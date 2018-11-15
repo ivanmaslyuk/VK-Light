@@ -10,7 +10,7 @@ import Foundation
 
 class VKMessagesApi {
     
-    func getConversations(count : Int, offset : Int = 0) -> VKResponse<VKGetConversationsResponse>? {
+    func getConversations(count : Int, offset : Int = 0, extended: Bool = false) -> VKResponse<VKGetConversationsResponse>? {
         
         // проверить входные данные и кинуть исключения если что
         if count >= 200 {
@@ -19,7 +19,8 @@ class VKMessagesApi {
         
         let propertioes : Dictionary<String, String> = [
             "count" : String(count),
-            "offset" : String(offset)
+            "offset" : String(offset),
+            "extended" : extended ? "1" : "0"
         ]
         
         let decoder = JSONDecoder()

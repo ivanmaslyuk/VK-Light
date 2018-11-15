@@ -12,5 +12,5 @@ struct VKProfileModel : Decodable {
     let id : Int
     let firstName : String
     let lastName : String
-    let deactivated : Bool
+    let deactivated : String? // deleted или banned
 }

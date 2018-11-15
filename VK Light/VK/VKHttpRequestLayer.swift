@@ -8,13 +8,10 @@
 
 import Foundation
 
-var sema = DispatchSemaphore( value: 0 )
-
 class VKHttpRequestLayer {
+    
     static var accessToken : String = ""
     static let version : String = "5.87"
-    
-    static var session : URLSession?
     
     static func getResponse(methodName: String, parameters: Dictionary<String, String>) -> String {
         
@@ -27,20 +24,19 @@ class VKHttpRequestLayer {
         }
         
         let r = "https://api.vk.com/method/\(methodName)?\(paramsAsString)&access_token=\(accessToken)&v=\(version)"
-        
         let url = URL(string: r)!
         var vkResponse : String? = ""
         
-        self.session = URLSession.shared
+        let session = URLSession.shared
+        let sema = DispatchSemaphore( value: 0 )
         
-        session?.dataTask(with: url) { (data, response, error) in
+        session.dataTask(with: url) { (data, response, error) in
             if let data = data {
                 vkResponse = String(data: data, encoding: .utf8)
                 sema.signal()
             }
             
         }.resume()
-        
         sema.wait()
         
         return vkResponse!

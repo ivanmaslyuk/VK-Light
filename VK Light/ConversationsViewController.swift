@@ -11,13 +11,15 @@ import UIKit
 class ConversationsViewController: UITableViewController {
 
     var conversations : [VKGetConversationsResponse.Item] = []
+    var vkResponse : VKGetConversationsResponse?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let api = VKMessagesApi()
+        let response = api.getConversations(count: 50, extended: true)!
         
-        let response = api.getConversations(count: 20)!
+        self.vkResponse = response.response
         conversations = response.response!.items
 
         // Uncomment the following line to preserve selection between presentations
@@ -49,7 +51,13 @@ class ConversationsViewController: UITableViewController {
             cell.textLabel?.text = con.chatSettings?.title
         }
         else {
-            cell.textLabel?.text = String(con.peer.id)
+            let profile = vkResponse!.findProfileById(id: con.peer.id)
+            if profile != nil {
+                cell.textLabel?.text = String(profile!.firstName + " " + profile!.lastName)
+            }
+            else {
+                cell.textLabel?.text = "_conversation_"
+            }
         }
         
 
