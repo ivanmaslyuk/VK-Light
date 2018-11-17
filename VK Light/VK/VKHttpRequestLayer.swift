@@ -10,10 +10,14 @@ import Foundation
 
 class VKHttpRequestLayer {
     
-    static var accessToken : String = ""
-    static let version : String = "5.87"
+    var accessToken : String = ""
+    let version : String = "5.87"
     
-    static func getResponse(methodName: String, parameters: Dictionary<String, String>) -> String {
+    init() {
+        self.accessToken = UserDefaults.standard.value(forKey: "vk_token") as! String
+    }
+    
+    func getResponse(methodName: String, parameters: Dictionary<String, String>) -> String {
         
         var paramsAsString = ""
         for key in parameters.keys {

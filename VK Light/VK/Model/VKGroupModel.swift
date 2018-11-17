@@ -7,3 +7,12 @@
 //
 
 import Foundation
+
+struct VKGroupModel : Decodable {
+    let id : Int
+    let name : String
+    let photo50 : URL
+    let photo100 : URL
+    let photo200 : URL
+    let isClosed : Int
+}

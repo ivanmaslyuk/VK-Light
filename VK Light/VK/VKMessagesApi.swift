@@ -27,7 +27,9 @@ class VKMessagesApi {
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .secondsSince1970
         
-        let vkResponse = VKHttpRequestLayer.getResponse(methodName: "messages.getConversations", parameters: propertioes)
+        let requestLayer = VKHttpRequestLayer()
+        
+        let vkResponse = requestLayer.getResponse(methodName: "messages.getConversations", parameters: propertioes)
         let data = vkResponse.data(using: .utf8)!
         
         do {

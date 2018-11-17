@@ -10,8 +10,6 @@ import Foundation
 
 struct VKGetConversationsResponse : Decodable {
     
-    
-    
     struct Item : Decodable {
         let conversation : VKConversationModel
         let lastMessage : VKMessageModel
@@ -21,7 +19,7 @@ struct VKGetConversationsResponse : Decodable {
     let items : [Item]
     let unreadCount : Int?
     let profiles : [VKProfileModel]?
-    // let groups : [VKGroupModel]
+    let groups : [VKGroupModel]?
     
     func findProfileById(id : Int) -> VKProfileModel? {
         if profiles != nil {
@@ -33,4 +31,17 @@ struct VKGetConversationsResponse : Decodable {
         }
         return nil
     }
+    
+    func findGroupById(id: Int) -> VKGroupModel? {
+        guard let groups = groups else {return nil}
+        
+        for group in groups {
+            if group.id == id {
+                return group
+            }
+        }
+        
+        return nil
+    }
+    
 }
