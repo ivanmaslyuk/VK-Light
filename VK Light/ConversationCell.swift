@@ -12,6 +12,7 @@ class ConversationCell: UITableViewCell {
     
     @IBOutlet weak var dialogName: UILabel!
     @IBOutlet weak var dialogImage: UIImageView!
+    @IBOutlet weak var lastMessageLabel: UILabel!
     
     var profile: VKProfileModel?
     var group: VKGroupModel?
@@ -53,6 +54,8 @@ class ConversationCell: UITableViewCell {
             self.dialogName.text = "ЧАТ С EMAIL"
             break
         }
+        
+        self.lastMessageLabel.text = unwrappedItem.lastMessage.text
     }
     
     override func prepareForReuse() {

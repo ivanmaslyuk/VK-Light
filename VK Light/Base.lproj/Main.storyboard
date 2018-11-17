@@ -84,11 +84,19 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ybq-ho-D5L">
+                                            <rect key="frame" x="88" y="40" width="271" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="dialogImage" destination="7av-m5-cOD" id="tdm-QM-JMr"/>
                                     <outlet property="dialogName" destination="Efg-Ft-5w4" id="fhs-x1-OcI"/>
+                                    <outlet property="lastMessageLabel" destination="ybq-ho-D5L" id="N9w-pU-MNH"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
