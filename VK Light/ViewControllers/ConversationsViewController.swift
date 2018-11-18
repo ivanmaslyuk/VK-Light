@@ -16,6 +16,8 @@ class ConversationsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "Диалоги"
+        
         self.tableView.separatorInset = UIEdgeInsets.init(top: 0, left: 88, bottom: 0, right: 0)
         
         let api = VKMessagesApi()
@@ -31,9 +33,8 @@ class ConversationsViewController: UITableViewController {
         }
         
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return conversations.count
     }
 
@@ -52,6 +53,19 @@ class ConversationsViewController: UITableViewController {
  
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.performSegue(withIdentifier: "showDialog", sender: indexPath.row)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showDialog" {
+            // в sender получаем индекс выбранного диалога
+            if let destination = segue.destination as? DialogViewController {
+                destination.dialogInfo = conversations[sender as! Int]
+            }
+        }
     }
 
 }

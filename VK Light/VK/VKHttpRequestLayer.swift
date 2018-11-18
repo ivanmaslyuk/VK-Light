@@ -17,32 +17,46 @@ class VKHttpRequestLayer {
         self.accessToken = UserDefaults.standard.value(forKey: "vk_token") as! String
     }
     
-    func getResponse(methodName: String, parameters: Dictionary<String, String>) -> String {
+    func getResponse<T : Decodable>(methodName: String, parameters: Dictionary<String, String>) -> VKResponse<T>? {
         
         var paramsAsString = ""
         for key in parameters.keys {
-            paramsAsString.append("&")
-            paramsAsString.append(key)
-            paramsAsString.append("=")
-            paramsAsString.append(parameters[key]!)
+            paramsAsString.append("&" + key + "=" + parameters[key]!)
         }
         
-        let r = "https://api.vk.com/method/\(methodName)?\(paramsAsString)&access_token=\(accessToken)&v=\(version)"
-        let url = URL(string: r)!
-        var vkResponse : String? = ""
+        let url = URL(string: "https://api.vk.com/method/\(methodName)?\(paramsAsString)&access_token=\(accessToken)&v=\(version)")!
         
-        let session = URLSession.shared
-        let sema = DispatchSemaphore( value: 0 )
-        
-        session.dataTask(with: url) { (data, response, error) in
+        return obtainResponse(url: url)
+    }
+    
+    private func obtainResponse<T : Decodable>(url: URL) -> VKResponse<T>? {
+        var vkResponse : String = ""
+        let sema = DispatchSemaphore(value: 0)
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if let error = error {
+                print(error)
+            }
             if let data = data {
-                vkResponse = String(data: data, encoding: .utf8)
+                vkResponse = String(data: data, encoding: .utf8) ?? ""
                 sema.signal()
             }
             
-        }.resume()
+            }.resume()
         sema.wait()
         
-        return vkResponse!
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .secondsSince1970
+        let data = vkResponse.data(using: .utf8)!
+        do {
+            return try decoder.decode(VKResponse<T>.self, from: data)
+        }
+        catch let error {
+            print(error)
+            return nil
+        }
     }
+    
+    
+    
 }

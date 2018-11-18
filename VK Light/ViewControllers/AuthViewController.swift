@@ -44,8 +44,6 @@ extension AuthViewController : WKNavigationDelegate {
         
         let defaults = UserDefaults.standard
         defaults.set(token, forKey: "vk_token")
-        
-        //VKHttpRequestLayer.accessToken = String(token)
     }
     
     func openConversationsList() {

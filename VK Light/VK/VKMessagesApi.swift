@@ -10,7 +10,7 @@ import Foundation
 
 class VKMessagesApi {
     
-    func getConversations(count : Int, offset : Int = 0, extended: Bool = false) -> VKResponse<VKGetConversationsResponse>? {
+    func getConversations(count: Int, offset: Int = 0, extended: Bool = false) -> VKResponse<VKGetConversationsResponse>? {
         
         // проверить входные данные и кинуть исключения если что
         if count >= 200 {
@@ -23,22 +23,20 @@ class VKMessagesApi {
             "extended" : extended ? "1" : "0"
         ]
         
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .secondsSince1970
+        let requestLayer = VKHttpRequestLayer()
+        return requestLayer.getResponse(methodName: "messages.getConversations", parameters: propertioes)
+    }
+    
+    func getHistory(peerId: Int, startMessageId: Int, count: Int = 20, offset: Int = 0) -> VKResponse<VKGetHistoryResponse>? {
+        let parameters : Dictionary<String, String> = [
+            "peer_id" : String(peerId),
+            "start_message_id" : String(startMessageId),
+            "count" : String(count),
+            "offset" : String(offset)
+        ]
         
         let requestLayer = VKHttpRequestLayer()
-        
-        let vkResponse = requestLayer.getResponse(methodName: "messages.getConversations", parameters: propertioes)
-        let data = vkResponse.data(using: .utf8)!
-        
-        do {
-            return try decoder.decode(VKResponse<VKGetConversationsResponse>.self, from: data)
-        }
-        catch let error {
-            print(error)
-            return nil
-        }
+        return requestLayer.getResponse(methodName: "messages.getHistory", parameters: parameters)
     }
     
 }

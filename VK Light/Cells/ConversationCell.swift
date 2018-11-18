@@ -70,7 +70,7 @@ class ConversationCell: UITableViewCell {
             }
             
             DispatchQueue.main.async {
-                print(from)
+                //print(from)
                 self.dialogImage.image = UIImage(data: data)
             }
             
