@@ -39,17 +39,30 @@ extension AuthViewController : WKNavigationDelegate {
     }
     
     func saveAccessToken(response: String) {
-        let resp = (response.split(separator: "#")[1]).split(separator: "=")[1]
+        /*let resp = (response.split(separator: "#")[1]).split(separator: "=")[1]
         let token = resp.split(separator: "&")[0]
         
         let defaults = UserDefaults.standard
-        defaults.set(token, forKey: "vk_token")
+        defaults.set(token, forKey: "vk_token")*/
+        let right = response.split(separator: "#")[1]
+        let parameters = right.split(separator: "&")
+        
+        var values : Dictionary<String, String> = [:]
+        for parameter in parameters {
+            let parts = parameter.split(separator: "=")
+            values[String(parts[0])] = String(parts[1])
+        }
+        
+        let defaults = UserDefaults.standard
+        defaults.set(values["access_token"], forKey: "vk_token")
+        defaults.set(values["user_id"], forKey: "vk_user_id")
     }
     
     func openConversationsList() {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+        /*let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         let conversationsViewController = storyBoard.instantiateViewController(withIdentifier: "conversationsViewController")
-        self.present(conversationsViewController, animated: false, completion: nil)
+        self.present(conversationsViewController, animated: false, completion: nil)*/
+        performSegue(withIdentifier: "loggedIn", sender: nil)
         //self.navigationController?.pushViewController(conversationsViewController, animated: true)
     }
     

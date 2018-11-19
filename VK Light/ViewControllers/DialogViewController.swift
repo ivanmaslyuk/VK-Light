@@ -7,11 +7,13 @@
 //
 
 import UIKit
-import ReverseExtension
+//import ReverseExtension
 
 class DialogViewController: UIViewController {
 
     var dialogInfo : VKGetConversationsResponse.Item?
+    var profile :  VKProfileModel?
+    var group : VKGroupModel?
     private var messages : [VKMessageModel]?
     
     @IBOutlet weak var tableView: UITableView!
@@ -19,18 +21,43 @@ class DialogViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let id = dialogInfo?.conversation.peer.id {
-            self.title = String(id)
-        }
+        setTitle()
         
-        //tableView.rowHeight = UITableView
-        tableView.re.delegate = self
         tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(MessageCell.self, forCellReuseIdentifier: "messageCell")
+        
+        tableView.transform = CGAffineTransform.identity.rotated(by: .pi) // переворачиваем TableView
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: tableView.frame.size.width - 8.0) // передвигаем скролл-индикатор вправо*/
+        
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 200
+        
+        tableView.allowsSelection = false
+        tableView.separatorStyle = .none
     }
     
     override func viewDidAppear(_ animated: Bool) {
         loadMessages()
         tableView.reloadData()
+        //tableView.scrollToRow(at: IndexPath(index: messages!.count), at: UITableView.ScrollPosition.bottom, animated: true)
+    }
+    
+    func setTitle() {
+        guard let info = dialogInfo else {return}
+        switch info.conversation.peer.type {
+        case .user:
+            guard let profile = profile else {return}
+            self.title = profile.firstName + " " + profile.lastName
+        case .chat:
+            guard let chat = info.conversation.chatSettings else {return}
+            self.title = chat.title
+        case .group:
+            guard let group = group else {return}
+            self.title = group.name
+        case .email:
+            self.title = "ЧАТ С EMAIL"
+        }
     }
     
     func loadMessages() {
@@ -56,7 +83,17 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "messageCell") as! MessageCell
-        cell.textLabel?.text = messages?[indexPath.row].text
+        
+        let defaults = UserDefaults.standard
+        if let message = messages?[indexPath.row] {
+            cell.messageModel = message
+            
+            cell.isFromMe = String(message.fromId) == defaults.string(forKey: "vk_user_id")
+        }
+        cell.transform = CGAffineTransform.identity.rotated(by: .pi) // поворот
+        cell.layoutSubviews()
+        
         return cell
     }
+    
 }

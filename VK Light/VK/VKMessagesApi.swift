@@ -27,12 +27,13 @@ class VKMessagesApi {
         return requestLayer.getResponse(methodName: "messages.getConversations", parameters: propertioes)
     }
     
-    func getHistory(peerId: Int, startMessageId: Int, count: Int = 20, offset: Int = 0) -> VKResponse<VKGetHistoryResponse>? {
+    func getHistory(peerId: Int, startMessageId: Int, count: Int = 20, offset: Int = 0, reverse: Bool = false) -> VKResponse<VKGetHistoryResponse>? {
         let parameters : Dictionary<String, String> = [
             "peer_id" : String(peerId),
             "start_message_id" : String(startMessageId),
             "count" : String(count),
-            "offset" : String(offset)
+            "offset" : String(offset),
+            "rev" : reverse ? "1" : "0"
         ]
         
         let requestLayer = VKHttpRequestLayer()
