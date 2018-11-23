@@ -51,11 +51,12 @@
                     </view>
                     <connections>
                         <outlet property="webView" destination="h3b-HJ-4BU" id="kOX-7c-e0w"/>
+                        <segue destination="kYd-zH-sZ4" kind="show" identifier="loginSuccess" id="jHf-HT-usM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="82" y="-158"/>
+            <point key="canvasLocation" x="80" y="-208"/>
         </scene>
         <!--Dialog View Controller-->
         <scene sceneID="4mW-PX-DOb">
@@ -65,9 +66,39 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="L7l-o1-A7R">
-                                <rect key="frame" x="0.0" y="64" width="414" height="622"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" contentViewInsetsToSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L7l-o1-A7R">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="686"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <inset key="scrollIndicatorInsets" minX="0.0" minY="0.0" maxX="0.0" maxY="44"/>
+                                <view key="tableHeaderView" contentMode="scaleToFill" id="cha-Nb-G48" userLabel="Footer">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="5"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </view>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="Tq1-eb-VJT" userLabel="Header">
+                                    <rect key="frame" x="0.0" y="77" width="414" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="5jL-40-USf">
+                                            <rect key="frame" x="197" y="5" width="20" height="20"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstItem="5jL-40-USf" firstAttribute="centerX" secondItem="Tq1-eb-VJT" secondAttribute="centerX" id="gAc-tb-IGq"/>
+                                        <constraint firstItem="5jL-40-USf" firstAttribute="centerY" secondItem="Tq1-eb-VJT" secondAttribute="centerY" id="kb8-rH-0aL"/>
+                                    </constraints>
+                                </view>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Hjt-am-tJB">
+                                        <rect key="frame" x="0.0" y="33" width="414" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Hjt-am-tJB" id="Ewk-ef-qOU">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="Vtp-sy-JYA" id="M5s-Xp-eru"/>
                                     <outlet property="delegate" destination="Vtp-sy-JYA" id="yB3-z3-eyY"/>
@@ -87,7 +118,7 @@
                                         <state key="normal" title="Отправить"/>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" red="0.83741801979999997" green="0.83743780850000005" blue="0.83742713930000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.92143100499999997" green="0.92145264149999995" blue="0.92144101860000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="3mB-CM-fnB"/>
                                     <constraint firstItem="oYK-iE-PBJ" firstAttribute="leading" secondItem="6db-SZ-btd" secondAttribute="leading" constant="8" id="3oc-oa-1f9"/>
@@ -101,17 +132,18 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="L7l-o1-A7R" firstAttribute="trailing" secondItem="goK-g4-bjj" secondAttribute="trailing" id="1fs-Uc-bkg"/>
+                            <constraint firstItem="L7l-o1-A7R" firstAttribute="top" secondItem="tmY-ZG-93y" secondAttribute="top" id="1sh-SL-L79"/>
                             <constraint firstAttribute="bottom" secondItem="6db-SZ-btd" secondAttribute="bottom" id="5HZ-iC-O3X"/>
-                            <constraint firstItem="6db-SZ-btd" firstAttribute="top" secondItem="L7l-o1-A7R" secondAttribute="bottom" id="6Rv-27-2AS"/>
+                            <constraint firstItem="L7l-o1-A7R" firstAttribute="leading" secondItem="goK-g4-bjj" secondAttribute="leading" id="7VS-gr-WQv"/>
                             <constraint firstAttribute="trailing" secondItem="6db-SZ-btd" secondAttribute="trailing" id="ChB-nQ-YIt"/>
-                            <constraint firstItem="L7l-o1-A7R" firstAttribute="top" secondItem="goK-g4-bjj" secondAttribute="top" id="HEi-GA-tmO"/>
                             <constraint firstItem="6db-SZ-btd" firstAttribute="leading" secondItem="tmY-ZG-93y" secondAttribute="leading" id="KNh-Jz-28Z"/>
-                            <constraint firstItem="L7l-o1-A7R" firstAttribute="leading" secondItem="goK-g4-bjj" secondAttribute="leading" id="iaF-5k-NeG"/>
+                            <constraint firstItem="L7l-o1-A7R" firstAttribute="trailing" secondItem="goK-g4-bjj" secondAttribute="trailing" id="aq4-jD-hPu"/>
+                            <constraint firstItem="6db-SZ-btd" firstAttribute="top" secondItem="L7l-o1-A7R" secondAttribute="bottom" id="tWF-Wu-kj0"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="goK-g4-bjj"/>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="5jL-40-USf" id="Uff-ox-mfN"/>
                         <outlet property="tableView" destination="L7l-o1-A7R" id="Dja-hE-Dwv"/>
                     </connections>
                 </viewController>
@@ -168,6 +200,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="68x-Le-evp">
+                        <barButtonItem key="backBarButtonItem" title=" " id="Frc-JD-jpR"/>
                         <barButtonItem key="rightBarButtonItem" title="Настройки" id="wN0-Or-ggh">
                             <connections>
                                 <segue destination="3ON-SD-06Q" kind="show" id="c2T-id-U8Q"/>
@@ -216,4 +249,7 @@
             <point key="canvasLocation" x="80.799999999999997" y="521.28935532233891"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="jHf-HT-usM"/>
+    </inferredMetricsTieBreakers>
 </document>

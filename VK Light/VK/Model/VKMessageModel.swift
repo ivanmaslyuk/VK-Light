@@ -17,7 +17,7 @@ struct VKMessageModel : Decodable {
     let randomId : Int?
     let ref : String?
     let refSource : String?
-    //let attachments : [Attachment]
+    let attachments : [VKAttachmentModel]
     let important : Bool?
     //let geo
     let payload : String? // только для ботов

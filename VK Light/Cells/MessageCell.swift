@@ -10,9 +10,9 @@ import UIKit
 
 class MessageCell: UITableViewCell {
     // сделать модель
-    var isFromMe : Bool = true
-    var messageModel : VKMessageModel?
-    
+    /*var isFromMe : Bool = true
+    var messageModel : VKMessageModel?*/
+    var message : Message?
     var leftConstraint : NSLayoutConstraint?
     var rightConstraint : NSLayoutConstraint?
     
@@ -23,6 +23,8 @@ class MessageCell: UITableViewCell {
         label.isScrollEnabled = false
         label.backgroundColor = .clear
         label.clipsToBounds = false
+        label.isSelectable = false
+        
         label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
@@ -36,24 +38,38 @@ class MessageCell: UITableViewCell {
         return card
     }()
     
+    private let sticker : UIImageView = {
+        return UIImageView()
+    }()
+    
+    private let stackView : UIStackView = {
+        let stView = UIStackView()
+        
+        return stView
+    }()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        self.clipsToBounds = false
         
         addSubview(messageCard)
         addSubview(messageText)
         
-        messageText.topAnchor.constraint(equalTo: messageCard.topAnchor).isActive = true
-        messageText.bottomAnchor.constraint(equalTo: messageCard.bottomAnchor).isActive = true
-        messageText.rightAnchor.constraint(equalTo: messageCard.rightAnchor).isActive = true
-        messageText.leftAnchor.constraint(equalTo: messageCard.leftAnchor).isActive = true
+        
         
         
         messageCard.topAnchor.constraint(equalTo: self.topAnchor, constant: 2).isActive = true
         messageCard.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 2).isActive = true
         //messageCard.widthAnchor.constraint(equalToConstant: 250).isActive = true
-        messageCard.widthAnchor.constraint(lessThanOrEqualToConstant: 250).isActive = true
-        messageCard.widthAnchor.constraint(equalTo: messageText.widthAnchor).isActive = true
+        messageCard.widthAnchor.constraint(lessThanOrEqualToConstant: 350).isActive = true
+        messageCard.widthAnchor.constraint(equalTo: messageText.widthAnchor, constant: 6).isActive = true
         messageCard.heightAnchor.constraint(equalTo: messageText.heightAnchor)
+        
+        messageText.topAnchor.constraint(equalTo: messageCard.topAnchor).isActive = true
+        messageText.bottomAnchor.constraint(equalTo: messageCard.bottomAnchor).isActive = true
+        messageText.rightAnchor.constraint(equalTo: messageCard.rightAnchor, constant: 3).isActive = true
+        messageText.leftAnchor.constraint(equalTo: messageCard.leftAnchor, constant: 3).isActive = true
         
         self.rightConstraint = messageCard.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8)
         self.leftConstraint = messageCard.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8)
@@ -71,8 +87,9 @@ class MessageCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        guard let message = message else {return}
         
-        if isFromMe {
+        if message.isFromMe {
             clipToRight()
             messageCard.backgroundColor = UIColor(red: 10.0/255.0, green: 115.0/255.0, blue: 255.0/255.0, alpha: 1)
             messageText.textColor = UIColor.white
@@ -82,9 +99,7 @@ class MessageCell: UITableViewCell {
             messageText.textColor = UIColor.black
         }
         
-        if let text = messageModel?.text {
-            self.messageText.text = text
-        }
+        self.messageText.text = message.text
     }
     
     func clipToRight() {

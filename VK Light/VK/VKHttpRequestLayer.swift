@@ -25,6 +25,7 @@ class VKHttpRequestLayer {
         }
         
         let url = URL(string: "https://api.vk.com/method/\(methodName)?\(paramsAsString)&access_token=\(accessToken)&v=\(version)")!
+        print(url)
         
         return obtainResponse(url: url)
     }
@@ -38,10 +39,10 @@ class VKHttpRequestLayer {
             }
             if let data = data {
                 vkResponse = String(data: data, encoding: .utf8) ?? ""
-                sema.signal()
+                
             }
-            
-            }.resume()
+            sema.signal()
+        }.resume()
         sema.wait()
         
         let decoder = JSONDecoder()

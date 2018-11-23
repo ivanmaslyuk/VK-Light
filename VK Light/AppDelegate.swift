@@ -16,6 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        
+        if let _ = UserDefaults.standard.value(forKey: "vk_token") {
+            let poller = VKLongPoller.shared
+            poller.prepareAnd { poller.startLongPolling() }
+        }
+        
         return true
     }
 

@@ -13,4 +13,29 @@ struct VKGetHistoryResponse : Decodable {
     let items : [VKMessageModel]
     let conversations : [VKConversationModel]?
     let profiles : [VKProfileModel]?
+    let groups : [VKGroupModel]?
+    
+    func getProfileById(id: Int) -> VKProfileModel? {
+        guard let profiles = profiles else {return nil}
+        
+        for profile in profiles {
+            if profile.id == id {
+                return profile
+            }
+        }
+        
+        return nil
+    }
+    
+    func getGroupById(id: Int) -> VKGroupModel? {
+        guard let groups = groups else {return nil}
+        
+        for group in groups {
+            if group.id == id {
+                return group
+            }
+        }
+        
+        return nil
+    }
 }

@@ -62,7 +62,7 @@ extension AuthViewController : WKNavigationDelegate {
         /*let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
         let conversationsViewController = storyBoard.instantiateViewController(withIdentifier: "conversationsViewController")
         self.present(conversationsViewController, animated: false, completion: nil)*/
-        performSegue(withIdentifier: "loggedIn", sender: nil)
+        performSegue(withIdentifier: "loginSuccess", sender: nil)
         //self.navigationController?.pushViewController(conversationsViewController, animated: true)
     }
     

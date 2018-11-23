@@ -64,8 +64,8 @@ class ConversationsViewController: UITableViewController {
             // в sender получаем индекс выбранного диалога
             if let destination = segue.destination as? DialogViewController {
                 let conInfo = conversations[sender as! Int]
-                destination.dialogInfo = conInfo
-                destination.group = vkResponse?.findGroupById(id: conInfo.conversation.peer.id)
+                destination.dialogInfo = conversations[sender as! Int]
+                destination.group = vkResponse?.findGroupById(id: -conInfo.conversation.peer.id)
                 destination.profile = vkResponse?.findProfileById(id: conInfo.conversation.peer.id)
             }
         }
