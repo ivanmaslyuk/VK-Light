@@ -16,7 +16,7 @@ class AuthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        let template = "https://oauth.vk.com/authorize?client_id=6752052&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends,messages,offline&response_type=token&v=5.52"
+        let template = "https://oauth.vk.com/authorize?client_id=6752052&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=friends,messages,offline&response_type=token&v=5.80"
         let url = URL(string: template)!
         webView.navigationDelegate = self
         webView.load(URLRequest(url: url))

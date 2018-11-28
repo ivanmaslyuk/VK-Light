@@ -12,23 +12,36 @@ class MessageHelper {
     let api = VKMessagesApi()
     let defaults = UserDefaults.standard
     
-    func getMessages(peerId: Int, startMessageId: Int, offset: Int = 0, count: Int = 20) -> [Message]? {
+    func getMessages(peerId: Int, startMessageId: Int, offset: Int = 0, count: Int = 20) -> [VKMessageWrapper]? {
         guard let response = api.getHistory(peerId: peerId, startMessageId: startMessageId, count: count, offset: offset, extended: true)?.response else {return nil}
-        let currentUserId = defaults.string(forKey: "vk_user_id")
         
-        var messages : [Message] = []
+        var messages : [VKMessageWrapper] = []
         for message in response.items {
-            let fromMe = String(message.fromId) == currentUserId
-            var sticker : VKStickerModel? = nil
-            if message.attachments.count > 0 {
-                if let s = message.attachments[0].sticker {
-                    sticker = s
-                }
-            }
-            let msg = Message(peerId: message.peerId!, text: message.text, sticker: sticker, profile: response.getProfileById(id: message.fromId), group: response.getGroupById(id: -message.fromId), isFromMe: fromMe)
-            messages.append(msg)
+            let profile = response.findProfileById(id: message.fromId)
+            let group = response.findGroupById(id: -message.fromId)
+            messages.append(VKMessageWrapper(message: message, profile: profile, group: group))
         }
         
         return messages
+    }
+    
+    static func translateVKMessage(model: VKMessageModel, associatedProfile: VKProfileModel?, associatedGroup: VKGroupModel?) -> Message {
+        
+        var sticker : VKStickerModel? = nil
+        if model.attachments.count > 0 {
+            if let s = model.attachments[0].sticker {
+                sticker = s
+            }
+        }
+        
+        var senderName: String = "Неизвестно"
+        if let profile = associatedProfile {
+            senderName = profile.firstName + " " + profile.lastName
+        }
+        if let group = associatedGroup {
+            senderName = group.name
+        }
+        
+        return Message(peerId: model.peerId!, text: model.text, sticker: sticker, senderName: senderName, isFromMe: model.out == 1)
     }
 }

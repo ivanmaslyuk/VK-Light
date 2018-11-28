@@ -20,6 +20,11 @@ class ConversationsViewController: UITableViewController {
         
         self.tableView.separatorInset = UIEdgeInsets.init(top: 0, left: 88, bottom: 0, right: 0)
         
+        
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         let api = VKMessagesApi()
         let response = api.getConversations(count: 50, extended: true)!
         
@@ -31,7 +36,7 @@ class ConversationsViewController: UITableViewController {
             print(error.errorCode)
             print(error.errorMsg)
         }
-        
+        tableView.reloadData()
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

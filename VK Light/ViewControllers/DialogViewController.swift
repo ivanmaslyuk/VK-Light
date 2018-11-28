@@ -15,7 +15,7 @@ class DialogViewController: UIViewController {
     var profile :  VKProfileModel?
     var group : VKGroupModel?
     let messageHelper = MessageHelper()
-    var messages : [Message] = []
+    var messages : [VKMessageWrapper] = []
     let longPoller = VKLongPoller.shared
     var isCurrentlyLoadingMessages = false {
         didSet(new) {
@@ -75,7 +75,7 @@ class DialogViewController: UIViewController {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row + 1 == (messages.count - 10) && !isCurrentlyLoadingMessages{
+        if indexPath.row + 1 == (messages.count - 15) && !isCurrentlyLoadingMessages{
             loadMessages()
         }
     }
@@ -102,12 +102,10 @@ class DialogViewController: UIViewController {
         }
     }
     
-    func handleNewMessage(message: Message) {
-        if message.peerId == dialogInfo?.conversation.peer.id {
+    func handleNewMessage(message: VKMessageWrapper) {
+        if message.message.peerId == dialogInfo?.conversation.peer.id {
             self.messages.insert(message, at: 0)
-            tableView.beginUpdates()
             tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .top)
-            tableView.endUpdates()
         }
     }
     
@@ -127,10 +125,9 @@ class DialogViewController: UIViewController {
                     }
                     
                     DispatchQueue.main.async {
-                        //self.tableView.reloadData()
-                        self.tableView.beginUpdates()
-                        self.tableView.insertRows(at: indexPaths, with: .fade)
-                        self.tableView.endUpdates()
+                        UIView.setAnimationsEnabled(false)
+                        self.tableView.insertRows(at: indexPaths, with: .none)
+                        UIView.setAnimationsEnabled(true)
                     }
                 }
             }

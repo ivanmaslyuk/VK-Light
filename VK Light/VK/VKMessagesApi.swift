@@ -50,4 +50,16 @@ class VKMessagesApi {
         return requestLayer.getResponse(methodName: "messages.getLongPollServer", parameters: parameters)
     }
     
+    func getLongPollHistory(ts: Int, pts: Int, onlines: Bool, fields: [String]) -> VKResponse<VKGetLongPollHistoryResponse>? {
+        let parameters : [String : String] = [
+            "ts" : String(ts),
+            "pts" : String(pts),
+            "onlines" : onlines ? "1" : "0",
+            "fields" : fields.joined(separator: ","),
+            "lp_version" : "3"
+            ]
+        
+        return requestLayer.getResponse(methodName: "messages.getLongPollHistory", parameters: parameters)
+    }
+    
 }

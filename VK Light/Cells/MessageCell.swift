@@ -12,7 +12,7 @@ class MessageCell: UITableViewCell {
     // сделать модель
     /*var isFromMe : Bool = true
     var messageModel : VKMessageModel?*/
-    var message : Message?
+    var message : VKMessageWrapper?
     var leftConstraint : NSLayoutConstraint?
     var rightConstraint : NSLayoutConstraint?
     
@@ -25,7 +25,7 @@ class MessageCell: UITableViewCell {
         label.clipsToBounds = false
         label.isSelectable = false
         
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont.systemFont(ofSize: 17)
         return label
     }()
     
@@ -89,7 +89,7 @@ class MessageCell: UITableViewCell {
         super.layoutSubviews()
         guard let message = message else {return}
         
-        if message.isFromMe {
+        if message.message.out == 1 {
             clipToRight()
             messageCard.backgroundColor = UIColor(red: 10.0/255.0, green: 115.0/255.0, blue: 255.0/255.0, alpha: 1)
             messageText.textColor = UIColor.white
@@ -99,7 +99,7 @@ class MessageCell: UITableViewCell {
             messageText.textColor = UIColor.black
         }
         
-        self.messageText.text = message.text
+        self.messageText.text = message.message.text
     }
     
     func clipToRight() {

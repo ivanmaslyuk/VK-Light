@@ -35,19 +35,19 @@ struct VKLPHistoryItemModel : Decodable {
     }
     
     let kind: Kind
-    let messageFlags: VKLPMessageFlags? //TODO: сделать декодер
+    let messageFlags: VKLPMessageFlags?
     let messageId: Int?
     let peerId: Int?
-    let messageDate: Date?
-    let messageText: String?
+    //let messageDate: Date?
+    //let messageText: String?
     
-    init(kind: Kind, messageId: Int? = nil, messageFlags: VKLPMessageFlags? = nil, peerId: Int? = nil, messageDate: Date? = nil, messageText: String? = nil) {
+    init(kind: Kind, messageId: Int? = nil, messageFlags: VKLPMessageFlags? = nil, peerId: Int? = nil/*, messageDate: Date? = nil, messageText: String? = nil*/) {
         self.kind = kind
         self.messageFlags = messageFlags
         self.peerId = peerId
-        self.messageDate = messageDate
-        self.messageText = messageText
-        self.messageId = nil
+        //self.messageDate = messageDate
+        //self.messageText = messageText
+        self.messageId = messageId
     }
     
     init(from decoder: Decoder) throws {
@@ -59,9 +59,9 @@ struct VKLPHistoryItemModel : Decodable {
             let messageId = try container.decode(Int.self)
             let messageFlags = try container.decode(VKLPMessageFlags.self)
             let peerId = try container.decode(Int.self)
-            let messageDate = try container.decode(Date.self)
-            let messageText = try container.decode(String.self)
-            self.init(kind: kind, messageId: messageId, messageFlags: messageFlags, peerId: peerId, messageDate: messageDate, messageText: messageText)
+            //let messageDate = try container.decode(Date.self)
+            //let messageText = try container.decode(String.self)
+            self.init(kind: kind, messageId: messageId, messageFlags: messageFlags, peerId: peerId/*, messageDate: messageDate, messageText: messageText*/)
         default:
             self.init(kind: .tempNotImplemented)
         }

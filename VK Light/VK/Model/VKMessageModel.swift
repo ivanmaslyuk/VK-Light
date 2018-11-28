@@ -19,9 +19,8 @@ struct VKMessageModel : Decodable {
     let refSource : String?
     let attachments : [VKAttachmentModel]
     let important : Bool?
-    //let geo
+    let out: Int? // не передается если сообщение пришло в качестве прикрепленного
     let payload : String? // только для ботов
     let fwdMessages : [VKMessageModel]?
-    //let action : Action
     
 }

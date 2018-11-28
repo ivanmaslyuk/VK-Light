@@ -21,14 +21,15 @@ struct VKGetConversationsResponse : Decodable {
     let profiles : [VKProfileModel]?
     let groups : [VKGroupModel]?
     
-    func findProfileById(id : Int) -> VKProfileModel? {
-        if profiles != nil {
-            for profile in profiles! {
-                if profile.id == id {
-                    return profile
-                }
+    func findProfileById(id: Int) -> VKProfileModel? {
+        guard let profiles = profiles else {return nil}
+        
+        for profile in profiles {
+            if profile.id == id {
+                return profile
             }
         }
+        
         return nil
     }
     
@@ -43,5 +44,4 @@ struct VKGetConversationsResponse : Decodable {
         
         return nil
     }
-    
 }

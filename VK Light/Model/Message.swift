@@ -18,8 +18,9 @@ struct Message {
     let text : String
     let sticker : VKStickerModel?
     //let peer : VKConversationModel.Peer
-    let profile : VKProfileModel?
-    let group : VKGroupModel?
+    //let profile : VKProfileModel?
+    //let group : VKGroupModel?
+    let senderName: String
     //let chat : VKConversationModel.ChatSettings?
     let isFromMe : Bool
 }

@@ -11,7 +11,7 @@ import Foundation
 class VKHttpRequestLayer {
     
     var accessToken : String = ""
-    let version : String = "5.87"
+    let version : String = "5.92"
     
     init() {
         self.accessToken = UserDefaults.standard.value(forKey: "vk_token") as! String
@@ -25,7 +25,9 @@ class VKHttpRequestLayer {
         }
         
         let url = URL(string: "https://api.vk.com/method/\(methodName)?\(paramsAsString)&access_token=\(accessToken)&v=\(version)")!
-        print(url)
+        if methodName != "messages.getLongPollHistory" {
+            print(url)
+        }
         
         return obtainResponse(url: url)
     }
