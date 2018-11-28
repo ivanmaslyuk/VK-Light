@@ -62,4 +62,17 @@ class VKMessagesApi {
         return requestLayer.getResponse(methodName: "messages.getLongPollHistory", parameters: parameters)
     }
     
+    
+    func getById(ids: [Int], extended: Bool) -> VKResponse<VKGetMessagesByIdResponse>? {
+        var ids_str: [String] = []
+        for id in ids { ids_str.append(String(id)) }
+        
+        let parameters: [String : String] = [
+            "message_ids" : ids_str.joined(separator: ","),
+            "extended" : extended ? "1" : "0"
+        ]
+        
+        return requestLayer.getResponse(methodName: "messages.getById", parameters: parameters)
+    }
+    
 }

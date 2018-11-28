@@ -12,8 +12,8 @@ class VKLongPoller {
     
     static var shared = VKLongPoller()
     private var server: VKLPServerModel?
-    private var ts: Int?
-    private var newPts: Int?
+    //private var newPts: Int?
+    private var newTs: Int?
     private var newMessageHandlers : [(VKMessageWrapper) -> Void] = []
     //private let userDefaults = UserDefaults.standard
     
@@ -80,7 +80,7 @@ class VKLongPoller {
         sema.wait()
     }*/
     
-    func doLongPollRequest() {
+    /*func doLongPollRequest() {
         guard let server = self.server else {
             print("doLongPollRequest() был вызван до инициализации self.server")
             getServer(blocking: true) { return }
@@ -94,6 +94,27 @@ class VKLongPoller {
             print("Полученный ответ от LP-сервера не является корректным.")
         }
         usleep(300000)
+    }*/
+    
+    func doLongPollRequest() {
+        guard let server = self.server else {
+            print("doLongPollRequest() был вызван до инициализации self.server")
+            getServer(blocking: true) { return }
+            return
+        }
+        
+        let response = VKLongPollApi().waitForLongPollUpdates(server: server.server, key: server.key, ts: self.newTs ?? server.ts)
+        if let response = response {
+            if let ts = response.ts { self.newTs = ts }
+            if let error = response.failed {
+                print("LP-сервер прислал ошибку: \(error)")
+            }
+            if let updates = response.updates {
+                handleUpdates(updates: updates)
+            }
+        } else {
+            print("Полученный ответ от LP-сервера не является корректным.")
+        }
     }
     
     /*private func handleLPResponse(response: VKLPResponse?) {
@@ -114,12 +135,14 @@ class VKLongPoller {
     }*/
     
     
-    private func handleLPResponse(response: VKGetLongPollHistoryResponse) {
-        self.newPts = response.newPts
-        for update in response.history {
+    /*private func handleLPResponse(response: VKLPResponse) {
+        if let ts = response.ts { self.newTs = ts }
+        guard let updates = response.updates else {return}
+        
+        for update in updates {
             print("Произошло событие: ", update.kind)
             
-            var relatedMessage: VKMessageModel? = nil
+            /*var relatedMessage: VKMessageModel? = nil
             var relatedProfile: VKProfileModel? = nil
             var relatedGroup: VKGroupModel? = nil
             if let messageId = update.messageId {
@@ -128,14 +151,39 @@ class VKLongPoller {
             if let peerId = update.peerId {
                 relatedProfile = response.findProfileById(id: peerId)
                 relatedGroup = response.findGroupById(id: -peerId)
-            }
+            }*/
             
-            handleUpdate(update: update, relatedMessage: relatedMessage, relatedProfile: relatedProfile, relatedGroup: relatedGroup)
+            handleUpdate(update: update)
+        }
+    }*/
+    
+    private func handleUpdates(updates: [VKLPHistoryItemModel]) {
+        var messageIds: [Int] = []
+        for update in updates {
+            print("Произошло событие \(update.kind)")
+            switch update.kind {
+            case .newMessage:
+                messageIds.append(update.messageId!)
+            default:
+                continue
+            }
+        }
+        handleNewMessages(ids: messageIds)
+    }
+    
+    private func handleNewMessages(ids: [Int]) {
+        let vkResponse = VKMessagesApi().getById(ids: ids, extended: true)
+        guard let response = vkResponse?.response else {return}
+        
+        for message in response.items {
+            let relatedProfile = response.findProfileById(id: message.peerId!)
+            let relatedGroup = response.findGroupById(id: -message.peerId!)
+            notifyNewMessage(message: VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup))
         }
     }
     
     
-    private func handleUpdate(update: VKLPHistoryItemModel, relatedMessage: VKMessageModel?, relatedProfile: VKProfileModel?, relatedGroup: VKGroupModel?) {
+    /*private func handleUpdate(update: VKLPHistoryItemModel/*, relatedMessage: VKMessageModel?, relatedProfile: VKProfileModel?, relatedGroup: VKGroupModel?*/) {
         switch update.kind {
         case .newMessage:
             guard let message = relatedMessage else {return}
@@ -144,7 +192,7 @@ class VKLongPoller {
         default:
             return
         }
-    }
+    }*/
     
     
     /*func decodeResponse(data: Data) -> VKLPResponse? {

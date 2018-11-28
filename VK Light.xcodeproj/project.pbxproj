@@ -36,6 +36,8 @@
 		6549FAEC21AACACF00E1A109 /* ObservableDataContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549FAEB21AACACF00E1A109 /* ObservableDataContainer.swift */; };
 		6550285321A8818B001A0420 /* DynamicDataContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550285221A8818B001A0420 /* DynamicDataContainer.swift */; };
 		6550285521A883D3001A0420 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550285421A883D3001A0420 /* Dialog.swift */; };
+		6551BED021AED6F500C568C9 /* VKLongPollApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6551BECF21AED6F500C568C9 /* VKLongPollApi.swift */; };
+		6551BED221AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6551BED121AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift */; };
 		65E6F50A219C8C4E006BC0A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E6F509219C8C4E006BC0A8 /* AppDelegate.swift */; };
 		65E6F50C219C8C4E006BC0A8 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E6F50B219C8C4E006BC0A8 /* AuthViewController.swift */; };
 		65E6F50F219C8C4E006BC0A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65E6F50D219C8C4E006BC0A8 /* Main.storyboard */; };
@@ -73,6 +75,8 @@
 		6549FAEB21AACACF00E1A109 /* ObservableDataContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableDataContainer.swift; sourceTree = "<group>"; };
 		6550285221A8818B001A0420 /* DynamicDataContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicDataContainer.swift; sourceTree = "<group>"; };
 		6550285421A883D3001A0420 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
+		6551BECF21AED6F500C568C9 /* VKLongPollApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLongPollApi.swift; sourceTree = "<group>"; };
+		6551BED121AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKGetMessagesByIdResponse.swift; sourceTree = "<group>"; };
 		65E6F506219C8C4E006BC0A8 /* VK Light.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK Light.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		65E6F509219C8C4E006BC0A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65E6F50B219C8C4E006BC0A8 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
@@ -164,6 +168,7 @@
 				6504B30021A18366002EDE94 /* VKGetHistoryResponse.swift */,
 				6515E5B921A42C6700D22CEA /* VKLPResponse.swift */,
 				6549FAE821AAA11300E1A109 /* VKGetLongPollHistoryResponse.swift */,
+				6551BED121AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
@@ -210,6 +215,7 @@
 				6524A44E219D348A0051D73C /* Model */,
 				6505262D219D6A0600EF8BAA /* VKMessagesApi.swift */,
 				6505262F219D6CB800EF8BAA /* VKHttpRequestLayer.swift */,
+				6551BECF21AED6F500C568C9 /* VKLongPollApi.swift */,
 			);
 			path = VK;
 			sourceTree = "<group>";
@@ -362,11 +368,13 @@
 				650805CF219E98AD0029519A /* RootViewController.swift in Sources */,
 				6505262A219D665B00EF8BAA /* VKProfileModel.swift in Sources */,
 				650C95B521A2D59B00D98867 /* VKStickerModel.swift in Sources */,
+				6551BED221AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift in Sources */,
 				650C95B821A2D95700D98867 /* MessageHelper.swift in Sources */,
 				650805D1219EA4730029519A /* ConversationCell.swift in Sources */,
 				6504B2FF21A1666A002EDE94 /* DialogViewController.swift in Sources */,
 				6550285521A883D3001A0420 /* Dialog.swift in Sources */,
 				6502082521A1C3F700157572 /* SettingsViewController.swift in Sources */,
+				6551BED021AED6F500C568C9 /* VKLongPollApi.swift in Sources */,
 				6505262C219D694500EF8BAA /* VKGroupModel.swift in Sources */,
 				6515E5BE21A4442400D22CEA /* VKLPHistoryItemModel.swift in Sources */,
 				6504B30121A18366002EDE94 /* VKGetHistoryResponse.swift in Sources */,
