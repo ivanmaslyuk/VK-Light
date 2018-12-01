@@ -13,13 +13,9 @@ class VKLongPoller {
     static var shared = VKLongPoller()
     private var server: VKLPServerModel?
     private var newTs: Int?
-    //private var newMessageHandlers : [(VKMessageWrapper) -> Void] = []
     private var updateHandler = VKLongPollEventHandler.shared
     
-    
-    private init(){
-        
-    }
+    private init() { }
     
     
     func prepareAnd(finished: @escaping () -> Void) {
@@ -74,69 +70,12 @@ class VKLongPoller {
                 }
             }
             if let updates = response.updates {
-                //handleUpdates(updates: updates)
                 updateHandler.handle(updates: updates)
             }
         } else {
             print("Полученный ответ от LP-сервера не является корректным.")
         }
     }
-    
-    
-    /*private func handleUpdates(updates: [VKLPHistoryItemModel]) {
-        var messageIds: [Int] = []
-        for update in updates {
-            print("LongPoller: Произошло событие \(update.kind) (\(update.kind.rawValue))")
-            switch update.kind {
-            case .newMessage:
-                messageIds.append(update.messageId!)
-            default:
-                continue
-            }
-        }
-        if !messageIds.isEmpty { handleNewMessages(ids: messageIds) }
-    }
-    
-    
-    
-    
-    private func handleNewMessages(ids: [Int]) {
-        let vkResponse = VKMessagesApi().getById(ids: ids, extended: true)
-        guard let response = vkResponse?.response else {return}
-        
-        for message in response.items {
-            let relatedProfile = response.findProfileById(id: message.peerId!)
-            let relatedGroup = response.findGroupById(id: -message.peerId!)
-            notifyNewMessage(message: VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup))
-        }
-    }
-    
-    
-    private func handleUserIsTyping(peerId: Int) {
-        
-    }
-    
-    
-    private func handleUserIsTypingInChat(userId: Int, chatId: Int) {
-        
-    }
-    
-    
-    
-    
-    
-    func addNewMessageHandler(handler: @escaping (_ message: VKMessageWrapper) -> Void) {
-        self.newMessageHandlers.append(handler)
-    }
-    
-    
-    private func notifyNewMessage(message: VKMessageWrapper) {
-        for handler in newMessageHandlers {
-            DispatchQueue.main.async {
-                handler(message)
-            }
-        }
-    }*/
     
     
     
