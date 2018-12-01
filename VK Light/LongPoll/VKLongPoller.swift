@@ -11,10 +11,12 @@ import Foundation
 class VKLongPoller {
     
     static var shared = VKLongPoller()
-    private var server: VKLPServerModel?
-    private var newTs: Int?
+    //private var server: VKLPServerModel?
+    private var ts: Int?
+    private var server: URL?
+    private var key: String?
     private var updateHandler = VKLongPollEventHandler.shared
-    
+    private let longPollApi = VKLongPollApi()
     private init() { }
     
     
@@ -42,10 +44,15 @@ class VKLongPoller {
         DispatchQueue.global().async {
             let response = VKMessagesApi().getLongPollServer()?.response
             print(response as Any)
-            self.server = response
+            if let response = response {
+                self.server = response.server
+                self.ts = response.ts
+                self.key = response.key
+            }
+            if blocking { sema.signal() }
             DispatchQueue.main.async {
                 print("получен LP-сервер")
-                if blocking { sema.signal() }
+                
                 finished()
             }
         }
@@ -54,15 +61,15 @@ class VKLongPoller {
     
     
     func doLongPollRequest() {
-        guard let server = self.server else {
+        guard let server = self.server, let key = self.key, let ts = self.ts else {
             print("doLongPollRequest() был вызван до инициализации self.server")
             getServer(blocking: true)
             return
         }
         
-        let response = VKLongPollApi().waitForLongPollUpdates(server: server.server, key: server.key, ts: self.newTs ?? server.ts)
+        let response = longPollApi.waitForLongPollUpdates(server: server, key: key, ts: ts)
         if let response = response {
-            if let ts = response.ts { self.newTs = ts }
+            if let ts = response.ts { self.ts = ts }
             if let error = response.failed {
                 print("LP-сервер прислал ошибку: \(error)")
                 if error != 1 {

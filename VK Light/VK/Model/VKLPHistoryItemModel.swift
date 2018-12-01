@@ -52,8 +52,8 @@ struct VKLPHistoryItemModel : Decodable {
     /* 80 */
     let count: Int?
     
-    /* 61, 62*/
-    let userId: Int?
+    /* 61, 62 */
+    let userId: Int? //8,9
     let chatId: Int?
     
     /* 10, 11, 12 */
@@ -130,14 +130,16 @@ struct VKLPHistoryItemModel : Decodable {
             self.init(kind: kind, messageId: messageId, messageFlags: messageFlags, peerId: peerId, date: date)
             
         case .friendWentOnline:
+            let userId = try container.decode(Int.self)
             let extra = try container.decode(Int.self)
             let lastOnline = try container.decode(Date.self)
-            self.init(kind: kind, extra: extra, lastOnline: lastOnline)
+            self.init(kind: kind, extra: extra, lastOnline: lastOnline, userId: -userId)
             
         case .friendWentOffline:
+            let userId = try container.decode(Int.self)
             let extra = try container.decode(Int.self)
             let lastOnline = try container.decode(Date.self)
-            self.init(kind: kind, extra: extra, lastOnline: lastOnline)
+            self.init(kind: kind, extra: extra, lastOnline: lastOnline, userId: -userId)
             
         case .incomingMessagesRead:
             let peerId = try container.decode(Int.self)

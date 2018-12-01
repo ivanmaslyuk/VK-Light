@@ -27,7 +27,7 @@ class VKLongPollEventHandler {
             case .friendWentOffline:
                 notifyOnlineChanged(userId: update.userId!, status: false)
             case .userIsTyping:
-                notifyUserIsTyping(peerId: update.userId!)
+                notifyUserIsTyping(userId: update.userId!)
             case .userIsTypingInChat:
                 notifyTypingInChat(userId: update.userId!, chatId: update.chatId!)
             default:
@@ -40,8 +40,7 @@ class VKLongPollEventHandler {
     
     
     /******************* НОВЫЕ СООБЩЕНИЯ **********************/
-    typealias newMessageHandler = (VKMessageWrapper) -> Void
-    private var newMessageHandlers : Dictionary<Int, newMessageHandler> = [:]
+    private var newMessageSubscribers: [NewMessagesSubscriber] = []
     
     private func handleNewMessages(ids: [Int]) {
         let vkResponse = VKMessagesApi().getById(ids: ids, extended: true)
@@ -54,20 +53,21 @@ class VKLongPollEventHandler {
         }
     }
     
-    
-    func addNewMessageHandler(peerId: Int, handler: @escaping newMessageHandler) {
-        self.newMessageHandlers[peerId] = handler
+    func addNewMessageSubscriber(subscriber: NewMessagesSubscriber) {
+        newMessageSubscribers.append(subscriber)
+        print("Добавлен подписчик на сообщения: \(newMessageSubscribers.count)")
     }
     
-    func unsubscribeFromNewMessages() {
-        
+    func removeNewMessageSubscriber(subscriber toRemove: NewMessagesSubscriber) {
+        newMessageSubscribers.removeAll(where: {subscriber in return subscriber === toRemove})
+        print("Удален подписчик на сообщения: \(newMessageSubscribers.count)")
     }
     
     private func notifyNewMessage(message: VKMessageWrapper) {
-        for handler in newMessageHandlers {
-            if handler.key == message.message.peerId || handler.key == -1 {
+        for subscriber in newMessageSubscribers {
+            if subscriber.peerWatchedForMessages == message.message.peerId || subscriber.watchesAllMessages {
                 DispatchQueue.main.async {
-                    handler.value(message)
+                    subscriber.newMessageReceived(message: message)
                 }
             }
         }
@@ -76,7 +76,7 @@ class VKLongPollEventHandler {
     
     
     /******************* НАБОР СООБЩЕНИЯ **********************/
-    typealias typingHandler = () -> Void
+    /*typealias typingHandler = () -> Void
     private var typingHandlers: Dictionary<Int, typingHandler> = [:]
     
     func addTypingHandler(userId: Int, handler: @escaping typingHandler) {
@@ -91,12 +91,31 @@ class VKLongPollEventHandler {
                 }
             }
         }
+    }*/
+    private var typingSubscribers: [UserTypingSubscriber] = []
+    
+    func addTypingSubscriber(subscriber: UserTypingSubscriber) {
+        typingSubscribers.append(subscriber)
+    }
+    
+    func removeTypingSubscriber(subscriber toRemove: UserTypingSubscriber) {
+        typingSubscribers.removeAll(where: {subscriber in return subscriber === toRemove})
+    }
+    
+    func notifyUserIsTyping(userId: Int) {
+        for subscriber in typingSubscribers {
+            if subscriber.watchingTypingFromUser() == userId || subscriber.watchesTypingFromAllUsers() {
+                DispatchQueue.main.async {
+                    subscriber.userStartedTyping(userId: userId)
+                }
+            }
+        }
     }
     
     
     
     /******************* НАБОР СООБЩЕНИЯ В ЧАТЕ **********************/
-    typealias typingInChatHandler = (Int) -> Void
+    /*typealias typingInChatHandler = (Int) -> Void
     private var typingInChatHandlers: Dictionary<Int, typingInChatHandler> = [:]
     
     func addTypingInChatHandler(chatId: Int, handler: @escaping typingInChatHandler) {
@@ -111,23 +130,47 @@ class VKLongPollEventHandler {
                 }
             }
         }
+    }*/
+    private var typingInChatSubscribers: Array<TypingInChatSubscriber> = []
+    
+    func addTypingInChatSubscriber(subscriber: TypingInChatSubscriber) {
+        typingInChatSubscribers.append(subscriber)
+    }
+    
+    func removeTypingInChatSubscriber(subscriber toRemove: TypingInChatSubscriber) {
+        typingInChatSubscribers.removeAll(where: {sub in return sub === toRemove})
+    }
+    
+    private func notifyTypingInChat(userId: Int, chatId: Int) {
+        for subscriber in typingInChatSubscribers {
+            if subscriber.watchingTypingInChat() == chatId || subscriber.watchesTypingFromAllChats() {
+                DispatchQueue.main.async {
+                    subscriber.userStartedTypingInChat(userId: userId, chatId: chatId)
+                }
+            }
+        }
     }
     
     
     
     /******************* ИЗМЕНЕНИЕ СТАТУСА ОНЛАЙН **********************/
-    typealias onlineHandler = (Bool) -> Void
-    private var onlineHandlers: Dictionary<[Int], onlineHandler> = [:]
+    private var onlineSubscibers: [OnlinesSubscriber] = []
     
-    func addOnlineHandler(for user: [Int], handler: @escaping onlineHandler) {
-        onlineHandlers[user] = handler
+    func addOnlinesSubscriber(subscriber: OnlinesSubscriber) {
+        onlineSubscibers.append(subscriber)
+        print("Добавлен подписчик на онлайны: \(onlineSubscibers.count)")
+    }
+    
+    func removeOnlinesSubscriber(subscriber toRemove: OnlinesSubscriber) {
+        onlineSubscibers.removeAll(where: {subscriber in return subscriber === toRemove})
+        print("Удален подписчик на онлайны: \(onlineSubscibers.count)")
     }
     
     private func notifyOnlineChanged(userId: Int, status: Bool) {
-        for handler in onlineHandlers {
-            if handler.key.contains(userId) || handler.key.contains(-1) {
+        for subscriber in onlineSubscibers {
+            if subscriber.watchedOnlines.contains(userId) || subscriber.watchesAllOnlines {
                 DispatchQueue.main.async {
-                    handler.value(status)
+                    subscriber.onlineStatusChanged(for: userId, status: status)
                 }
             }
         }

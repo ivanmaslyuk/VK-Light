@@ -19,6 +19,10 @@
 		65052630219D6CB800EF8BAA /* VKHttpRequestLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6505262F219D6CB800EF8BAA /* VKHttpRequestLayer.swift */; };
 		65052634219DB99000EF8BAA /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65052633219DB99000EF8BAA /* ConversationsViewController.swift */; };
 		6506EC9F21B277240033859A /* VKLongPollEventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6506EC9E21B277240033859A /* VKLongPollEventHandler.swift */; };
+		6506ECA321B29FBF0033859A /* NewMessagesSubscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6506ECA221B29FBF0033859A /* NewMessagesSubscriber.swift */; };
+		6506ECA521B2A13C0033859A /* OnlinesSubscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6506ECA421B2A13C0033859A /* OnlinesSubscriber.swift */; };
+		6506ECA721B2B8BD0033859A /* UserTypingSubscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6506ECA621B2B8BD0033859A /* UserTypingSubscriber.swift */; };
+		6506ECA921B2BA2C0033859A /* TypingInChatSubscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6506ECA821B2BA2C0033859A /* TypingInChatSubscriber.swift */; };
 		650805CF219E98AD0029519A /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650805CE219E98AD0029519A /* RootViewController.swift */; };
 		650805D1219EA4730029519A /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650805D0219EA4730029519A /* ConversationCell.swift */; };
 		650856E321A9578500DE6ECB /* DialogsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650856E221A9578500DE6ECB /* DialogsHelper.swift */; };
@@ -60,6 +64,10 @@
 		6505262F219D6CB800EF8BAA /* VKHttpRequestLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKHttpRequestLayer.swift; sourceTree = "<group>"; };
 		65052633219DB99000EF8BAA /* ConversationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
 		6506EC9E21B277240033859A /* VKLongPollEventHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLongPollEventHandler.swift; sourceTree = "<group>"; };
+		6506ECA221B29FBF0033859A /* NewMessagesSubscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessagesSubscriber.swift; sourceTree = "<group>"; };
+		6506ECA421B2A13C0033859A /* OnlinesSubscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlinesSubscriber.swift; sourceTree = "<group>"; };
+		6506ECA621B2B8BD0033859A /* UserTypingSubscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTypingSubscriber.swift; sourceTree = "<group>"; };
+		6506ECA821B2BA2C0033859A /* TypingInChatSubscriber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypingInChatSubscriber.swift; sourceTree = "<group>"; };
 		650805CE219E98AD0029519A /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		650805D0219EA4730029519A /* ConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		650856E221A9578500DE6ECB /* DialogsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogsHelper.swift; sourceTree = "<group>"; };
@@ -127,6 +135,27 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		6506ECA021B29F220033859A /* LongPoll */ = {
+			isa = PBXGroup;
+			children = (
+				6506ECA121B29F800033859A /* Subscribers */,
+				6506EC9E21B277240033859A /* VKLongPollEventHandler.swift */,
+				6515E5BF21A4484500D22CEA /* VKLongPoller.swift */,
+			);
+			path = LongPoll;
+			sourceTree = "<group>";
+		};
+		6506ECA121B29F800033859A /* Subscribers */ = {
+			isa = PBXGroup;
+			children = (
+				6506ECA221B29FBF0033859A /* NewMessagesSubscriber.swift */,
+				6506ECA421B2A13C0033859A /* OnlinesSubscriber.swift */,
+				6506ECA621B2B8BD0033859A /* UserTypingSubscriber.swift */,
+				6506ECA821B2BA2C0033859A /* TypingInChatSubscriber.swift */,
+			);
+			path = Subscribers;
+			sourceTree = "<group>";
+		};
 		650C95AF21A2C74E00D98867 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -142,10 +171,8 @@
 			isa = PBXGroup;
 			children = (
 				650C95B721A2D95700D98867 /* MessageHelper.swift */,
-				6515E5BF21A4484500D22CEA /* VKLongPoller.swift */,
 				6550285221A8818B001A0420 /* DynamicDataContainer.swift */,
 				650856E221A9578500DE6ECB /* DialogsHelper.swift */,
-				6506EC9E21B277240033859A /* VKLongPollEventHandler.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -207,6 +234,7 @@
 		65E6F508219C8C4E006BC0A8 /* VK Light */ = {
 			isa = PBXGroup;
 			children = (
+				6506ECA021B29F220033859A /* LongPoll */,
 				6551BED321AF063400C568C9 /* Views */,
 				650C95B621A2D90000D98867 /* Helpers */,
 				650C95AF21A2C74E00D98867 /* Model */,
@@ -376,7 +404,9 @@
 				6515E5C021A4484500D22CEA /* VKLongPoller.swift in Sources */,
 				65052630219D6CB800EF8BAA /* VKHttpRequestLayer.swift in Sources */,
 				65052634219DB99000EF8BAA /* ConversationsViewController.swift in Sources */,
+				6506ECA721B2B8BD0033859A /* UserTypingSubscriber.swift in Sources */,
 				650856E321A9578500DE6ECB /* DialogsHelper.swift in Sources */,
+				6506ECA921B2BA2C0033859A /* TypingInChatSubscriber.swift in Sources */,
 				6549FAE921AAA11300E1A109 /* VKGetLongPollHistoryResponse.swift in Sources */,
 				6506EC9F21B277240033859A /* VKLongPollEventHandler.swift in Sources */,
 				650C95B121A2C77B00D98867 /* Message.swift in Sources */,
@@ -399,6 +429,7 @@
 				65052628219D61AE00EF8BAA /* VKMessageModel.swift in Sources */,
 				6502082921A1C6E600157572 /* MessageCell.swift in Sources */,
 				6515E5BA21A42C6700D22CEA /* VKLPResponse.swift in Sources */,
+				6506ECA321B29FBF0033859A /* NewMessagesSubscriber.swift in Sources */,
 				6515E5BC21A4342600D22CEA /* VKLPServerModel.swift in Sources */,
 				6524A450219D35B90051D73C /* VKConversationModel.swift in Sources */,
 				6549FAE721AA8E2400E1A109 /* VKMessageWrapper.swift in Sources */,
@@ -406,6 +437,7 @@
 				65E6F50A219C8C4E006BC0A8 /* AppDelegate.swift in Sources */,
 				65E6F51F219CB7CD006BC0A8 /* VKResponse.swift in Sources */,
 				650C95B321A2D46B00D98867 /* VKAttachmentModel.swift in Sources */,
+				6506ECA521B2A13C0033859A /* OnlinesSubscriber.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

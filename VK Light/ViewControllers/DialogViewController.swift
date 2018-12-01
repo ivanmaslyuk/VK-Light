@@ -16,7 +16,7 @@ class DialogViewController: UIViewController {
     var group : VKGroupModel?
     let messageHelper = MessageHelper()
     var messages : [VKMessageWrapper] = []
-    let longPoller = VKLongPollEventHandler.shared
+    let lpEventHandler = VKLongPollEventHandler.shared
     var isCurrentlyLoadingMessages = false {
         didSet(new) {
             if new {
@@ -82,7 +82,11 @@ class DialogViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         loadMessages()
-        longPoller.addNewMessageHandler(handler: handleNewMessage)
+        lpEventHandler.addNewMessageSubscriber(subscriber: self)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        lpEventHandler.removeNewMessageSubscriber(subscriber: self)
     }
     
     func setTitle() {
@@ -103,10 +107,10 @@ class DialogViewController: UIViewController {
     }
     
     func handleNewMessage(message: VKMessageWrapper) {
-        if message.message.peerId == dialogInfo?.conversation.peer.id {
+        //if message.message.peerId == dialogInfo?.conversation.peer.id {
             self.messages.insert(message, at: 0)
             tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .top)
-        }
+        //}
     }
     
     func loadMessages() {
@@ -155,4 +159,20 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+}
+
+extension DialogViewController : NewMessagesSubscriber {
+    func newMessageReceived(message: VKMessageWrapper) {
+        handleNewMessage(message: message)
+    }
+    
+    var peerWatchedForMessages: Int {
+        get {
+            return dialogInfo!.conversation.peer.id
+        }
+    }
+    
+    var watchesAllMessages: Bool {
+        get { return false }
+    }
 }
