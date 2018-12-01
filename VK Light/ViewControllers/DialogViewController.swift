@@ -16,7 +16,7 @@ class DialogViewController: UIViewController {
     var group : VKGroupModel?
     let messageHelper = MessageHelper()
     var messages : [VKMessageWrapper] = []
-    let longPoller = VKLongPoller.shared
+    let longPoller = VKLongPollEventHandler.shared
     var isCurrentlyLoadingMessages = false {
         didSet(new) {
             if new {

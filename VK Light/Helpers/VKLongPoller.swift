@@ -13,7 +13,8 @@ class VKLongPoller {
     static var shared = VKLongPoller()
     private var server: VKLPServerModel?
     private var newTs: Int?
-    private var newMessageHandlers : [(VKMessageWrapper) -> Void] = []
+    //private var newMessageHandlers : [(VKMessageWrapper) -> Void] = []
+    private var updateHandler = VKLongPollEventHandler.shared
     
     
     private init(){
@@ -40,10 +41,12 @@ class VKLongPoller {
     }
     
     
-    private func getServer(blocking: Bool, finished: @escaping () -> Void) {
+    private func getServer(blocking: Bool, finished: @escaping () -> Void = {}) {
         let sema = DispatchSemaphore(value: 0)
         DispatchQueue.global().async {
-            self.server = VKMessagesApi().getLongPollServer()?.response
+            let response = VKMessagesApi().getLongPollServer()?.response
+            print(response as Any)
+            self.server = response
             DispatchQueue.main.async {
                 print("получен LP-сервер")
                 if blocking { sema.signal() }
@@ -57,7 +60,7 @@ class VKLongPoller {
     func doLongPollRequest() {
         guard let server = self.server else {
             print("doLongPollRequest() был вызван до инициализации self.server")
-            getServer(blocking: true) { return }
+            getServer(blocking: true)
             return
         }
         
@@ -67,11 +70,12 @@ class VKLongPoller {
             if let error = response.failed {
                 print("LP-сервер прислал ошибку: \(error)")
                 if error != 1 {
-                    getServer(blocking: true, finished: {})
+                    getServer(blocking: true)
                 }
             }
             if let updates = response.updates {
-                handleUpdates(updates: updates)
+                //handleUpdates(updates: updates)
+                updateHandler.handle(updates: updates)
             }
         } else {
             print("Полученный ответ от LP-сервера не является корректным.")
@@ -79,7 +83,7 @@ class VKLongPoller {
     }
     
     
-    private func handleUpdates(updates: [VKLPHistoryItemModel]) {
+    /*private func handleUpdates(updates: [VKLPHistoryItemModel]) {
         var messageIds: [Int] = []
         for update in updates {
             print("LongPoller: Произошло событие \(update.kind) (\(update.kind.rawValue))")
@@ -132,7 +136,7 @@ class VKLongPoller {
                 handler(message)
             }
         }
-    }
+    }*/
     
     
     
