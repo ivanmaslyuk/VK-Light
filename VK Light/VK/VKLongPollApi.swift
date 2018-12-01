@@ -23,8 +23,8 @@ class VKLongPollApi {
                 print(error)
             }
             if let data = data {
-                print("получен ответ от LP-сервера")
-                print(String(data: data, encoding: .utf8) ?? "no data from lp server")
+                //print("получен ответ от LP-сервера")
+                //print(String(data: data, encoding: .utf8) ?? "no data from lp server")
                 vkResponse = self.decodeResponse(data: data)
             }
             sema.signal()

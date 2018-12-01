@@ -42,7 +42,7 @@ class DialogViewController: UIViewController {
         super.viewDidLoad()
         
         setTitle()
-        addContentInsetsToTableView()
+        //addContentInsetsToTableView()
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -66,7 +66,7 @@ class DialogViewController: UIViewController {
     
     private func pushScrollBarToRightSide(size: CGSize? = nil) {
         let frameWidth: CGFloat = size?.width ?? tableView.frame.size.width
-        tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: UIApplication.shared.statusBarFrame.size.height + 44.0, right: frameWidth - 8.0) // передвигаем скролл-индикатор вправо
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: frameWidth - 8.0) // передвигаем скролл-индикатор вправо
         
     }
     

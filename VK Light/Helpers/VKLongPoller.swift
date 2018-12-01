@@ -12,10 +12,9 @@ class VKLongPoller {
     
     static var shared = VKLongPoller()
     private var server: VKLPServerModel?
-    //private var newPts: Int?
     private var newTs: Int?
     private var newMessageHandlers : [(VKMessageWrapper) -> Void] = []
-    //private let userDefaults = UserDefaults.standard
+    
     
     private init(){
         
@@ -24,6 +23,20 @@ class VKLongPoller {
     
     func prepareAnd(finished: @escaping () -> Void) {
         getServer(blocking: false, finished: finished)
+    }
+    
+    
+    func startLongPolling() {
+        guard let _ = self.server else {
+            print("Невозможно начать LongPoll-запрос, так как self.server не инициализирован.")
+            return
+        }
+        
+        DispatchQueue.global().async {
+            while (true) {
+                self.doLongPollRequest()
+            }
+        }
     }
     
     
@@ -41,61 +54,6 @@ class VKLongPoller {
     }
     
     
-    func startLongPolling() {
-        guard let _ = self.server else {
-            print("Невозможно начать LongPoll-запрос, так как self.server не инициализирован.")
-            return
-        }
-        
-        DispatchQueue.global().async {
-            while (true) {
-                self.doLongPollRequest()
-            }
-        }
-    }
-    
-    /*func doLongPollRequest() {
-        guard let server = self.server else {
-            print("doLongPollRequest() был вызван до инициализации self.server")
-            getServer(blocking: true) { return }
-            return
-        }
-        
-        let request = URL(string: "https://\(server.server)?act=a_check&key=\(server.key)&ts=\(self.ts ?? server.ts)&wait=25&mode=2&version=3")!
-        
-        let sema = DispatchSemaphore(value: 0)
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                print("ошибка при попытке получить ответ от LP-сервера")
-                print(error)
-            }
-            if let data = data {
-                print("получен ответ от LP-сервера")
-                print(String(data: data, encoding: .utf8) ?? "no data from lp server")
-                let response = self.decodeResponse(data: data)
-                self.handleLPResponse(response: response)
-            }
-            sema.signal()
-        }.resume()
-        sema.wait()
-    }*/
-    
-    /*func doLongPollRequest() {
-        guard let server = self.server else {
-            print("doLongPollRequest() был вызван до инициализации self.server")
-            getServer(blocking: true) { return }
-            return
-        }
-        
-        let response = VKMessagesApi().getLongPollHistory(ts: server.ts, pts: self.newPts ?? server.pts, onlines: true, fields: [])
-        if let response = response?.response {
-            self.handleLPResponse(response: response)
-        } else {
-            print("Полученный ответ от LP-сервера не является корректным.")
-        }
-        usleep(300000)
-    }*/
-    
     func doLongPollRequest() {
         guard let server = self.server else {
             print("doLongPollRequest() был вызван до инициализации self.server")
@@ -108,6 +66,9 @@ class VKLongPoller {
             if let ts = response.ts { self.newTs = ts }
             if let error = response.failed {
                 print("LP-сервер прислал ошибку: \(error)")
+                if error != 1 {
+                    getServer(blocking: true, finished: {})
+                }
             }
             if let updates = response.updates {
                 handleUpdates(updates: updates)
@@ -117,50 +78,11 @@ class VKLongPoller {
         }
     }
     
-    /*private func handleLPResponse(response: VKLPResponse?) {
-        if let ts = response?.ts {
-            self.ts = ts
-            if let errorCode = response?.failed {
-                if errorCode != 1 {
-                    self.getServer(blocking: true) { return }
-                }
-            }
-            if let updates = response?.updates {
-                self.handleUpdates(updates: updates)
-            }
-        }
-        else {
-            self.getServer(blocking: true) { return }
-        }
-    }*/
-    
-    
-    /*private func handleLPResponse(response: VKLPResponse) {
-        if let ts = response.ts { self.newTs = ts }
-        guard let updates = response.updates else {return}
-        
-        for update in updates {
-            print("Произошло событие: ", update.kind)
-            
-            /*var relatedMessage: VKMessageModel? = nil
-            var relatedProfile: VKProfileModel? = nil
-            var relatedGroup: VKGroupModel? = nil
-            if let messageId = update.messageId {
-                relatedMessage = response.findMessageById(id: messageId)
-            }
-            if let peerId = update.peerId {
-                relatedProfile = response.findProfileById(id: peerId)
-                relatedGroup = response.findGroupById(id: -peerId)
-            }*/
-            
-            handleUpdate(update: update)
-        }
-    }*/
     
     private func handleUpdates(updates: [VKLPHistoryItemModel]) {
         var messageIds: [Int] = []
         for update in updates {
-            print("Произошло событие \(update.kind)")
+            print("LongPoller: Произошло событие \(update.kind) (\(update.kind.rawValue))")
             switch update.kind {
             case .newMessage:
                 messageIds.append(update.messageId!)
@@ -168,8 +90,11 @@ class VKLongPoller {
                 continue
             }
         }
-        handleNewMessages(ids: messageIds)
+        if !messageIds.isEmpty { handleNewMessages(ids: messageIds) }
     }
+    
+    
+    
     
     private func handleNewMessages(ids: [Int]) {
         let vkResponse = VKMessagesApi().getById(ids: ids, extended: true)
@@ -183,43 +108,17 @@ class VKLongPoller {
     }
     
     
-    /*private func handleUpdate(update: VKLPHistoryItemModel/*, relatedMessage: VKMessageModel?, relatedProfile: VKProfileModel?, relatedGroup: VKGroupModel?*/) {
-        switch update.kind {
-        case .newMessage:
-            guard let message = relatedMessage else {return}
-            let wrapped = VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup)
-            notifyNewMessage(message: wrapped)
-        default:
-            return
-        }
-    }*/
-    
-    
-    /*func decodeResponse(data: Data) -> VKLPResponse? {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .secondsSince1970
+    private func handleUserIsTyping(peerId: Int) {
         
-        do {
-            return try decoder.decode(VKLPResponse.self, from: data)
-        }
-        catch let error {
-            print(error)
-            return nil
-        }
-    }*/
+    }
     
     
-    /*func handleUpdates(updates: [VKLPHistoryItemModel]) {
-        for update in updates {
-            switch update.kind {
-            case .newMessage:
-                notifyNewMessage(message: Message(peerId: update.peerId!, text: update.messageText ?? "", sticker: nil, senderName: "Неизвестно", isFromMe: update.messageFlags!.isOutbox))
-            default:
-                continue
-            }
-        }
-    }*/
+    private func handleUserIsTypingInChat(userId: Int, chatId: Int) {
+        
+    }
+    
+    
+    
     
     
     func addNewMessageHandler(handler: @escaping (_ message: VKMessageWrapper) -> Void) {

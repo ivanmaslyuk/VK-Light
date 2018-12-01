@@ -18,16 +18,15 @@ class VKHttpRequestLayer {
     }
     
     func getResponse<T : Decodable>(methodName: String, parameters: Dictionary<String, String>) -> VKResponse<T>? {
+        print("Отправляю запрос \(methodName)")
         
-        var paramsAsString = ""
-        for key in parameters.keys {
-            paramsAsString.append("&" + key + "=" + parameters[key]!)
-        }
+        var params = parameters
+        params["access_token"] = accessToken
+        params["v"] = version
+        let paramsString = params.map{ "\($0)=\($1)" }.joined(separator: "&")
         
-        let url = URL(string: "https://api.vk.com/method/\(methodName)?\(paramsAsString)&access_token=\(accessToken)&v=\(version)")!
-        if methodName != "messages.getLongPollHistory" {
-            print(url)
-        }
+        let url = URL(string: "https://api.vk.com/method/\(methodName)?\(paramsString)")!
+        //print(url)
         
         return obtainResponse(url: url)
     }

@@ -60,7 +60,7 @@ class MessageCell: UITableViewCell {
         
         
         messageCard.topAnchor.constraint(equalTo: self.topAnchor, constant: 2).isActive = true
-        messageCard.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 2).isActive = true
+        //messageCard.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 2).isActive = true
         //messageCard.widthAnchor.constraint(equalToConstant: 250).isActive = true
         messageCard.widthAnchor.constraint(lessThanOrEqualToConstant: 350).isActive = true
         messageCard.widthAnchor.constraint(equalTo: messageText.widthAnchor, constant: 6).isActive = true
@@ -68,8 +68,8 @@ class MessageCell: UITableViewCell {
         
         messageText.topAnchor.constraint(equalTo: messageCard.topAnchor).isActive = true
         messageText.bottomAnchor.constraint(equalTo: messageCard.bottomAnchor).isActive = true
-        messageText.rightAnchor.constraint(equalTo: messageCard.rightAnchor, constant: 3).isActive = true
-        messageText.leftAnchor.constraint(equalTo: messageCard.leftAnchor, constant: 3).isActive = true
+        //messageText.rightAnchor.constraint(equalTo: messageCard.rightAnchor, constant: 3).isActive = true
+        //messageText.leftAnchor.constraint(equalTo: messageCard.leftAnchor, constant: 3).isActive = true
         
         self.rightConstraint = messageCard.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8)
         self.leftConstraint = messageCard.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8)
@@ -90,11 +90,11 @@ class MessageCell: UITableViewCell {
         guard let message = message else {return}
         
         if message.message.out == 1 {
-            clipToRight()
+            //clipToRight()
             messageCard.backgroundColor = UIColor(red: 10.0/255.0, green: 115.0/255.0, blue: 255.0/255.0, alpha: 1)
             messageText.textColor = UIColor.white
         } else {
-            clipToLeft()
+            //clipToLeft()
             messageCard.backgroundColor = UIColor(red: 229.0/255.0, green: 228.0/255.0, blue: 234.0/255.0, alpha: 1)
             messageText.textColor = UIColor.black
         }
