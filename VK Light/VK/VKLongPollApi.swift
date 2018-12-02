@@ -12,7 +12,7 @@ class VKLongPollApi {
     
     
     func waitForLongPollUpdates(server: URL, key: String, ts: Int) -> VKLPResponse? {
-        let request = URL(string: "https://\(server)?act=a_check&key=\(key)&ts=\(ts)&wait=25&mode=2&version=3")!
+        let request = URL(string: "https://\(server)?act=a_check&key=\(key)&ts=\(ts)&wait=25&mode=72&version=3")!
         
         var vkResponse: VKLPResponse? = nil
         

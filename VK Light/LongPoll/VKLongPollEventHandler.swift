@@ -17,25 +17,41 @@ class VKLongPollEventHandler {
     
     func handle(updates: [VKLPHistoryItemModel]) {
         var messageIds: [Int] = []
+        var editedMsgIds: [Int] = []
         for update in updates {
             print("LongPoller: Произошло событие \(update.kind) (\(update.kind.rawValue))")
             switch update.kind {
+            case .messageFlagsSet, .messageFlagsReset, .messageFlagsChanged:
+                notifyMessageFlagsChanged(peerId: update.peerId!, messageId: update.messageId!, flags: update.messageFlags!)
             case .newMessage:
                 messageIds.append(update.messageId!)
+            case .messageEdited:
+                editedMsgIds.append(update.messageId!)
             case .friendWentOnline:
                 notifyOnlineChanged(userId: update.userId!, status: true)
             case .friendWentOffline:
                 notifyOnlineChanged(userId: update.userId!, status: false)
+            case .incomingMessagesRead:
+                notifyMessagesRead(peerId: update.peerId!, localId: update.localId!, sent: false)
+            case .sentMessagesRead:
+                notifyMessagesRead(peerId: update.peerId!, localId: update.localId!, sent: true)
             case .userIsTyping:
                 notifyUserIsTyping(userId: update.userId!)
+            case .counterInLeftMenuChanged:
+                notifyMenuCounterChanged(newCount: update.count!)
             case .userIsTypingInChat:
                 notifyTypingInChat(userId: update.userId!, chatId: update.chatId!)
+            case .notificationPreferencesChanged:
+                notifyNotificationSettingsChanged(peerId: update.peerId!, soundEnabled: update.soundEnabled!, disabledUntil: update.disabledUntil!)
             default:
                 continue
             }
         }
         if !messageIds.isEmpty { handleNewMessages(ids: messageIds) }
+        if !editedMsgIds.isEmpty { handleEditedMessages(ids: editedMsgIds) }
     }
+    
+    
     
     
     
@@ -76,22 +92,6 @@ class VKLongPollEventHandler {
     
     
     /******************* НАБОР СООБЩЕНИЯ **********************/
-    /*typealias typingHandler = () -> Void
-    private var typingHandlers: Dictionary<Int, typingHandler> = [:]
-    
-    func addTypingHandler(userId: Int, handler: @escaping typingHandler) {
-        typingHandlers[userId] = handler
-    }
-    
-    private func notifyUserIsTyping(peerId: Int) {
-        for handler in typingHandlers {
-            if handler.key == peerId || handler.key == -1 {
-                DispatchQueue.main.async {
-                    handler.value()
-                }
-            }
-        }
-    }*/
     private var typingSubscribers: [UserTypingSubscriber] = []
     
     func addTypingSubscriber(subscriber: UserTypingSubscriber) {
@@ -115,22 +115,6 @@ class VKLongPollEventHandler {
     
     
     /******************* НАБОР СООБЩЕНИЯ В ЧАТЕ **********************/
-    /*typealias typingInChatHandler = (Int) -> Void
-    private var typingInChatHandlers: Dictionary<Int, typingInChatHandler> = [:]
-    
-    func addTypingInChatHandler(chatId: Int, handler: @escaping typingInChatHandler) {
-        typingInChatHandlers[chatId] = handler
-    }
-    
-    private func notifyTypingInChat(userId: Int, chatId: Int) {
-        for handler in typingInChatHandlers {
-            if handler.key == chatId || handler.key == -1 {
-                DispatchQueue.main.async {
-                    handler.value(userId)
-                }
-            }
-        }
-    }*/
     private var typingInChatSubscribers: Array<TypingInChatSubscriber> = []
     
     func addTypingInChatSubscriber(subscriber: TypingInChatSubscriber) {
@@ -175,5 +159,132 @@ class VKLongPollEventHandler {
             }
         }
     }
+    
+    
+    
+    /******************* РЕДАКТИРОВАНИЕ СООБЩЕНИЯ **********************/
+    private var messageEditSubscribers: [MessageEditedSubscriber] = []
+    
+    func addMessageEditedSubscriber(subscriber: MessageEditedSubscriber) {
+        messageEditSubscribers.append(subscriber)
+    }
+    
+    func removeMessageEditedSubscriber(subscriber toRemove: MessageEditedSubscriber) {
+        messageEditSubscribers.removeAll(where: {$0 === toRemove})
+    }
+    
+    private func handleEditedMessages(ids: [Int]) {
+        let vkResponse = VKMessagesApi().getById(ids: ids, extended: true)
+        guard let response = vkResponse?.response else {return}
+        
+        for message in response.items {
+            let relatedProfile = response.findProfileById(id: message.peerId!)
+            let relatedGroup = response.findGroupById(id: -message.peerId!)
+            notifyMessageEdited(message: VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup))
+        }
+    }
+    
+    private func notifyMessageEdited(message: VKMessageWrapper) {
+        for sub in messageEditSubscribers {
+            if sub.watchesMessageEditsForPeer() == message.message.peerId || sub.watchesMessageEditsForAllPeers() {
+                DispatchQueue.main.async {
+                    sub.messageWasEdited(editedMessage: message)
+                }
+            }
+        }
+    }
+    
+    
+    
+    /******************* ПРОЧТЕНИЕ ВХОДЯЩИХ/ИСХОДЯЩИХ СООБЩЕНИЙ **********************/
+    private var messagesReadSubscribers: [MessagesReadSubscriber] = []
+    
+    func addMessagesReadSubscriber(subscriber: MessagesReadSubscriber) {
+        messagesReadSubscribers.append(subscriber)
+    }
+    
+    func removeMessagesReadSubscriber(subscriber: MessagesReadSubscriber) {
+        messagesReadSubscribers.removeAll(where: {$0 === subscriber})
+    }
+    
+    private func notifyMessagesRead(peerId: Int, localId: Int, sent: Bool) {
+        for sub in messagesReadSubscribers {
+            if sub.watchesMessagesReadForPeer() == peerId || sub.watchesMessagesReadForAllPeers() {
+                DispatchQueue.main.async {
+                    sub.messagesRead(peerId: peerId, localId: localId, sent: sent)
+                }
+            }
+        }
+    }
+    
+    
+    
+    /******************* ИЗМЕНЕНИЕ СЧЕТЧИКА В ЛЕВОМ МЕНЮ **********************/
+    private var menuCounterSubscribers: [MenuCounterSubscriber] = []
+    
+    func addMenuCounterSubscriber(subscriber: MenuCounterSubscriber) {
+        menuCounterSubscribers.append(subscriber)
+    }
+    
+    func removeMenuCounterSubscriber(subscriber: MenuCounterSubscriber) {
+        menuCounterSubscribers.removeAll(where: {$0 === subscriber})
+    }
+    
+    private func notifyMenuCounterChanged(newCount: Int) {
+        for sub in menuCounterSubscribers {
+            DispatchQueue.main.async {
+                sub.counterChanged(newCount: newCount)
+            }
+        }
+    }
+    
+    
+    
+    /******************* ИЗМЕНИЛИСЬ ФЛАГИ СООБЩЕНИЯ **********************/
+    private var messageFlagsSubscribers: [MessageFlagsSubscriber] = []
+    
+    func addMessageFlagsSubscriber(subscriber: MessageFlagsSubscriber) {
+        messageFlagsSubscribers.append(subscriber)
+    }
+    
+    func removeMessageFlagsSubscriber(subscriber: MessageFlagsSubscriber) {
+        messageFlagsSubscribers.removeAll(where: {$0 === subscriber})
+    }
+    
+    private func notifyMessageFlagsChanged(peerId: Int, messageId: Int, flags: VKLPMessageFlags) {
+        for sub in messageFlagsSubscribers {
+            if sub.watchesMessageFlagsForPeer() == peerId || sub.watchesMessageFlagsForAllPeers() {
+                DispatchQueue.main.async {
+                    sub.messageFlagsChanged(peerId: peerId, messageId: messageId, flags: flags)
+                }
+            }
+        }
+    }
+    
+    
+    
+    /******************* ИЗМЕНИЛИСЬ НАСТРОЙКИ ЗВУКОВЫХ ОПОВЕЩЕНИЙ **********************/
+    private var notificationSettingsSubscribers: [NotificationSettingsSubscriber] = []
+    
+    func addNotificationSettingsSubscriber(subscriber: NotificationSettingsSubscriber) {
+        notificationSettingsSubscribers.append(subscriber)
+    }
+    
+    func removeNotificationSettingsSubscriber(subscriber: NotificationSettingsSubscriber) {
+        notificationSettingsSubscribers.removeAll(where: {$0 === subscriber})
+    }
+    
+    private func notifyNotificationSettingsChanged(peerId: Int, soundEnabled: Bool, disabledUntil: Int) {
+        for sub in notificationSettingsSubscribers {
+            if sub.watchesNotificationSettingsForPeer() == peerId || sub.watchesNotificationSettingsForAllPeers() {
+                DispatchQueue.main.async {
+                    sub.notificationSettingsChanged(peerId: peerId, soundEnabled: soundEnabled, disabledUntil: disabledUntil, disabledForever: disabledUntil == -1)
+                }
+            }
+        }
+    }
+    
+    
+    
     
 }

@@ -104,17 +104,20 @@ struct VKLPHistoryItemModel : Decodable {
         case .messageFlagsChanged:
             let messageId = try container.decode(Int.self)
             let messageFlags = try container.decode(VKLPMessageFlags.self)
-            self.init(kind: kind, messageId: messageId, messageFlags: messageFlags)
+            let peerId = try container.decode(Int.self)
+            self.init(kind: kind, messageId: messageId, messageFlags: messageFlags, peerId: peerId)
             
         case .messageFlagsSet:
             let messageId = try container.decode(Int.self)
             let messageFlags = try container.decode(VKLPMessageFlags.self)
-            self.init(kind: kind, messageId: messageId, messageFlags: messageFlags)
+            let peerId = try container.decode(Int.self)
+            self.init(kind: kind, messageId: messageId, messageFlags: messageFlags, peerId: peerId)
             
         case .messageFlagsReset:
             let messageId = try container.decode(Int.self)
             let messageFlags = try container.decode(VKLPMessageFlags.self)
-            self.init(kind: kind, messageId: messageId, messageFlags: messageFlags)
+            let peerId = try container.decode(Int.self)
+            self.init(kind: kind, messageId: messageId, messageFlags: messageFlags, peerId: peerId)
             
         case .newMessage:
             let messageId = try container.decode(Int.self)
@@ -178,13 +181,14 @@ struct VKLPHistoryItemModel : Decodable {
             
         case .chatPropertiesModified: //51
             let chatId = try container.decode(Int.self)
-            let causedBySelf = try container.decode(Int.self)
-            self.init(kind: kind, chatId: chatId, causedBySelf: causedBySelf == 1)
+            //let causedBySelf = try container.decode(Int.self) // вк на самом деле это не возвращает почему-то
+            self.init(kind: kind, chatId: chatId/*, causedBySelf: causedBySelf == 1*/)
             
         case .chatInfoChanged: //52
             let type = try container.decode(VKLPChatEventType.self)
+            let peerId = try container.decode(Int.self)
             let payload = try container.decode(Int.self)
-            self.init(kind: kind, dialogEventType: type, dialogEventPayload: payload)
+            self.init(kind: kind, peerId: peerId, dialogEventType: type, dialogEventPayload: payload)
             
         case .userIsTyping: //61
             let userId = try container.decode(Int.self)

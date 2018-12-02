@@ -11,7 +11,7 @@ import Foundation
 struct VKMessageModel : Decodable {
     let id : Int?
     let date : Date
-    let peerId : Int?
+    let peerId : Int? // не передается если сообщение пришло в качестве последнего в диалоге
     let fromId : Int
     let text : String
     let randomId : Int?
