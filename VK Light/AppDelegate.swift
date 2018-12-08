@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    let notificationDelegate = NotificationDebuggerDelegate()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -22,8 +24,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let poller = VKLongPoller.shared
             poller.prepareAnd { poller.startLongPolling() }
         }
-        
+        authorizeNC()
         return true
+    }
+    
+    func authorizeNC() {
+        let center = UNUserNotificationCenter.current()
+        center.delegate = notificationDelegate
+        center.requestAuthorization(options: [.sound, .alert], completionHandler: { (granted, error) in
+            if let error = error {
+                print(error)
+            }
+        })
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

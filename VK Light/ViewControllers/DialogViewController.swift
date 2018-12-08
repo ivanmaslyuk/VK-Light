@@ -7,7 +7,6 @@
 //
 
 import UIKit
-//import ReverseExtension
 
 class DialogViewController: UIViewController {
 
@@ -83,10 +82,12 @@ class DialogViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         loadMessages()
         lpEventHandler.addNewMessageSubscriber(subscriber: self)
+        lpEventHandler.addTypingSubscriber(subscriber: self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         lpEventHandler.removeNewMessageSubscriber(subscriber: self)
+        lpEventHandler.removeTypingSubscriber(subscriber: self)
     }
     
     func setTitle() {
@@ -107,18 +108,22 @@ class DialogViewController: UIViewController {
     }
     
     func handleNewMessage(message: VKMessageWrapper) {
-        //if message.message.peerId == dialogInfo?.conversation.peer.id {
-            self.messages.insert(message, at: 0)
-            tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .top)
-        //}
+        self.messages.insert(message, at: 0)
+        tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .top)
     }
     
     func loadMessages() {
-        DispatchQueue.global().async {
+        /*DispatchQueue.global().async {
             self.isCurrentlyLoadingMessages = true
             if let info = self.dialogInfo, let last = self.dialogInfo?.lastMessage {
                 let offset = self.messages.count
-                guard let new = self.messageHelper.getMessages(peerId: info.conversation.peer.id, startMessageId: last.id!, offset: offset, count: 30) else {self.isCurrentlyLoadingMessages = false; return }
+                guard let new = self.messageHelper.getMessages(peerId: info.conversation.peer.id, startMessageId: last.id!, offset: offset, count: 30) else
+                {
+                    NotificationDebugger.print(text: "ошибка при загрузке")
+                    self.isCurrentlyLoadingMessages = false
+                    return
+                    
+                }
                 
                 if new.count > 0 {
                     self.messages.append(contentsOf: new)
@@ -134,8 +139,23 @@ class DialogViewController: UIViewController {
                         UIView.setAnimationsEnabled(true)
                     }
                 }
+            } else {
+                
             }
             self.isCurrentlyLoadingMessages = false
+        }*/
+        guard let dialogInfo = dialogInfo else {
+            return
+        }
+        isCurrentlyLoadingMessages = true
+        messageHelper.loadMessages(peerId: dialogInfo.conversation.peer.id, startId: dialogInfo.lastMessage.id!, offset: messages.count) {
+            (newMessages, error) in
+            self.isCurrentlyLoadingMessages = false
+            if let newMessages = newMessages {
+                self.messages.append(contentsOf: newMessages)
+                self.tableView.reloadData()
+            }
+            
         }
     }
     
@@ -154,7 +174,7 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
         
         cell.message = messages[indexPath.row]
         cell.transform = CGAffineTransform.identity.rotated(by: .pi) // поворот
-        cell.layoutSubviews()
+        //cell.layoutSubviews()
         
         return cell
     }
@@ -175,4 +195,39 @@ extension DialogViewController : NewMessagesSubscriber {
     var watchesAllMessages: Bool {
         get { return false }
     }
+}
+
+extension DialogViewController : UserTypingSubscriber {
+
+    func userStartedTyping(userId: Int) {
+        self.title = "печатает..."
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: { self.setTitle() })
+    }
+    
+    func watchingTypingFromUser() -> Int {
+        return dialogInfo!.conversation.peer.id
+    }
+    
+    func watchesTypingFromAllUsers() -> Bool {
+        return false
+    }
+    
+    
+}
+
+extension DialogViewController : TypingInChatSubscriber {
+    func userStartedTypingInChat(userId: Int, chatId: Int) {
+        self.title = "\(userId) печатает..."
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: { self.setTitle() })
+    }
+    
+    func watchingTypingInChat() -> Int {
+        return dialogInfo!.conversation.peer.localId
+    }
+    
+    func watchesTypingFromAllChats() -> Bool {
+        return false
+    }
+    
+    
 }

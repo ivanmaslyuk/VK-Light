@@ -25,5 +25,17 @@ struct VKAttachmentModel : Decodable {
     }
     
     let type : AttachmentType
+    
+    let photo: VKPhotoModel?
+    let video: VKVideoModel?
+    let audio: VKAudioModel?
+    let doc: VKDocumentModel?
+    let link: VKLinkModel?
+    // let market
+    // let marketAlbum
+    let wall: VKWallPostModel?
+    let wallReply: VKCommentModel?
     let sticker : VKStickerModel?
+    let gift: VKGiftModel?
+    let audioMessage: VKAudioMessageModel?
 }

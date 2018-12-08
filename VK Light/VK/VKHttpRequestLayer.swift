@@ -26,7 +26,7 @@ class VKHttpRequestLayer {
         let paramsString = params.map{ "\($0)=\($1)" }.joined(separator: "&")
         
         let url = URL(string: "https://api.vk.com/method/\(methodName)?\(paramsString)")!
-        //print(url)
+        print(url)
         
         return obtainResponse(url: url)
     }

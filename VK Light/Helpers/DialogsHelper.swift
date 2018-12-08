@@ -10,7 +10,7 @@ import Foundation
 
 class DialogsHelper {
     
-    func getDialogs(count: Int, offset: Int = 0) -> [Dialog]? {
+    /*func getDialogs(count: Int, offset: Int = 0) -> [Dialog]? {
         guard let response = VKMessagesApi().getConversations(count: count, offset: offset, extended: true)?.response else {return nil}
         
         var result: [Dialog] = []
@@ -28,7 +28,7 @@ class DialogsHelper {
             result.append(Dialog(title: title, peerType: peerType, peerId: peerId, unreadCount: unreadCount, messages: messages))
         }
         return result
-    }
+    }*/
     
     private func extractDialogTitle(item: VKGetConversationsResponse.Item, response: VKGetConversationsResponse) -> String {
         let peerId = item.conversation.peer.id
