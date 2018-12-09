@@ -74,6 +74,7 @@ class VKLongPoller {
                 print("LP-сервер прислал ошибку: \(error)")
                 if error != 1 {
                     getServer(blocking: true)
+                    NotificationDebugger.print(text: "ой")
                 }
             }
             if let updates = response.updates {

@@ -74,7 +74,7 @@ class DialogViewController: UIViewController {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row + 1 == (messages.count - 15) && !isCurrentlyLoadingMessages{
+        if indexPath.row + 1 == (messages.count - 1) && !isCurrentlyLoadingMessages{
             loadMessages()
         }
     }
@@ -113,37 +113,6 @@ class DialogViewController: UIViewController {
     }
     
     func loadMessages() {
-        /*DispatchQueue.global().async {
-            self.isCurrentlyLoadingMessages = true
-            if let info = self.dialogInfo, let last = self.dialogInfo?.lastMessage {
-                let offset = self.messages.count
-                guard let new = self.messageHelper.getMessages(peerId: info.conversation.peer.id, startMessageId: last.id!, offset: offset, count: 30) else
-                {
-                    NotificationDebugger.print(text: "ошибка при загрузке")
-                    self.isCurrentlyLoadingMessages = false
-                    return
-                    
-                }
-                
-                if new.count > 0 {
-                    self.messages.append(contentsOf: new)
-                    var indexPaths: [IndexPath] = []
-                    //if offset > 0 { offset -= 1}
-                    for i in (offset)...self.messages.count-1 {
-                        indexPaths.append(IndexPath(row: i, section: 0))
-                    }
-                    
-                    DispatchQueue.main.async {
-                        UIView.setAnimationsEnabled(false)
-                        self.tableView.insertRows(at: indexPaths, with: .none)
-                        UIView.setAnimationsEnabled(true)
-                    }
-                }
-            } else {
-                
-            }
-            self.isCurrentlyLoadingMessages = false
-        }*/
         guard let dialogInfo = dialogInfo else {
             return
         }
@@ -155,7 +124,9 @@ class DialogViewController: UIViewController {
                 self.messages.append(contentsOf: newMessages)
                 self.tableView.reloadData()
             }
-            
+            if let error = error {
+                NotificationDebugger.print(text: String(error))
+            }
         }
     }
     
@@ -172,7 +143,7 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "messageCell") as! MessageCell
         
-        cell.message = messages[indexPath.row]
+        cell.messageWrapper = messages[indexPath.row]
         cell.transform = CGAffineTransform.identity.rotated(by: .pi) // поворот
         //cell.layoutSubviews()
         

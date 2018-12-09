@@ -9,17 +9,16 @@
 import UIKit
 
 class MessageCell: UITableViewCell {
-    // сделать модель
-    /*var isFromMe : Bool = true
-    var messageModel : VKMessageModel?*/
-    var message : VKMessageWrapper! {
+    var messageWrapper : VKMessageWrapper! {
         didSet{ setMessage() }
     }
     
-    var leftConstr : NSLayoutConstraint!
-    var rightConstr : NSLayoutConstraint!
+    var leftConstr: NSLayoutConstraint!
+    var rightConstr: NSLayoutConstraint!
+    
     let bubblePadding: CGFloat = 8
     let bubbleMargin: CGFloat = 5
+    let bubbleWidth: CGFloat = 300
     
     let messageText : UILabel = {
         let label = UILabel()
@@ -34,7 +33,7 @@ class MessageCell: UITableViewCell {
     private let messageCard : UIView = {
         let card = UIView()
         card.translatesAutoresizingMaskIntoConstraints = false
-        card.layer.cornerRadius = 16
+        card.layer.cornerRadius = 18
         card.layer.masksToBounds = true
         card.clipsToBounds = false
         return card
@@ -42,9 +41,10 @@ class MessageCell: UITableViewCell {
     
     private let avatar : CachedImageView = {
         var imageView = CachedImageView()
-        imageView.heightAnchor.constraint(equalToConstant: 15)
-        imageView.heightAnchor.constraint(equalToConstant: 15)
-        imageView.isAvatar = true
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.cornerRadius = 18
+        imageView.layer.masksToBounds = true
+        imageView.isHidden = true
         return imageView
     }()
     
@@ -52,110 +52,175 @@ class MessageCell: UITableViewCell {
         let stView = UIStackView()
         stView.translatesAutoresizingMaskIntoConstraints = false
         stView.backgroundColor = .clear
+        stView.axis = .vertical
         return stView
     }()
+    
+    private let timeLabel : LabelWithPadding = {
+        var l = LabelWithPadding()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.layer.masksToBounds = true
+        l.leftInset = 4.0
+        l.rightInset = 4.0
+        l.topInset = 2.0
+        l.bottomInset = 2.0
+        l.font = UIFont.systemFont(ofSize: 12)
+        l.textColor = .white
+        return l
+    }()
+    
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        self.clipsToBounds = false
-        
-        //addSubview(messageCard)
-        //addSubview(messageText)
-        
-        //messageCard.topAnchor.constraint(equalTo: self.topAnchor, constant: 2).isActive = true
-        //////messageCard.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 2).isActive = true
-        ///////messageCard.widthAnchor.constraint(equalToConstant: 250).isActive = true
-        //messageCard.widthAnchor.constraint(lessThanOrEqualToConstant: 350).isActive = true//
-        //messageCard.widthAnchor.constraint(equalTo: messageText.widthAnchor, constant: 6).isActive = true
-        //messageCard.heightAnchor.constraint(equalTo: messageText.heightAnchor)
-        
-        //messageText.topAnchor.constraint(equalTo: messageCard.topAnchor).isActive = true
-        //messageText.bottomAnchor.constraint(equalTo: messageCard.bottomAnchor).isActive = true
-        ///////messageText.rightAnchor.constraint(equalTo: messageCard.rightAnchor, constant: 3).isActive = true
-        ///////messageText.leftAnchor.constraint(equalTo: messageCard.leftAnchor, constant: 3).isActive = true
-        
-        //self.rightConstraint = messageCard.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -8)
-        //self.leftConstraint = messageCard.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8)
-        
-        //self.heightAnchor.constraint(equalTo: messageCard.heightAnchor, constant: 4).isActive = true
         stackView.addArrangedSubview(messageText)
-        addSubview(avatar)
         addSubview(messageCard)
         addSubview(stackView)
+        addSubview(avatar)
+        addSubview(timeLabel)
         
         let constraints = [
+            avatar.widthAnchor.constraint(equalToConstant: 36),
+            avatar.heightAnchor.constraint(equalToConstant: 36),
+            avatar.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -bubbleMargin),
+            
+            stackView.leadingAnchor.constraint(equalTo: avatar.trailingAnchor, constant: bubbleMargin + bubblePadding),
             stackView.topAnchor.constraint(equalTo: topAnchor, constant: bubbleMargin + bubblePadding),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -(bubbleMargin + bubblePadding)),
-            stackView.widthAnchor.constraint(lessThanOrEqualToConstant: 300),
+            stackView.widthAnchor.constraint(lessThanOrEqualToConstant: bubbleWidth),
             stackView.widthAnchor.constraint(greaterThanOrEqualToConstant: 30),
-            stackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 10), // ну хз
+            stackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 36 - bubblePadding * 2),
             
             messageCard.topAnchor.constraint(equalTo: stackView.topAnchor, constant: -bubblePadding),
             messageCard.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: bubblePadding),
             messageCard.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: -bubblePadding),
             messageCard.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: bubblePadding),
             
-            messageText.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 20),
-            messageText.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: -20)
+            timeLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor, constant: timeLabel.bottomInset),
+            timeLabel.bottomAnchor.constraint(equalTo: stackView.bottomAnchor, constant: timeLabel.rightInset)
         ]
         
+        leftConstr = avatar.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5)
         rightConstr = stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -(bubbleMargin + bubblePadding))
-        leftConstr = stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: bubbleMargin + bubblePadding)
         
-        leftConstr.isActive = true
+        NSLayoutConstraint.activate(constraints)
         
-        for c in constraints {
-            c.isActive = true
-        }
     }
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
     override func awakeFromNib() {
-        super.awakeFromNib()
+        
     }
     
-    /*override func layoutSubviews() {
-        super.layoutSubviews()
-        /*guard let message = message else {return}
-        
-        if message.message.out == 1 {
-            //clipToRight()
-            messageCard.backgroundColor = UIColor(red: 10.0/255.0, green: 115.0/255.0, blue: 255.0/255.0, alpha: 1)
-            messageText.textColor = UIColor.white
-        } else {
-            //clipToLeft()
-            messageCard.backgroundColor = UIColor(red: 229.0/255.0, green: 228.0/255.0, blue: 234.0/255.0, alpha: 1)
-            messageText.textColor = UIColor.black
-        }
-        
-        self.messageText.text = message.message.text*/
-    }*/
-    
-    /*func clipToRight() {
-        rightConstraint?.isActive = true
-        leftConstraint?.isActive = false
+    override func prepareForReuse() {
+        clearAttachments()
     }
-    
-    func clipToLeft() {
-        leftConstraint?.isActive = true
-        rightConstraint?.isActive = false
-    }*/
     
     
     func setMessage() {
-        messageText.text = message.message.text
+        messageText.text = messageWrapper.message.text
         messageText.textColor = .white
-        messageCard.backgroundColor = message.message.out == 1 ? .darkGray : .lightGray
-        leftConstr.isActive = message.message.out == 0
-        rightConstr.isActive = message.message.out == 1
-        avatar.isHidden = message.message.out == 0
+        messageCard.backgroundColor = messageWrapper.isSticker ? .clear : messageWrapper.message.out == 1 ? .darkGray : .lightGray
+        leftConstr.isActive = messageWrapper.message.out == 0
+        rightConstr.isActive = messageWrapper.message.out == 1
+        timeLabel.text = messageWrapper.formattedTime
+        let lastAttachType = messageWrapper.message.attachments.last?.type
+        timeLabel.backgroundColor = lastAttachType == .sticker || lastAttachType == .photo ? UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 0.5) : .clear
+        timeLabel.layer.cornerRadius = timeLabel.frame.size.height / 2
         
-        //setNeedsLayout()
+        avatar.isHidden = messageWrapper.message.out == 1
+        if messageWrapper.message.out == 0 {
+            if let photo = messageWrapper.group?.photo50 {
+                avatar.setSource(url: photo)
+            }
+            if let photo = messageWrapper.profile?.photo100 {
+                avatar.setSource(url: photo)
+            }
+        }
+        
+        presentAttachments()
+        
+        
+        
     }
     
+    
+    private var attachmentViews: [UIView] = []
+    
+    
+    private func presentAttachments() {
+        var photos: [VKPhotoModel] = []
+        
+        for attach in messageWrapper.message.attachments {
+            switch attach.type {
+            case .photo:
+                photos.append(attach.photo!)
+            case .sticker:
+                presentSticker(sticker: attach.sticker!)
+            case .audio:
+                continue
+            case .audioMessage:
+                continue
+            case .doc:
+                continue
+            case .gift:
+                continue
+            case .link:
+                continue
+            case .market:
+                continue
+            case .marketAlbum:
+                continue
+            case .video:
+                continue
+            case .wall:
+                continue
+            case .wallReply:
+                continue
+            }
+        }
+        
+        presentPhotos(photos: photos)
+    }
+    
+    
+    private func presentPhotos(photos: [VKPhotoModel]) {
+        for photo in photos {
+            let image = CachedImageView()
+            image.setSource(url: photo.sizes.last!.url)
+            image.contentMode = .scaleAspectFit
+            let size = photo.getAppropriateSize(for: Int(bubbleWidth))
+            image.heightAnchor.constraint(equalToConstant: CGFloat(size.height)).isActive = true
+            image.backgroundColor = .red
+            image.widthAnchor.constraint(equalToConstant: bubbleWidth).isActive = true
+            attachmentViews.append(image)
+            stackView.addArrangedSubview(image)
+        }
+    }
+    
+    
+    private func presentSticker(sticker: VKStickerModel) {
+        let image = CachedImageView()
+        image.setSource(url: sticker.images.last!.url)
+        image.contentMode = .scaleAspectFit
+        image.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        //image.backgroundColor = .blue
+        attachmentViews.append(image)
+        stackView.addArrangedSubview(image)
+    }
+    
+    
+    private func clearAttachments() {
+        for a in attachmentViews {
+            a.removeFromSuperview()
+        }
+        attachmentViews.removeAll()
+    }
 
 }

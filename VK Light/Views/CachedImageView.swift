@@ -11,9 +11,9 @@ import UIKit
 
 class CachedImageView: UIImageView {
     
-    var isAvatar: Bool? {
+    var isAvatar: Bool = false {
         didSet {
-            layer.cornerRadius = isAvatar! ? frame.height / 2 : 0
+            layer.cornerRadius = isAvatar ? frame.height / 2 : 0
         }
     }
     
@@ -21,11 +21,14 @@ class CachedImageView: UIImageView {
     func setSource(url: URL) {
         URLSession.shared.dataTask(with: url) {(data, response, error) in
             if let data = data {
-                self.image = UIImage(data: data)
+                DispatchQueue.main.async {
+                    UIView.animate(withDuration: 5) {
+                        self.image = UIImage(data: data)
+                    }
+                }
             }
-        }
+        }.resume()
     }
-    
     
     
 }

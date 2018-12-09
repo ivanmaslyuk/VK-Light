@@ -11,6 +11,7 @@ import UIKit
 import UserNotifications
 
 class NotificationDebugger {
+    static var lastTime = 0
     static func print(text: String) {
         let content = UNMutableNotificationContent()
         content.title = "Debug"

@@ -12,4 +12,25 @@ struct VKMessageWrapper {
     let message: VKMessageModel
     let profile: VKProfileModel?
     let group: VKGroupModel?
+    
+    var isSticker: Bool {
+        get {
+            if message.attachments.count > 0 {
+                return message.attachments[0].type == .sticker
+            }
+            return false
+        }
+    }
+    
+    var formattedTime : String {
+        get {
+            let calendar = Calendar.current
+            let date = message.date
+            
+            let minutes = String(calendar.component(.minute, from: date))
+            let formattedMinutes = minutes.count == 1 ? "0" + minutes : minutes
+            return String(calendar.component(.hour, from: date)) + ":" + formattedMinutes
+        }
+    }
+    
 }

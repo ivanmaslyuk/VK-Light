@@ -28,4 +28,14 @@ struct VKPhotoModel : Decodable {
     /* недоступны для фотографий, загруженных на сайт до 2012 года */
     let width: Int?
     let height: Int?
+    
+    func getAppropriateSize(for width: Int) -> Size {
+        var mostAppropriate = sizes[0]
+        for s in sizes {
+            if abs(width - s.width) < abs(width - mostAppropriate.width) {
+                mostAppropriate = s
+            }
+        }
+        return mostAppropriate
+    }
 }

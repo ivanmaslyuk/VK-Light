@@ -33,6 +33,7 @@
 		6506FF2D21B474D400DF281C /* VKAudioModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6506FF2C21B474D400DF281C /* VKAudioModel.swift */; };
 		6506FF2F21B4772600DF281C /* VKAudioMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6506FF2E21B4772600DF281C /* VKAudioMessageModel.swift */; };
 		6506FF3121B4781800DF281C /* VKDocumentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6506FF3021B4781800DF281C /* VKDocumentModel.swift */; };
+		65079F7621BD074D0013F502 /* LabelWithPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65079F7521BD074D0013F502 /* LabelWithPadding.swift */; };
 		650805CF219E98AD0029519A /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650805CE219E98AD0029519A /* RootViewController.swift */; };
 		650805D1219EA4730029519A /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650805D0219EA4730029519A /* ConversationCell.swift */; };
 		650856E321A9578500DE6ECB /* DialogsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650856E221A9578500DE6ECB /* DialogsHelper.swift */; };
@@ -61,7 +62,6 @@
 		6550285521A883D3001A0420 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550285421A883D3001A0420 /* Dialog.swift */; };
 		6551BED021AED6F500C568C9 /* VKLongPollApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6551BECF21AED6F500C568C9 /* VKLongPollApi.swift */; };
 		6551BED221AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6551BED121AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift */; };
-		6551BED521AF068000C568C9 /* MessageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6551BED421AF068000C568C9 /* MessageContentView.swift */; };
 		65E6F50A219C8C4E006BC0A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E6F509219C8C4E006BC0A8 /* AppDelegate.swift */; };
 		65E6F50C219C8C4E006BC0A8 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E6F50B219C8C4E006BC0A8 /* AuthViewController.swift */; };
 		65E6F50F219C8C4E006BC0A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65E6F50D219C8C4E006BC0A8 /* Main.storyboard */; };
@@ -96,6 +96,7 @@
 		6506FF2C21B474D400DF281C /* VKAudioModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKAudioModel.swift; sourceTree = "<group>"; };
 		6506FF2E21B4772600DF281C /* VKAudioMessageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKAudioMessageModel.swift; sourceTree = "<group>"; };
 		6506FF3021B4781800DF281C /* VKDocumentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKDocumentModel.swift; sourceTree = "<group>"; };
+		65079F7521BD074D0013F502 /* LabelWithPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelWithPadding.swift; sourceTree = "<group>"; };
 		650805CE219E98AD0029519A /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		650805D0219EA4730029519A /* ConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		650856E221A9578500DE6ECB /* DialogsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogsHelper.swift; sourceTree = "<group>"; };
@@ -124,7 +125,6 @@
 		6550285421A883D3001A0420 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
 		6551BECF21AED6F500C568C9 /* VKLongPollApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLongPollApi.swift; sourceTree = "<group>"; };
 		6551BED121AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKGetMessagesByIdResponse.swift; sourceTree = "<group>"; };
-		6551BED421AF068000C568C9 /* MessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageContentView.swift; sourceTree = "<group>"; };
 		65E6F506219C8C4E006BC0A8 /* VK Light.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK Light.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		65E6F509219C8C4E006BC0A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65E6F50B219C8C4E006BC0A8 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
@@ -277,8 +277,8 @@
 		6551BED321AF063400C568C9 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				6551BED421AF068000C568C9 /* MessageContentView.swift */,
 				651951D521BC00F600B5909C /* CachedImageView.swift */,
+				65079F7521BD074D0013F502 /* LabelWithPadding.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -495,9 +495,9 @@
 				6548945821B56B8100025CB6 /* VKGeoMarkModel.swift in Sources */,
 				6506FF2621B46D1600DF281C /* NotificationSettingsSubscriber.swift in Sources */,
 				651951D621BC00F600B5909C /* CachedImageView.swift in Sources */,
-				6551BED521AF068000C568C9 /* MessageContentView.swift in Sources */,
 				6504B2FF21A1666A002EDE94 /* DialogViewController.swift in Sources */,
 				6506FF3121B4781800DF281C /* VKDocumentModel.swift in Sources */,
+				65079F7621BD074D0013F502 /* LabelWithPadding.swift in Sources */,
 				6550285521A883D3001A0420 /* Dialog.swift in Sources */,
 				6502082521A1C3F700157572 /* SettingsViewController.swift in Sources */,
 				6551BED021AED6F500C568C9 /* VKLongPollApi.swift in Sources */,
