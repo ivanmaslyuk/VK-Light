@@ -23,6 +23,10 @@ struct VKMessageWrapper {
         }
     }
     
+    var hasText : Bool {
+        return !message.text.isEmpty
+    }
+    
     var formattedTime : String {
         get {
             let calendar = Calendar.current

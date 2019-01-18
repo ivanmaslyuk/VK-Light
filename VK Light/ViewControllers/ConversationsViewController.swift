@@ -18,7 +18,7 @@ class ConversationsViewController: UITableViewController {
         
         self.title = "Диалоги"
         
-        self.tableView.separatorInset = UIEdgeInsets.init(top: 0, left: 88, bottom: 0, right: 0)
+        self.tableView.separatorInset = UIEdgeInsets.init(top: 0, left: 80, bottom: 0, right: 0)
         
         
         

@@ -42,6 +42,7 @@
 		650C95B521A2D59B00D98867 /* VKStickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650C95B421A2D59B00D98867 /* VKStickerModel.swift */; };
 		650C95B821A2D95700D98867 /* MessageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650C95B721A2D95700D98867 /* MessageHelper.swift */; };
 		650D820121B6D51C00D88134 /* NotificationDebugger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650D820021B6D51C00D88134 /* NotificationDebugger.swift */; };
+		65102DDD21F24C9F0015ACCE /* VKDialogWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65102DDC21F24C9F0015ACCE /* VKDialogWrapper.swift */; };
 		6515E5BA21A42C6700D22CEA /* VKLPResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6515E5B921A42C6700D22CEA /* VKLPResponse.swift */; };
 		6515E5BC21A4342600D22CEA /* VKLPServerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6515E5BB21A4342600D22CEA /* VKLPServerModel.swift */; };
 		6515E5BE21A4442400D22CEA /* VKLPHistoryItemModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6515E5BD21A4442400D22CEA /* VKLPHistoryItemModel.swift */; };
@@ -108,6 +109,7 @@
 		650C95B421A2D59B00D98867 /* VKStickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKStickerModel.swift; sourceTree = "<group>"; };
 		650C95B721A2D95700D98867 /* MessageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHelper.swift; sourceTree = "<group>"; };
 		650D820021B6D51C00D88134 /* NotificationDebugger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationDebugger.swift; sourceTree = "<group>"; };
+		65102DDC21F24C9F0015ACCE /* VKDialogWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKDialogWrapper.swift; sourceTree = "<group>"; };
 		6515E5B921A42C6700D22CEA /* VKLPResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLPResponse.swift; sourceTree = "<group>"; };
 		6515E5BB21A4342600D22CEA /* VKLPServerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLPServerModel.swift; sourceTree = "<group>"; };
 		6515E5BD21A4442400D22CEA /* VKLPHistoryItemModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLPHistoryItemModel.swift; sourceTree = "<group>"; };
@@ -238,6 +240,7 @@
 				6550285421A883D3001A0420 /* Dialog.swift */,
 				6549FAE621AA8E2400E1A109 /* VKMessageWrapper.swift */,
 				6549FAEB21AACACF00E1A109 /* ObservableDataContainer.swift */,
+				65102DDC21F24C9F0015ACCE /* VKDialogWrapper.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -532,6 +535,7 @@
 				6549FAE721AA8E2400E1A109 /* VKMessageWrapper.swift in Sources */,
 				6548943B21B5633E00025CB6 /* VKGiftModel.swift in Sources */,
 				6548945C21B56F1B00025CB6 /* VKLinkModel.swift in Sources */,
+				65102DDD21F24C9F0015ACCE /* VKDialogWrapper.swift in Sources */,
 				6549FAEC21AACACF00E1A109 /* ObservableDataContainer.swift in Sources */,
 				6548943D21B563D700025CB6 /* VKWallPostModel.swift in Sources */,
 				65E6F50A219C8C4E006BC0A8 /* AppDelegate.swift in Sources */,

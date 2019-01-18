@@ -10,14 +10,19 @@ import Foundation
 
 class VKHttpRequestLayer {
     
+    enum ReasonForFailure {
+        case connectionError
+        case couldNotDecode
+    }
+    
     var accessToken : String = ""
     let version : String = "5.92"
     
     init() {
         self.accessToken = UserDefaults.standard.value(forKey: "vk_token") as! String
     }
-    
-    func getResponse<T : Decodable>(methodName: String, parameters: Dictionary<String, String>) -> VKResponse<T>? {
+     @available(iOS, deprecated: 1.0)
+    func getResponseOld<T : Decodable>(methodName: String, parameters: Dictionary<String, String>) -> VKResponse<T>? {
         print("Отправляю запрос \(methodName)")
         
         var params = parameters
@@ -31,6 +36,56 @@ class VKHttpRequestLayer {
         return obtainResponse(url: url)
     }
     
+    
+    
+    func getResponse<T : Decodable>(method: String, parameters: [String:String], completion: @escaping (VKResponse<T>?, ReasonForFailure?) -> Void) {
+        var params = parameters
+        params["access_token"] = accessToken
+        params["v"] = version
+        let paramsString = params.map{ "\($0)=\($1)" }.joined(separator: "&")
+        
+        let url = URL(string: "https://api.vk.com/method/\(method)?\(paramsString)")!
+        
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if let error = error {
+                print(error)
+                completion(nil, .connectionError)
+            }
+            if let data = data {
+                let decoder = self.getJsonDecoder()
+                do {
+                    let decoded = try decoder.decode(VKResponse<T>.self, from: data)
+                    completion(decoded, nil)
+                }
+                catch let error {
+                    print(error)
+                    completion(nil, .couldNotDecode)
+                }
+            }
+        }
+    }
+    
+    
+    
+    private func decodeResponse<T: Decodable>(_ data: Data) -> VKResponse<T>? {
+        let decoder = getJsonDecoder()
+        do {
+            return try decoder.decode(VKResponse<T>.self, from: data)
+        }
+        catch let error {
+            print(error)
+            return nil
+        }
+    }
+    
+    private func getJsonDecoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .secondsSince1970
+        return decoder
+    }
+    
+    @available(iOS, deprecated: 1.0)
     private func obtainResponse<T : Decodable>(url: URL) -> VKResponse<T>? {
         var vkResponse : String = ""
         let sema = DispatchSemaphore(value: 0)
