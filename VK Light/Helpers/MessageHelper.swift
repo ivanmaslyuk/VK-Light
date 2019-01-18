@@ -51,9 +51,19 @@ class MessageHelper {
             if let response = response?.response {
                 var messages : [VKMessageWrapper] = []
                 for message in response.items {
-                    let profile = response.findProfileById(id: message.fromId)
+                    /*let profile = response.findProfileById(id: message.fromId)
                     let group = response.findGroupById(id: -message.fromId)
-                    messages.append(VKMessageWrapper(message: message, profile: profile, group: group))
+                    
+                    if let forwarded = message.fwdMessages {
+                        for f in forwarded {
+                            let profile = response.findProfileById(id: message.fromId)
+                            let group = response.findGroupById(id: -message.fromId)
+                            message.wrappedForwarded?.append(VKMessageWrapper(message: message, profile: profile, group: group))
+                        }
+                    }
+                    
+                    messages.append(VKMessageWrapper(message: message, profile: profile, group: group))*/
+                    messages.append(self.wrap(msg: message, response: response))
                 }
                 
                 DispatchQueue.main.async {
@@ -67,6 +77,20 @@ class MessageHelper {
         }
     }
     
-    
+    private func wrap(msg: VKMessageModel, response: VKGetHistoryResponse) -> VKMessageWrapper {
+        let profile = response.findProfileById(id: msg.fromId)
+        let group = response.findGroupById(id: -msg.fromId)
+        
+        var wrappedForwarded = [VKMessageWrapper]()
+        if let forwarded = msg.fwdMessages {
+            for f in forwarded {
+                let wrapped = wrap(msg: f, response: response)
+                wrappedForwarded.append(wrapped)
+            }
+        }
+        
+        let wrapper = VKMessageWrapper.init(message: msg, profile: profile, group: group, forwardedMessages: wrappedForwarded)
+        return wrapper
+    }
     
 }

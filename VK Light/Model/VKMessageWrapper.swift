@@ -12,6 +12,7 @@ struct VKMessageWrapper {
     let message: VKMessageModel
     let profile: VKProfileModel?
     let group: VKGroupModel?
+    var forwardedMessages: [VKMessageWrapper]
     
     var isSticker: Bool {
         get {

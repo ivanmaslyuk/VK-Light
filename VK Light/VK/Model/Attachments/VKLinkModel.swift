@@ -29,7 +29,7 @@ struct VKLinkModel : Decodable {
         let title: String // название кнопки
     }
     
-    let url: URL
+    let url: String
     let title: String // заголовок
     let caption: String? // подпись
     let description: String // описание

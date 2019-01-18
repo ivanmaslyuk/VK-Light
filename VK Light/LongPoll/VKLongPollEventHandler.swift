@@ -65,7 +65,7 @@ class VKLongPollEventHandler {
         for message in response.items {
             let relatedProfile = response.findProfileById(id: message.peerId!)
             let relatedGroup = response.findGroupById(id: -message.peerId!)
-            notifyNewMessage(message: VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup))
+            notifyNewMessage(message: VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup, forwardedMessages: [])) // TODO: добавить поддержку пересланных
         }
     }
     
@@ -180,7 +180,7 @@ class VKLongPollEventHandler {
         for message in response.items {
             let relatedProfile = response.findProfileById(id: message.peerId!)
             let relatedGroup = response.findGroupById(id: -message.peerId!)
-            notifyMessageEdited(message: VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup))
+            notifyMessageEdited(message: VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup, forwardedMessages: [])) //FIXME: исправить
         }
     }
     

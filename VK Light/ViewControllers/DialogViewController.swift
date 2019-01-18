@@ -15,6 +15,7 @@ class DialogViewController: UIViewController {
     var group : VKGroupModel?
     let messageHelper = MessageHelper()
     var messages : [VKMessageWrapper] = []
+    var rowHights = [CGFloat]()
     let lpEventHandler = VKLongPollEventHandler.shared
     var isCurrentlyLoadingMessages = false {
         didSet(new) {
@@ -79,6 +80,7 @@ class DialogViewController: UIViewController {
         }
     }
     
+    
     override func viewDidAppear(_ animated: Bool) {
         loadMessages()
         lpEventHandler.addNewMessageSubscriber(subscriber: self)
@@ -122,7 +124,8 @@ class DialogViewController: UIViewController {
             self.isCurrentlyLoadingMessages = false
             if let newMessages = newMessages {
                 self.messages.append(contentsOf: newMessages)
-                self.tableView.reloadData()
+                //self.tableView.reloadData()
+                self.calculateRowHightsAndUpdateTableView()
             }
             if let error = error {
                 NotificationDebugger.print(text: String(error))
@@ -149,6 +152,28 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
+    
+    /*func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return rowHights[indexPath.row]
+    }*/
+    
+    func calculateRowHightsAndUpdateTableView() {
+        DispatchQueue.global().async {
+            let cell = MessageCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: "fakeCell")
+            
+            for msg in self.messages {
+                let l = CALayer()
+                l.contents = cell
+                cell.messageWrapper = msg
+                self.rowHights.append(cell.layer.bounds.height)
+                cell.prepareForReuse()
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
     
 }
 

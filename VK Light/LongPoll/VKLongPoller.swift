@@ -17,6 +17,7 @@ class VKLongPoller {
     private var key: String?
     private var updateHandler = VKLongPollEventHandler.shared
     private let longPollApi = VKLongPollApi()
+    private var isPaused = true
     private init() { }
     
     
@@ -25,17 +26,29 @@ class VKLongPoller {
     }
     
     
-    func startLongPolling() {
+    func resume() {
         guard let _ = self.server else {
             print("Невозможно начать LongPoll-запрос, так как self.server не инициализирован.")
             return
         }
-        
+        print("Работа LongPoller возобновлена")
+        isPaused = false
         DispatchQueue.global().async {
+            
             while (true) {
-                self.doLongPollRequest()
+                if !self.isPaused {
+                    self.doLongPollRequest()
+                } else {
+                    break
+                }
             }
         }
+    }
+    
+    
+    func pause() {
+        isPaused = true
+        print("LongPoller приостановлен")
     }
     
     
@@ -60,7 +73,7 @@ class VKLongPoller {
     }
     
     
-    func doLongPollRequest() {
+    private func doLongPollRequest() {
         guard let server = self.server, let key = self.key, let ts = self.ts else {
             print("doLongPollRequest() был вызван до инициализации self.server")
             getServer(blocking: true)

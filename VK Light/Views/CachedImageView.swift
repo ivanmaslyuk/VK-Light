@@ -22,9 +22,7 @@ class CachedImageView: UIImageView {
         URLSession.shared.dataTask(with: url) {(data, response, error) in
             if let data = data {
                 DispatchQueue.main.async {
-                    UIView.animate(withDuration: 5) {
-                        self.image = UIImage(data: data)
-                    }
+                    self.image = UIImage(data: data)
                 }
             }
         }.resume()

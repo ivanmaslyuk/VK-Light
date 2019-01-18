@@ -15,12 +15,18 @@ struct VKMessageModel : Decodable {
     let fromId : Int
     let text : String
     let randomId : Int?
-    let ref : String?
-    let refSource : String?
+    //let ref : String? //не нужно
+    //let refSource : String?
     let attachments : [VKAttachmentModel]
     let important : Bool?
     let out: Int? // не передается если сообщение пришло в качестве прикрепленного
-    let payload : String? // только для ботов
+    //let payload : String? // только для ботов
     let fwdMessages : [VKMessageModel]?
+    //let replyMessage: VKMessageModel?
+    
+    /* служебные */
+    var isOut: Bool {
+        get { return out == 1 }
+    }
     
 }

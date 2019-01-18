@@ -62,6 +62,9 @@
 		6550285521A883D3001A0420 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550285421A883D3001A0420 /* Dialog.swift */; };
 		6551BED021AED6F500C568C9 /* VKLongPollApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6551BECF21AED6F500C568C9 /* VKLongPollApi.swift */; };
 		6551BED221AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6551BED121AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift */; };
+		65ADFEB621E233230060020D /* AttachedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADFEB521E233230060020D /* AttachedImageView.swift */; };
+		65ADFEB821E25F990060020D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADFEB721E25F990060020D /* MessageView.swift */; };
+		65ADFEBA21E2912A0060020D /* ForwardedMessageHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADFEB921E2912A0060020D /* ForwardedMessageHeader.swift */; };
 		65E6F50A219C8C4E006BC0A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E6F509219C8C4E006BC0A8 /* AppDelegate.swift */; };
 		65E6F50C219C8C4E006BC0A8 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E6F50B219C8C4E006BC0A8 /* AuthViewController.swift */; };
 		65E6F50F219C8C4E006BC0A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65E6F50D219C8C4E006BC0A8 /* Main.storyboard */; };
@@ -125,6 +128,9 @@
 		6550285421A883D3001A0420 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
 		6551BECF21AED6F500C568C9 /* VKLongPollApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLongPollApi.swift; sourceTree = "<group>"; };
 		6551BED121AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKGetMessagesByIdResponse.swift; sourceTree = "<group>"; };
+		65ADFEB521E233230060020D /* AttachedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachedImageView.swift; sourceTree = "<group>"; };
+		65ADFEB721E25F990060020D /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		65ADFEB921E2912A0060020D /* ForwardedMessageHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardedMessageHeader.swift; sourceTree = "<group>"; };
 		65E6F506219C8C4E006BC0A8 /* VK Light.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK Light.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		65E6F509219C8C4E006BC0A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65E6F50B219C8C4E006BC0A8 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
@@ -279,6 +285,9 @@
 			children = (
 				651951D521BC00F600B5909C /* CachedImageView.swift */,
 				65079F7521BD074D0013F502 /* LabelWithPadding.swift */,
+				65ADFEB521E233230060020D /* AttachedImageView.swift */,
+				65ADFEB721E25F990060020D /* MessageView.swift */,
+				65ADFEB921E2912A0060020D /* ForwardedMessageHeader.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -480,6 +489,7 @@
 				6548945621B5695E00025CB6 /* VKBool.swift in Sources */,
 				6506FF1A21B40D3600DF281C /* MessageEditedSubscriber.swift in Sources */,
 				6549FAE921AAA11300E1A109 /* VKGetLongPollHistoryResponse.swift in Sources */,
+				65ADFEBA21E2912A0060020D /* ForwardedMessageHeader.swift in Sources */,
 				6506EC9F21B277240033859A /* VKLongPollEventHandler.swift in Sources */,
 				650C95B121A2C77B00D98867 /* Message.swift in Sources */,
 				6506FF2921B4706000DF281C /* VKPhotoModel.swift in Sources */,
@@ -498,7 +508,9 @@
 				6504B2FF21A1666A002EDE94 /* DialogViewController.swift in Sources */,
 				6506FF3121B4781800DF281C /* VKDocumentModel.swift in Sources */,
 				65079F7621BD074D0013F502 /* LabelWithPadding.swift in Sources */,
+				65ADFEB821E25F990060020D /* MessageView.swift in Sources */,
 				6550285521A883D3001A0420 /* Dialog.swift in Sources */,
+				65ADFEB621E233230060020D /* AttachedImageView.swift in Sources */,
 				6502082521A1C3F700157572 /* SettingsViewController.swift in Sources */,
 				6551BED021AED6F500C568C9 /* VKLongPollApi.swift in Sources */,
 				6505262C219D694500EF8BAA /* VKGroupModel.swift in Sources */,
