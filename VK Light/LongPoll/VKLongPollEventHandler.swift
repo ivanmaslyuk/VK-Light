@@ -59,14 +59,15 @@ class VKLongPollEventHandler {
     private var newMessageSubscribers: [NewMessagesSubscriber] = []
     
     private func handleNewMessages(ids: [Int]) {
-        let vkResponse = VKMessagesApi().getById(ids: ids, extended: true)
-        guard let response = vkResponse?.response else {return}
-        
-        for message in response.items {
-            let relatedProfile = response.findProfileById(id: message.peerId!)
-            let relatedGroup = response.findGroupById(id: -message.peerId!)
-            notifyNewMessage(message: VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup, forwardedMessages: [])) // TODO: добавить поддержку пересланных
-        }
+        VKMessagesApi().getById(ids: ids, extended: true, completion: { (response, error) in
+            guard let response = response?.response else {return}
+            
+            for message in response.items {
+                let relatedProfile = response.findProfileById(id: message.peerId!)
+                let relatedGroup = response.findGroupById(id: -message.peerId!)
+                self.notifyNewMessage(message: VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup, forwardedMessages: [])) // TODO: добавить поддержку пересланных
+            }
+        })
     }
     
     func addNewMessageSubscriber(subscriber: NewMessagesSubscriber) {
@@ -174,14 +175,15 @@ class VKLongPollEventHandler {
     }
     
     private func handleEditedMessages(ids: [Int]) {
-        let vkResponse = VKMessagesApi().getById(ids: ids, extended: true)
-        guard let response = vkResponse?.response else {return}
-        
-        for message in response.items {
-            let relatedProfile = response.findProfileById(id: message.peerId!)
-            let relatedGroup = response.findGroupById(id: -message.peerId!)
-            notifyMessageEdited(message: VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup, forwardedMessages: [])) //FIXME: исправить
-        }
+        VKMessagesApi().getById(ids: ids, extended: true, completion: {(response, error) in
+            guard let response = response?.response else {return}
+            
+            for message in response.items {
+                let relatedProfile = response.findProfileById(id: message.peerId!)
+                let relatedGroup = response.findGroupById(id: -message.peerId!)
+                self.notifyMessageEdited(message: VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup, forwardedMessages: [])) //FIXME: исправить
+            }
+        })
     }
     
     private func notifyMessageEdited(message: VKMessageWrapper) {

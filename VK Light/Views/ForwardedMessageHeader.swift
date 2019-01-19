@@ -12,8 +12,8 @@ import UIKit
 
 class ForwardedMessageHeader : UIView {
     
-    public var profile: VKProfileModel?
-    public var group: VKGroupModel?
+    public var profile: VKProfile?
+    public var group: VKGroup?
     public var date: Date!
     public var avatarDiameter = 35
     

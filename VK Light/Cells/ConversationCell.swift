@@ -19,8 +19,8 @@ class ConversationCell: UITableViewCell {
     @IBOutlet weak var unreadCountLabel: UILabel!
     @IBOutlet weak var dialogTimeLabel: UILabel!
     
-    var profile: VKProfileModel?
-    var group: VKGroupModel?
+    var profile: VKProfile?
+    var group: VKGroup?
 
     var item: VKGetConversationsResponse.Item?
     
@@ -70,7 +70,9 @@ class ConversationCell: UITableViewCell {
         }
         
         self.lastMessageLabel.text = unwrappedItem.lastMessage.text
-        lastMessageUnreadMark.isHidden = unwrappedItem.lastMessage.fromId == Int(UserDefaults.standard.value(forKey: "vk_user_id") as! String)
+        
+        
+        lastMessageUnreadMark.isHidden = unwrappedItem.lastMessage.fromId != Int(UserDefaults.standard.value(forKey: "vk_user_id") as! String)
         lastMessageAvatar.isHidden = unwrappedItem.conversation.chatSettings == nil
         
         

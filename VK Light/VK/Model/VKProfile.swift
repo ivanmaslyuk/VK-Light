@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKProfileModel : Decodable {
+struct VKProfile : Decodable {
     let id : Int
     let firstName : String
     let lastName : String

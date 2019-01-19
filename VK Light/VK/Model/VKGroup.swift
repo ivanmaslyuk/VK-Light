@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKGroupModel : Decodable {
+struct VKGroup : Decodable {
     let id : Int
     let name : String
     let photo50 : URL

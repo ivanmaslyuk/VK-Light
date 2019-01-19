@@ -12,7 +12,7 @@ class VKMessagesApi {
     
     let requestLayer = VKHttpRequestLayer()
     
-    func getConversations(count: Int, offset: Int = 0, extended: Bool = false) -> VKResponse<VKGetConversationsResponse>? {
+    func getConversations(count: Int, offset: Int = 0, extended: Bool = false, completion: @escaping VKResponseHandler<VKGetConversationsResponse>) {
         
         // проверить входные данные и кинуть исключения если что
         if count >= 200 {
@@ -25,10 +25,10 @@ class VKMessagesApi {
             "extended" : extended ? "1" : "0"
         ]
         
-        return requestLayer.getResponse(methodName: "messages.getConversations", parameters: propertioes)
+        return requestLayer.getResponse(method: "messages.getConversations", parameters: propertioes, completion: completion)
     }
     
-    func getHistory(peerId: Int, startMessageId: Int, count: Int = 20, offset: Int = 0, extended: Bool = false, reverse: Bool = false) -> VKResponse<VKGetHistoryResponse>? {
+    func getHistory(peerId: Int, startMessageId: Int, count: Int = 20, offset: Int = 0, extended: Bool = false, reverse: Bool = false, completion: @escaping VKResponseHandler<VKGetHistoryResponse>) {
         let parameters : Dictionary<String, String> = [
             "peer_id" : String(peerId),
             "start_message_id" : String(startMessageId),
@@ -38,19 +38,19 @@ class VKMessagesApi {
             "extended" : extended ? "1" : "0"
         ]
         
-        return requestLayer.getResponse(methodName: "messages.getHistory", parameters: parameters)
+        return requestLayer.getResponse(method: "messages.getHistory", parameters: parameters, completion: completion)
     }
     
-    func getLongPollServer() -> VKResponse<VKLPServerModel>? {
+    func getLongPollServer(completion: @escaping VKResponseHandler<VKLPServerModel>) {
         let parameters: Dictionary<String, String> = [
             "need_pts" : "1",
             "lp_version" : "3"
         ]
         
-        return requestLayer.getResponse(methodName: "messages.getLongPollServer", parameters: parameters)
+        return requestLayer.getResponse(method: "messages.getLongPollServer", parameters: parameters, completion: completion)
     }
     
-    func getLongPollHistory(ts: Int, pts: Int, onlines: Bool, fields: [String]) -> VKResponse<VKGetLongPollHistoryResponse>? {
+    /*func getLongPollHistory(ts: Int, pts: Int, onlines: Bool, fields: [String]) -> VKResponse<VKGetLongPollHistoryResponse>? {
         let parameters : [String : String] = [
             "ts" : String(ts),
             "pts" : String(pts),
@@ -60,10 +60,10 @@ class VKMessagesApi {
             ]
         
         return requestLayer.getResponse(methodName: "messages.getLongPollHistory", parameters: parameters)
-    }
+    }*/
     
     
-    func getById(ids: [Int], extended: Bool) -> VKResponse<VKGetMessagesByIdResponse>? {
+    func getById(ids: [Int], extended: Bool, completion: @escaping VKResponseHandler<VKGetMessagesByIdResponse>) {
         var ids_str: [String] = []
         for id in ids { ids_str.append(String(id)) }
         
@@ -72,7 +72,7 @@ class VKMessagesApi {
             "extended" : extended ? "1" : "0"
         ]
         
-        return requestLayer.getResponse(methodName: "messages.getById", parameters: parameters)
+        return requestLayer.getResponse(method: "messages.getById", parameters: parameters, completion: completion)
     }
     
 }

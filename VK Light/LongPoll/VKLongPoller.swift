@@ -52,7 +52,7 @@ class VKLongPoller {
     }
     
     
-    private func getServer(blocking: Bool, finished: @escaping () -> Void = {}) {
+    /*private func getServerOld(blocking: Bool, finished: @escaping () -> Void = {}) {
         let sema = DispatchSemaphore(value: 0)
         DispatchQueue.global().async {
             let response = VKMessagesApi().getLongPollServer()?.response
@@ -68,6 +68,25 @@ class VKLongPoller {
                 
                 finished()
             }
+        }
+        if blocking { sema.wait() }
+    }*/
+    
+    private func getServer(blocking: Bool, finished: @escaping () -> Void = {}) {
+        let sema = DispatchSemaphore(value: 0)
+        DispatchQueue.global().async {
+            VKMessagesApi().getLongPollServer(completion: { (response, error) in
+                if let response = response?.response {
+                    self.server = response.server
+                    self.ts = response.ts
+                    self.key = response.key
+                }
+                if let error = error {
+                    print(error)
+                }
+                if blocking { sema.signal() }
+                DispatchQueue.main.async { finished() }
+            })
         }
         if blocking { sema.wait() }
     }

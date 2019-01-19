@@ -26,17 +26,19 @@ class ConversationsViewController: UITableViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         let api = VKMessagesApi()
-        let response = api.getConversations(count: 50, extended: true)!
-        
-        self.vkResponse = response.response
-        if let response = response.response {
-            self.conversations = response.items
-        }
-        if let error = response.error {
-            print(error.errorCode)
-            print(error.errorMsg)
-        }
-        tableView.reloadData()
+        api.getConversations(count: 50, extended: true, completion: { (response, error) in
+            self.vkResponse = response?.response
+            if let response = response?.response {
+                self.conversations = response.items
+            }
+            if let error = response?.error {
+                print(error.errorCode)
+                print(error.errorMsg)
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        })
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

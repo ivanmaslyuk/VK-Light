@@ -11,8 +11,8 @@ import UIKit
 class DialogViewController: UIViewController {
 
     var dialogInfo : VKGetConversationsResponse.Item?
-    var profile :  VKProfileModel?
-    var group : VKGroupModel?
+    var profile :  VKProfile?
+    var group : VKGroup?
     let messageHelper = MessageHelper()
     var messages : [VKMessageWrapper] = []
     var rowHights = [CGFloat]()
@@ -119,7 +119,7 @@ class DialogViewController: UIViewController {
             return
         }
         isCurrentlyLoadingMessages = true
-        messageHelper.loadMessages(peerId: dialogInfo.conversation.peer.id, startId: dialogInfo.lastMessage.id!, offset: messages.count) {
+        messageHelper.loadMessages(peerId: dialogInfo.conversation.peer.id, startId: dialogInfo.lastMessage.id!, offset: messages.count, count: 20) {
             (newMessages, error) in
             self.isCurrentlyLoadingMessages = false
             if let newMessages = newMessages {
@@ -128,7 +128,7 @@ class DialogViewController: UIViewController {
                 self.calculateRowHightsAndUpdateTableView()
             }
             if let error = error {
-                NotificationDebugger.print(text: String(error))
+                NotificationDebugger.print(text: error.rawValue)
             }
         }
     }
@@ -158,6 +158,7 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
     }*/
     
     func calculateRowHightsAndUpdateTableView() {
+        return;
         DispatchQueue.global().async {
             let cell = MessageCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: "fakeCell")
             

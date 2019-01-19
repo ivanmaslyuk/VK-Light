@@ -11,10 +11,10 @@ import Foundation
 struct VKGetMessagesByIdResponse : Decodable {
     let count: Int
     let items: [VKMessageModel]
-    let profiles: [VKProfileModel]?
-    let groups: [VKGroupModel]?
+    let profiles: [VKProfile]?
+    let groups: [VKGroup]?
     
-    func findProfileById(id: Int) -> VKProfileModel? {
+    func findProfileById(id: Int) -> VKProfile? {
         guard let profiles = profiles else {return nil}
         
         for profile in profiles {
@@ -26,7 +26,7 @@ struct VKGetMessagesByIdResponse : Decodable {
         return nil
     }
     
-    func findGroupById(id: Int) -> VKGroupModel? {
+    func findGroupById(id: Int) -> VKGroup? {
         guard let groups = groups else {return nil}
         
         for group in groups {

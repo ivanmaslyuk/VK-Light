@@ -8,12 +8,18 @@
 
 import Foundation
 
+
+enum RequestFailureReason : String {
+    case connectionError
+    case couldNotDecode
+}
+
+typealias VKResponseHandler<T: Decodable> = (VKResponse<T>?, RequestFailureReason?) -> Void
+
+
 class VKHttpRequestLayer {
     
-    enum ReasonForFailure {
-        case connectionError
-        case couldNotDecode
-    }
+    
     
     var accessToken : String = ""
     let version : String = "5.92"
@@ -38,7 +44,7 @@ class VKHttpRequestLayer {
     
     
     
-    func getResponse<T : Decodable>(method: String, parameters: [String:String], completion: @escaping (VKResponse<T>?, ReasonForFailure?) -> Void) {
+    func getResponse<T : Decodable>(method: String, parameters: [String:String], completion: @escaping VKResponseHandler<T>) {
         var params = parameters
         params["access_token"] = accessToken
         params["v"] = version
@@ -62,7 +68,7 @@ class VKHttpRequestLayer {
                     completion(nil, .couldNotDecode)
                 }
             }
-        }
+        }.resume()
     }
     
     

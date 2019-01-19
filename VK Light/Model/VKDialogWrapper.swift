@@ -10,8 +10,9 @@ import Foundation
 
 struct VKDialogWrapper {
     let dialog : VKConversationModel
-    let profile : VKProfileModel?
-    let group : VKGroupModel?
+    let profile : VKProfile?
+    let group : VKGroup?
+    let lastMessage: VKMessageWrapper
     
     var isChat : Bool {
         return dialog.chatSettings != nil

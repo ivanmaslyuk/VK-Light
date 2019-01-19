@@ -21,7 +21,7 @@
                     </view>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="login" animates="NO" id="XEc-PS-wz3"/>
-                        <segue destination="kYd-zH-sZ4" kind="show" identifier="loggedIn" animates="NO" id="kTS-pN-2fz"/>
+                        <segue destination="mp1-KN-D2p" kind="show" identifier="loggedIn" animates="NO" id="gtW-4i-3do"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LG5-Pj-GZ6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -56,7 +56,6 @@
                     </view>
                     <connections>
                         <outlet property="webView" destination="h3b-HJ-4BU" id="kOX-7c-e0w"/>
-                        <segue destination="kYd-zH-sZ4" kind="show" identifier="loginSuccess" id="jHf-HT-usM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -155,7 +154,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dYx-L9-H9J" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4252" y="520"/>
+            <point key="canvasLocation" x="5157.971014492754" y="519.29347826086962"/>
         </scene>
         <!--Диалоги-->
         <scene sceneID="kQx-tc-ARW">
@@ -266,18 +265,14 @@
                             <outlet property="delegate" destination="6zR-cR-3zx" id="2Qs-OW-yvU"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Диалоги" id="qPG-4s-3fN"/>
-                    <navigationItem key="navigationItem" title="Диалоги" id="68x-Le-evp">
-                        <barButtonItem key="backBarButtonItem" title=" " id="Frc-JD-jpR"/>
-                        <barButtonItem key="rightBarButtonItem" title="Настройки" id="wN0-Or-ggh"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title=" Диалоги" id="H7m-jA-mAc"/>
                     <connections>
                         <segue destination="Vtp-sy-JYA" kind="show" identifier="showDialog" id="Urp-md-jfx"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U32-iN-1a1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3357.971014492754" y="520.92391304347825"/>
+            <point key="canvasLocation" x="4265.217391304348" y="520.10869565217399"/>
         </scene>
         <!--Настройки-->
         <scene sceneID="4IB-1h-wIy">
@@ -289,29 +284,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="1Uq-rG-h61"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Настройки" id="YYt-Jx-TGz"/>
+                    <tabBarItem key="tabBarItem" title="Настройки" image="settings" id="YYt-Jx-TGz"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RAo-8i-YvM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3358" y="1411"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="L1H-kj-3rL">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="kYd-zH-sZ4" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="Rmb-ej-tzs">
-                        <rect key="frame" x="0.0" y="20" width="414" height="96"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="mp1-KN-D2p" kind="relationship" relationship="rootViewController" id="6xA-9g-EuH"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="f0Y-Vb-CDa" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="80.799999999999997" y="521.28935532233891"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="7gn-cr-2OB">
@@ -320,11 +297,12 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="GEO-Ry-PIa"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="0SK-0O-eqW">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="6zR-cR-3zx" kind="relationship" relationship="viewControllers" id="qIM-Ex-hYX"/>
+                        <segue destination="ZwZ-OC-zYG" kind="relationship" relationship="viewControllers" id="qIM-Ex-hYX"/>
                         <segue destination="mhY-HI-zqn" kind="relationship" relationship="viewControllers" id="Brt-Qk-E8i"/>
                         <segue destination="3ON-SD-06Q" kind="relationship" relationship="viewControllers" id="R62-bH-r62"/>
                     </connections>
@@ -343,14 +321,35 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="sMf-wO-FTw"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Друзья" id="xI6-75-cwq"/>
+                    <tabBarItem key="tabBarItem" title="Друзья" image="friends" id="xI6-75-cwq"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rwE-0n-eAo" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3358" y="-271"/>
         </scene>
+        <!--Диалоги-->
+        <scene sceneID="OS3-0k-van">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="ZwZ-OC-zYG" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Диалоги" image="chat" id="qPG-4s-3fN"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="ujt-ka-zVS">
+                        <rect key="frame" x="0.0" y="20" width="414" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="6zR-cR-3zx" kind="relationship" relationship="rootViewController" id="1Pt-iO-HOL"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cVY-0p-bCQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3357.971014492754" y="520.10869565217399"/>
+        </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="kTS-pN-2fz"/>
-    </inferredMetricsTieBreakers>
+    <resources>
+        <image name="chat" width="30" height="30"/>
+        <image name="friends" width="30" height="30"/>
+        <image name="settings" width="30" height="30"/>
+    </resources>
 </document>
