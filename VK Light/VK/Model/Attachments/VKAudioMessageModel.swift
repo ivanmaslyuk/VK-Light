@@ -15,5 +15,5 @@ struct VKAudioMessageModel : Decodable {
     let ownerId: Int
     let linkMp3: URL
     let linkOgg: URL
-    let waveform: [Int]
+    let waveform: [Int] // всегда 128 элементов
 }

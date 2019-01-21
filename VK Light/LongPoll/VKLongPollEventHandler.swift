@@ -16,13 +16,16 @@ class VKLongPollEventHandler {
     
     
     func handle(updates: [VKLPHistoryItemModel]) {
+        print("LongPoller: ПОЛУЧЕНЫ ДАННЫЕ ОТ LP")
         var messageIds: [Int] = []
         var editedMsgIds: [Int] = []
+        var flagsSetForMessages = [VKLPHistoryItemModel]()
         for update in updates {
             print("LongPoller: Произошло событие \(update.kind) (\(update.kind.rawValue))")
             switch update.kind {
             case .messageFlagsSet, .messageFlagsReset, .messageFlagsChanged:
-                notifyMessageFlagsChanged(peerId: update.peerId!, messageId: update.messageId!, flags: update.messageFlags!)
+                //notifyMessageFlagsChanged(peerId: update.peerId!, messageId: update.messageId!, flags: update.messageFlags!)
+                flagsSetForMessages.append(update)
             case .newMessage:
                 messageIds.append(update.messageId!)
             case .messageEdited:
@@ -49,6 +52,7 @@ class VKLongPollEventHandler {
         }
         if !messageIds.isEmpty { handleNewMessages(ids: messageIds) }
         if !editedMsgIds.isEmpty { handleEditedMessages(ids: editedMsgIds) }
+        if !flagsSetForMessages.isEmpty { handleFlags(flagsSetForMessages) }
     }
     
     
@@ -245,6 +249,19 @@ class VKLongPollEventHandler {
     /******************* ИЗМЕНИЛИСЬ ФЛАГИ СООБЩЕНИЯ **********************/
     private var messageFlagsSubscribers: [MessageFlagsSubscriber] = []
     
+    func handleFlags(_ flags: [VKLPHistoryItemModel]) {
+        var peerDict = [Int : [MessageIdAndFlags]]()
+        for elem in flags {
+            peerDict[elem.peerId!] = [MessageIdAndFlags]()
+        }
+        for elem in flags {
+            peerDict[elem.peerId!]!.append(MessageIdAndFlags(messageId: elem.messageId!, flags: elem.messageFlags!))
+        }
+        for key in peerDict.keys {
+            notifyMessageFlagsChanged(peerId: key, messages: peerDict[key]!)
+        }
+    }
+    
     func addMessageFlagsSubscriber(subscriber: MessageFlagsSubscriber) {
         messageFlagsSubscribers.append(subscriber)
     }
@@ -253,11 +270,11 @@ class VKLongPollEventHandler {
         messageFlagsSubscribers.removeAll(where: {$0 === subscriber})
     }
     
-    private func notifyMessageFlagsChanged(peerId: Int, messageId: Int, flags: VKLPMessageFlags) {
+    private func notifyMessageFlagsChanged(peerId: Int, messages: [MessageIdAndFlags]) {
         for sub in messageFlagsSubscribers {
             if sub.watchesMessageFlagsForPeer() == peerId || sub.watchesMessageFlagsForAllPeers() {
                 DispatchQueue.main.async {
-                    sub.messageFlagsChanged(peerId: peerId, messageId: messageId, flags: flags)
+                    sub.messageFlagsChanged(peerId: peerId, messages: messages)
                 }
             }
         }

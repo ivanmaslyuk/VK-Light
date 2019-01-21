@@ -9,24 +9,35 @@
 import Foundation
 import UIKit
 
-class CachedImageView: UIImageView {
+class CachedImageView: UIImageView, KnowsOwnSize {
     
-    var isAvatar: Bool = false {
+    /*var isAvatar: Bool = false {
         didSet {
             layer.cornerRadius = isAvatar ? frame.height / 2 : 0
+            clipsToBounds = true
         }
-    }
+    }*/
+    private var imageCache = NSCache<AnyObject, AnyObject>()
     
     
     func setSource(url: URL) {
-        URLSession.shared.dataTask(with: url) {(data, response, error) in
-            if let data = data {
-                DispatchQueue.main.async {
-                    self.image = UIImage(data: data)
+        if let cachedImage = imageCache.object(forKey: url as AnyObject) as? UIImage {
+            self.image = cachedImage
+        } else {
+            URLSession.shared.dataTask(with: url) {(data, response, error) in
+                if let data = data {
+                    DispatchQueue.main.async {
+                        let imageToCache = UIImage(data: data)
+                        self.imageCache.setObject(imageToCache!, forKey: url as AnyObject)
+                        self.image = imageToCache
+                    }
                 }
-            }
-        }.resume()
+            }.resume()
+        }
     }
     
+    var heightOfSelf: CGFloat {
+        return frame.height
+    }
     
 }

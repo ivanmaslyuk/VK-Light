@@ -10,13 +10,14 @@ import UIKit
 
 class ConversationsViewController: UITableViewController {
 
-    var conversations : [VKGetConversationsResponse.Item] = []
-    var vkResponse : VKGetConversationsResponse?
+    //var conversations : [VKGetConversationsResponse.Item] = []
+    //var vkResponse : VKGetConversationsResponse?
+    var dialogs = [VKDialogWrapper]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "Диалоги"
+//        self.title = "Диалоги"
         
         self.tableView.separatorInset = UIEdgeInsets.init(top: 0, left: 80, bottom: 0, right: 0)
         
@@ -25,41 +26,34 @@ class ConversationsViewController: UITableViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        let api = VKMessagesApi()
-        api.getConversations(count: 50, extended: true, completion: { (response, error) in
-            self.vkResponse = response?.response
-            if let response = response?.response {
-                self.conversations = response.items
-            }
-            if let error = response?.error {
-                print(error.errorCode)
-                print(error.errorMsg)
-            }
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
+        self.tabBarController?.tabBar.isHidden = false
+        MessageHelper().loadDialogs(count: 50, offset: 0, completion: { (response, error) in
+            if let response = response {
+                self.dialogs = response
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
             }
         })
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return conversations.count
+        return dialogs.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! ConversationCell
-        let item = conversations[indexPath.row]
+        let wrapper = dialogs[indexPath.row]
         
-        cell.profile = vkResponse?.findProfileById(id: item.conversation.peer.id)
-        cell.group = vkResponse?.findGroupById(id: -item.conversation.peer.id)
-        cell.item = item
+        cell.dialogWrapper = wrapper
         
         return cell
     }
  
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 70
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -67,13 +61,12 @@ class ConversationsViewController: UITableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        self.tabBarController?.tabBar.isHidden = true
         if segue.identifier == "showDialog" {
             // в sender получаем индекс выбранного диалога
             if let destination = segue.destination as? DialogViewController {
-                let conInfo = conversations[sender as! Int]
-                destination.dialogInfo = conversations[sender as! Int]
-                destination.group = vkResponse?.findGroupById(id: -conInfo.conversation.peer.id)
-                destination.profile = vkResponse?.findProfileById(id: conInfo.conversation.peer.id)
+                let conInfo = dialogs[sender as! Int]
+                destination.dialogWrapper = conInfo
             }
         }
     }

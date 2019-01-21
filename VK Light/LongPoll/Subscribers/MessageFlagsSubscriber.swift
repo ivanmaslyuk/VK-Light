@@ -8,8 +8,13 @@
 
 import Foundation
 
+struct MessageIdAndFlags {
+    let messageId: Int
+    let flags: VKLPMessageFlags
+}
+
 protocol MessageFlagsSubscriber : class {
-    func messageFlagsChanged(peerId: Int, messageId: Int, flags: VKLPMessageFlags)
+    func messageFlagsChanged(peerId: Int, messages: [MessageIdAndFlags])
     func watchesMessageFlagsForPeer() -> Int
     func watchesMessageFlagsForAllPeers() -> Bool
 }

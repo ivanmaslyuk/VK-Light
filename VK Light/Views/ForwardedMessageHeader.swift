@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-class ForwardedMessageHeader : UIView {
+class ForwardedMessageHeader : UIView, KnowsOwnSize {
     
     public var profile: VKProfile?
     public var group: VKGroup?
@@ -82,5 +82,9 @@ class ForwardedMessageHeader : UIView {
             avatarImage.setSource(url: g.photo100)
         }
         dateLabel.text = date.description
+    }
+    
+    var heightOfSelf: CGFloat {
+        return CGFloat(avatarDiameter) + 10
     }
 }

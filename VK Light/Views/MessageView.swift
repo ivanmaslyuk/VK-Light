@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class MessageView : UIStackView {
+class MessageView : UIStackView, KnowsOwnSize {
     public var isForwarded = false
     public var messageWrapper: VKMessageWrapper! {
         didSet { presentContent() }
@@ -25,11 +25,12 @@ class MessageView : UIStackView {
         label.clipsToBounds = false
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = .white
+        label.lineBreakMode = .byWordWrapping
         
-        label.topInset = 2
-        label.rightInset = 4
-        label.bottomInset = 2
-        label.leftInset = 4
+        label.topInset = 4
+        label.bottomInset = 4
+        label.rightInset = 8
+        label.leftInset = 8
         
         return label
     }()
@@ -51,14 +52,15 @@ class MessageView : UIStackView {
     
     
     private func presentContent() {
-        if isForwarded { presentHeader(); layer.borderWidth = 1; layer.borderColor = UIColor.red.cgColor }
+        if isForwarded { presentHeader() }
         let message = messageWrapper.message
         
         if !message.text.isEmpty {
             messageText.text = message.text
             addArrangedSubview(messageText)
-            attachmentViews.append(messageText)
         }
+        
+        messageText.textColor = message.isOut || isForwarded ? .white : .black
         
         presentAttachments()
         presentForwarded()
@@ -77,6 +79,7 @@ class MessageView : UIStackView {
             case .audio:
                 continue
             case .audioMessage:
+                print("В аудио \(attach.audioMessage!.waveform.count) элементов")
                 continue
             case .doc:
                 continue
@@ -93,6 +96,10 @@ class MessageView : UIStackView {
             case .wall:
                 continue
             case .wallReply:
+                continue
+            case .graffiti:
+                continue
+            case .poll:
                 continue
             }
         }
@@ -135,6 +142,7 @@ class MessageView : UIStackView {
     
     private func presentSticker(sticker: VKStickerModel) {
         let image = CachedImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
         image.setSource(url: sticker.images.last!.url)
         image.contentMode = .scaleAspectFit
         image.heightAnchor.constraint(equalToConstant: 150).isActive = true
@@ -155,5 +163,17 @@ class MessageView : UIStackView {
     override func addArrangedSubview(_ view: UIView) {
         super.addArrangedSubview(view)
         attachmentViews.append(view)
+    }
+    
+    var heightOfSelf: CGFloat {
+        guard let _ = messageWrapper else { fatalError() }
+        var height: CGFloat = 0
+        for item in attachmentViews {
+            let kos = item as! KnowsOwnSize
+            var newHeight = kos.heightOfSelf
+            if newHeight == 0 { newHeight = 150 }
+            height += newHeight
+        }
+        return height
     }
 }

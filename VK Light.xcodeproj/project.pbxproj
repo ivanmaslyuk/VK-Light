@@ -37,7 +37,6 @@
 		650805CF219E98AD0029519A /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650805CE219E98AD0029519A /* RootViewController.swift */; };
 		650805D1219EA4730029519A /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650805D0219EA4730029519A /* ConversationCell.swift */; };
 		650856E321A9578500DE6ECB /* DialogsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650856E221A9578500DE6ECB /* DialogsHelper.swift */; };
-		650C95B121A2C77B00D98867 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650C95B021A2C77B00D98867 /* Message.swift */; };
 		650C95B321A2D46B00D98867 /* VKAttachmentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650C95B221A2D46B00D98867 /* VKAttachmentModel.swift */; };
 		650C95B521A2D59B00D98867 /* VKStickerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650C95B421A2D59B00D98867 /* VKStickerModel.swift */; };
 		650C95B821A2D95700D98867 /* MessageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650C95B721A2D95700D98867 /* MessageHelper.swift */; };
@@ -58,12 +57,11 @@
 		6548945C21B56F1B00025CB6 /* VKLinkModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6548945B21B56F1B00025CB6 /* VKLinkModel.swift */; };
 		6549FAE721AA8E2400E1A109 /* VKMessageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549FAE621AA8E2400E1A109 /* VKMessageWrapper.swift */; };
 		6549FAE921AAA11300E1A109 /* VKGetLongPollHistoryResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549FAE821AAA11300E1A109 /* VKGetLongPollHistoryResponse.swift */; };
-		6549FAEC21AACACF00E1A109 /* ObservableDataContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6549FAEB21AACACF00E1A109 /* ObservableDataContainer.swift */; };
-		6550285321A8818B001A0420 /* DynamicDataContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550285221A8818B001A0420 /* DynamicDataContainer.swift */; };
-		6550285521A883D3001A0420 /* Dialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550285421A883D3001A0420 /* Dialog.swift */; };
 		6551BED021AED6F500C568C9 /* VKLongPollApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6551BECF21AED6F500C568C9 /* VKLongPollApi.swift */; };
 		6551BED221AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6551BED121AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift */; };
 		6592917221F31AFD00608207 /* LastMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592917121F31AFD00608207 /* LastMessageView.swift */; };
+		6594A04E21F49C5300CFD54C /* CustomTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6594A04D21F49C5200CFD54C /* CustomTabBarViewController.swift */; };
+		65A1E01F21F4E847003CA73E /* KnowsOwnSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A1E01E21F4E847003CA73E /* KnowsOwnSize.swift */; };
 		65ADFEB621E233230060020D /* AttachedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADFEB521E233230060020D /* AttachedImageView.swift */; };
 		65ADFEB821E25F990060020D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADFEB721E25F990060020D /* MessageView.swift */; };
 		65ADFEBA21E2912A0060020D /* ForwardedMessageHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADFEB921E2912A0060020D /* ForwardedMessageHeader.swift */; };
@@ -105,7 +103,6 @@
 		650805CE219E98AD0029519A /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		650805D0219EA4730029519A /* ConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
 		650856E221A9578500DE6ECB /* DialogsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogsHelper.swift; sourceTree = "<group>"; };
-		650C95B021A2C77B00D98867 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		650C95B221A2D46B00D98867 /* VKAttachmentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKAttachmentModel.swift; sourceTree = "<group>"; };
 		650C95B421A2D59B00D98867 /* VKStickerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKStickerModel.swift; sourceTree = "<group>"; };
 		650C95B721A2D95700D98867 /* MessageHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageHelper.swift; sourceTree = "<group>"; };
@@ -126,12 +123,11 @@
 		6548945B21B56F1B00025CB6 /* VKLinkModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLinkModel.swift; sourceTree = "<group>"; };
 		6549FAE621AA8E2400E1A109 /* VKMessageWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKMessageWrapper.swift; sourceTree = "<group>"; };
 		6549FAE821AAA11300E1A109 /* VKGetLongPollHistoryResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKGetLongPollHistoryResponse.swift; sourceTree = "<group>"; };
-		6549FAEB21AACACF00E1A109 /* ObservableDataContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableDataContainer.swift; sourceTree = "<group>"; };
-		6550285221A8818B001A0420 /* DynamicDataContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicDataContainer.swift; sourceTree = "<group>"; };
-		6550285421A883D3001A0420 /* Dialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dialog.swift; sourceTree = "<group>"; };
 		6551BECF21AED6F500C568C9 /* VKLongPollApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKLongPollApi.swift; sourceTree = "<group>"; };
 		6551BED121AEE32D00C568C9 /* VKGetMessagesByIdResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKGetMessagesByIdResponse.swift; sourceTree = "<group>"; };
 		6592917121F31AFD00608207 /* LastMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastMessageView.swift; sourceTree = "<group>"; };
+		6594A04D21F49C5200CFD54C /* CustomTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBarViewController.swift; sourceTree = "<group>"; };
+		65A1E01E21F4E847003CA73E /* KnowsOwnSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KnowsOwnSize.swift; sourceTree = "<group>"; };
 		65ADFEB521E233230060020D /* AttachedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachedImageView.swift; sourceTree = "<group>"; };
 		65ADFEB721E25F990060020D /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		65ADFEB921E2912A0060020D /* ForwardedMessageHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardedMessageHeader.swift; sourceTree = "<group>"; };
@@ -168,6 +164,7 @@
 				6504B2FE21A1666A002EDE94 /* DialogViewController.swift */,
 				6502082421A1C3F700157572 /* SettingsViewController.swift */,
 				650805CE219E98AD0029519A /* RootViewController.swift */,
+				6594A04D21F49C5200CFD54C /* CustomTabBarViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -238,10 +235,7 @@
 		650C95AF21A2C74E00D98867 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				650C95B021A2C77B00D98867 /* Message.swift */,
-				6550285421A883D3001A0420 /* Dialog.swift */,
 				6549FAE621AA8E2400E1A109 /* VKMessageWrapper.swift */,
-				6549FAEB21AACACF00E1A109 /* ObservableDataContainer.swift */,
 				65102DDC21F24C9F0015ACCE /* VKDialogWrapper.swift */,
 			);
 			path = Model;
@@ -251,7 +245,6 @@
 			isa = PBXGroup;
 			children = (
 				650C95B721A2D95700D98867 /* MessageHelper.swift */,
-				6550285221A8818B001A0420 /* DynamicDataContainer.swift */,
 				650856E221A9578500DE6ECB /* DialogsHelper.swift */,
 				650D820021B6D51C00D88134 /* NotificationDebugger.swift */,
 			);
@@ -294,6 +287,7 @@
 				65ADFEB721E25F990060020D /* MessageView.swift */,
 				65ADFEB921E2912A0060020D /* ForwardedMessageHeader.swift */,
 				6592917121F31AFD00608207 /* LastMessageView.swift */,
+				65A1E01E21F4E847003CA73E /* KnowsOwnSize.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -486,7 +480,6 @@
 			files = (
 				6592917221F31AFD00608207 /* LastMessageView.swift in Sources */,
 				6524A453219D41460051D73C /* VKGetConversationsResponse.swift in Sources */,
-				6550285321A8818B001A0420 /* DynamicDataContainer.swift in Sources */,
 				6515E5C021A4484500D22CEA /* VKLongPoller.swift in Sources */,
 				65052630219D6CB800EF8BAA /* VKHttpRequestLayer.swift in Sources */,
 				65052634219DB99000EF8BAA /* ConversationsViewController.swift in Sources */,
@@ -498,7 +491,6 @@
 				6549FAE921AAA11300E1A109 /* VKGetLongPollHistoryResponse.swift in Sources */,
 				65ADFEBA21E2912A0060020D /* ForwardedMessageHeader.swift in Sources */,
 				6506EC9F21B277240033859A /* VKLongPollEventHandler.swift in Sources */,
-				650C95B121A2C77B00D98867 /* Message.swift in Sources */,
 				6506FF2921B4706000DF281C /* VKPhotoModel.swift in Sources */,
 				650D820121B6D51C00D88134 /* NotificationDebugger.swift in Sources */,
 				650805CF219E98AD0029519A /* RootViewController.swift in Sources */,
@@ -516,7 +508,6 @@
 				6506FF3121B4781800DF281C /* VKDocumentModel.swift in Sources */,
 				65079F7621BD074D0013F502 /* LabelWithPadding.swift in Sources */,
 				65ADFEB821E25F990060020D /* MessageView.swift in Sources */,
-				6550285521A883D3001A0420 /* Dialog.swift in Sources */,
 				65ADFEB621E233230060020D /* AttachedImageView.swift in Sources */,
 				6502082521A1C3F700157572 /* SettingsViewController.swift in Sources */,
 				6551BED021AED6F500C568C9 /* VKLongPollApi.swift in Sources */,
@@ -537,10 +528,11 @@
 				6548945A21B56CF600025CB6 /* VKCommentModel.swift in Sources */,
 				6524A450219D35B90051D73C /* VKConversationModel.swift in Sources */,
 				6549FAE721AA8E2400E1A109 /* VKMessageWrapper.swift in Sources */,
+				65A1E01F21F4E847003CA73E /* KnowsOwnSize.swift in Sources */,
+				6594A04E21F49C5300CFD54C /* CustomTabBarViewController.swift in Sources */,
 				6548943B21B5633E00025CB6 /* VKGiftModel.swift in Sources */,
 				6548945C21B56F1B00025CB6 /* VKLinkModel.swift in Sources */,
 				65102DDD21F24C9F0015ACCE /* VKDialogWrapper.swift in Sources */,
-				6549FAEC21AACACF00E1A109 /* ObservableDataContainer.swift in Sources */,
 				6548943D21B563D700025CB6 /* VKWallPostModel.swift in Sources */,
 				65E6F50A219C8C4E006BC0A8 /* AppDelegate.swift in Sources */,
 				65E6F51F219CB7CD006BC0A8 /* VKResponse.swift in Sources */,

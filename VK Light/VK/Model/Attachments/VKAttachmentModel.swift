@@ -22,6 +22,8 @@ struct VKAttachmentModel : Decodable {
         case wallReply
         case gift
         case audioMessage = "audio_message"
+        case graffiti
+        case poll
     }
     
     let type : AttachmentType

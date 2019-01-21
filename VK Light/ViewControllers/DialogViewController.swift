@@ -10,12 +10,13 @@ import UIKit
 
 class DialogViewController: UIViewController {
 
-    var dialogInfo : VKGetConversationsResponse.Item?
-    var profile :  VKProfile?
-    var group : VKGroup?
+    //var dialogInfo : VKGetConversationsResponse.Item?
+    var dialogWrapper: VKDialogWrapper!
+    //var profile :  VKProfile?
+    //var group : VKGroup?
     let messageHelper = MessageHelper()
     var messages : [VKMessageWrapper] = []
-    var rowHights = [CGFloat]()
+    var rowHeights = [CGFloat]()
     let lpEventHandler = VKLongPollEventHandler.shared
     var isCurrentlyLoadingMessages = false {
         didSet(new) {
@@ -41,8 +42,7 @@ class DialogViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setTitle()
-        //addContentInsetsToTableView()
+        title = dialogWrapper.dialogTitle
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -50,9 +50,6 @@ class DialogViewController: UIViewController {
         
         tableView.transform = CGAffineTransform.identity.rotated(by: .pi) // переворачиваем TableView
         pushScrollBarToRightSide()
-        
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 50
         
         tableView.allowsSelection = false
         tableView.separatorStyle = .none
@@ -74,58 +71,39 @@ class DialogViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: (navigationController?.navigationBar.frame.height)! + UIApplication.shared.statusBarFrame.size.height, right: 0)
     }
     
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row + 1 == (messages.count - 1) && !isCurrentlyLoadingMessages{
-            loadMessages()
-        }
-    }
+    
     
     
     override func viewDidAppear(_ animated: Bool) {
         loadMessages()
         lpEventHandler.addNewMessageSubscriber(subscriber: self)
         lpEventHandler.addTypingSubscriber(subscriber: self)
+        lpEventHandler.addMessageFlagsSubscriber(subscriber: self)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         lpEventHandler.removeNewMessageSubscriber(subscriber: self)
         lpEventHandler.removeTypingSubscriber(subscriber: self)
+        lpEventHandler.removeMessageFlagsSubscriber(subscriber: self)
     }
     
-    func setTitle() {
-        guard let info = dialogInfo else {return}
-        switch info.conversation.peer.type {
-        case .user:
-            guard let profile = profile else {return}
-            self.title = profile.firstName + " " + profile.lastName
-        case .chat:
-            guard let chat = info.conversation.chatSettings else {return}
-            self.title = chat.title
-        case .group:
-            guard let group = group else {return}
-            self.title = group.name
-        case .email:
-            self.title = "ЧАТ С EMAIL"
-        }
-    }
     
-    func handleNewMessage(message: VKMessageWrapper) {
-        self.messages.insert(message, at: 0)
-        tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .top)
-    }
+    
     
     func loadMessages() {
-        guard let dialogInfo = dialogInfo else {
-            return
-        }
+        let countBeforeLoading = messages.count
         isCurrentlyLoadingMessages = true
-        messageHelper.loadMessages(peerId: dialogInfo.conversation.peer.id, startId: dialogInfo.lastMessage.id!, offset: messages.count, count: 20) {
+        messageHelper.loadMessages(peerId: dialogWrapper.dialog.peer.id, startId: dialogWrapper.lastMessage.message.id!, offset: messages.count, count: 20) {
             (newMessages, error) in
             self.isCurrentlyLoadingMessages = false
             if let newMessages = newMessages {
                 self.messages.append(contentsOf: newMessages)
-                //self.tableView.reloadData()
-                self.calculateRowHightsAndUpdateTableView()
+                DispatchQueue.global().async {
+                    self.calculateRowHights(startingAt: countBeforeLoading, count: newMessages.count)
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }
             }
             if let error = error {
                 NotificationDebugger.print(text: error.rawValue)
@@ -145,34 +123,47 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "messageCell") as! MessageCell
-        
-        cell.messageWrapper = messages[indexPath.row]
-        cell.transform = CGAffineTransform.identity.rotated(by: .pi) // поворот
-        //cell.layoutSubviews()
-        
+        cell.transform = CGAffineTransform.identity.rotated(by: .pi)
         return cell
     }
     
-    /*func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return rowHights[indexPath.row]
-    }*/
-    
-    func calculateRowHightsAndUpdateTableView() {
-        return;
-        DispatchQueue.global().async {
-            let cell = MessageCell.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: "fakeCell")
-            
-            for msg in self.messages {
-                let l = CALayer()
-                l.contents = cell
-                cell.messageWrapper = msg
-                self.rowHights.append(cell.layer.bounds.height)
-                cell.prepareForReuse()
-            }
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let c = cell as! MessageCell
+        c.messageWrapper = messages[indexPath.row]
+        if indexPath.row + 1 == (messages.count - 1) && !isCurrentlyLoadingMessages{
+            loadMessages()
         }
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return rowHeights[indexPath.row]
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return rowHeights[indexPath.row]
+    }
+    
+    func calculateRowHights(startingAt: Int, count: Int) {
+        var current = startingAt
+        for _ in 0...count-1 {
+            calculateRowHeight(for: current)
+            current += 1
+        }
+    }
+    
+    private func calculateRowHeight(for messageIndex: Int) {
+        let bubble = MessageView()
+        bubble.messageWrapper = messages[messageIndex]
+        var height = bubble.heightOfSelf + MessageCell.absolutePadding
+        if height < MessageCell.minHeight { height = MessageCell.minHeight }
+        rowHeights.insert(height, at: messageIndex)
+    }
+    
+    private func recalculateRowHeight(for messageIndex: Int) {
+        let bubble = MessageView()
+        bubble.messageWrapper = messages[messageIndex]
+        var height = bubble.heightOfSelf + MessageCell.absolutePadding
+        if height < MessageCell.minHeight { height = MessageCell.minHeight }
+        rowHeights[messageIndex] = height
     }
     
     
@@ -180,12 +171,18 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
 
 extension DialogViewController : NewMessagesSubscriber {
     func newMessageReceived(message: VKMessageWrapper) {
-        handleNewMessage(message: message)
+        self.messages.insert(message, at: 0)
+        DispatchQueue.global().async {
+            self.calculateRowHeight(for: 0)
+            DispatchQueue.main.async {
+                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .top)
+            }
+        }
     }
     
     var peerWatchedForMessages: Int {
         get {
-            return dialogInfo!.conversation.peer.id
+            return dialogWrapper.dialog.peer.id
         }
     }
     
@@ -198,11 +195,11 @@ extension DialogViewController : UserTypingSubscriber {
 
     func userStartedTyping(userId: Int) {
         self.title = "печатает..."
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: { self.setTitle() })
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: { self.title = self.dialogWrapper.dialogTitle })
     }
     
     func watchingTypingFromUser() -> Int {
-        return dialogInfo!.conversation.peer.id
+        return dialogWrapper.dialog.peer.id
     }
     
     func watchesTypingFromAllUsers() -> Bool {
@@ -215,14 +212,52 @@ extension DialogViewController : UserTypingSubscriber {
 extension DialogViewController : TypingInChatSubscriber {
     func userStartedTypingInChat(userId: Int, chatId: Int) {
         self.title = "\(userId) печатает..."
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: { self.setTitle() })
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: { self.title = self.dialogWrapper.dialogTitle })
     }
     
     func watchingTypingInChat() -> Int {
-        return dialogInfo!.conversation.peer.localId
+        return dialogWrapper.dialog.peer.localId
     }
     
     func watchesTypingFromAllChats() -> Bool {
+        return false
+    }
+    
+    
+}
+
+extension DialogViewController : MessageFlagsSubscriber {
+    func messageFlagsChanged(peerId: Int, messages: [MessageIdAndFlags]) {
+        DispatchQueue.global().async {
+            var deleted = [Int]()
+            for message in messages {
+                if message.flags.isDeleted || message.flags.isDeletedForEveryone {
+                    for i in 0...self.messages.count-1 {
+                        if self.messages[i].message.id == message.messageId {
+                            deleted.append(i)
+                        }
+                    }
+                }
+            }
+            
+            var deletedPaths = [IndexPath]()
+            for i in deleted {
+                deletedPaths.append(IndexPath(row: i, section: 0))
+                self.messages.remove(at: i)
+                self.rowHeights.remove(at: i)
+            }
+            DispatchQueue.main.async {
+                self.tableView.deleteRows(at: deletedPaths, with: .fade)
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    func watchesMessageFlagsForPeer() -> Int {
+        return self.dialogWrapper.dialog.peer.id
+    }
+    
+    func watchesMessageFlagsForAllPeers() -> Bool {
         return false
     }
     

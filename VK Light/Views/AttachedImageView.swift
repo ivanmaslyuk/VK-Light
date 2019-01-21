@@ -9,7 +9,10 @@
 import Foundation
 import UIKit
 
-class AttachedImageView : UIView {
+class AttachedImageView : UIView, KnowsOwnSize {
+    
+    private let topPadding: CGFloat = 3.0
+    private let bottomPadding: CGFloat = 3.0
     
     public var image: VKPhotoModel! {
         didSet { setImage() }
@@ -17,6 +20,7 @@ class AttachedImageView : UIView {
     
     private var imageView: CachedImageView = {
         var iv = CachedImageView()
+        iv.translatesAutoresizingMaskIntoConstraints = false
         iv.contentMode = .scaleAspectFit
         iv.clipsToBounds = true
         iv.layer.cornerRadius = 7
@@ -42,22 +46,22 @@ class AttachedImageView : UIView {
     
     private func setImage() {
         let img = image.getAppropriatelySized(for: 300)
-        let aspectRatio = Double(img.width) / Double(img.height)
-        let adjustedWidth = Double(300)
-        var adjustedHeight = adjustedWidth / aspectRatio
-        
-        if adjustedHeight > 400 { adjustedHeight = 400 }
-        
-        imageView.frame.size = CGSize(width: adjustedWidth, height: adjustedHeight)
+//        let aspectRatio = Double(img.width) / Double(img.height)
+//        let adjustedWidth = Double(300)
+//        var adjustedHeight = adjustedWidth / aspectRatio
+//
+//        if adjustedHeight > 400 { adjustedHeight = 400 }
+        let newSize = adjustedSize(for: img, maxWidth: 300)
+        imageView.frame.size = newSize//CGSize(width: adjustedWidth, height: adjustedHeight)
         
         let constraints = [
-            self.heightAnchor.constraint(equalToConstant: CGFloat(adjustedHeight) + 6),
-            self.widthAnchor.constraint(equalToConstant: CGFloat(adjustedWidth)),
+            self.heightAnchor.constraint(equalToConstant: newSize.height + topPadding + bottomPadding),
+            self.widthAnchor.constraint(equalToConstant: newSize.width),
             
-            imageView.topAnchor.constraint(equalTo: topAnchor, constant: 3), // TODO: починить это, нет отступа сверху
-            imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -3),
-            imageView.heightAnchor.constraint(equalToConstant: CGFloat(adjustedHeight)),
-            imageView.widthAnchor.constraint(equalToConstant: CGFloat(adjustedWidth)),
+            imageView.topAnchor.constraint(equalTo: topAnchor, constant: topPadding), // TODO: починить это, нет отступа сверху
+            imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -bottomPadding),
+            imageView.heightAnchor.constraint(equalToConstant: newSize.height),
+            imageView.widthAnchor.constraint(equalToConstant: newSize.width),
         ]
         
         NSLayoutConstraint.activate(constraints)
@@ -65,5 +69,20 @@ class AttachedImageView : UIView {
         
     }
     
+    private func adjustedSize(for size: VKPhotoModel.Size, maxWidth: CGFloat) -> CGSize {
+        let aspectRatio = CGFloat(size.width) / CGFloat(size.height)
+        let adjustedWidth = maxWidth
+        var adjustedHeight = adjustedWidth / aspectRatio
+        
+        if adjustedHeight > 400 { adjustedHeight = 400 }
+        
+        return CGSize(width: adjustedWidth, height: adjustedHeight)
+    }
+    
+    var heightOfSelf: CGFloat {
+        let img = image.getAppropriatelySized(for: 300)
+        let size = adjustedSize(for: img, maxWidth: 300)
+        return size.height + topPadding + bottomPadding
+    }
     
 }
