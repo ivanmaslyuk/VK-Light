@@ -19,7 +19,29 @@ class ConversationCell: UITableViewCell {
     
     var dialogWrapper: VKDialogWrapper!
     
+    private var onlineIndicator: UIImageView = {
+        let iv = UIImageView()
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.contentMode = .scaleAspectFit
+        NSLayoutConstraint.activate([
+            iv.widthAnchor.constraint(equalToConstant: 15),
+            iv.heightAnchor.constraint(equalToConstant: 15)
+        ])
+        iv.image = UIImage(named: "online")
+        return iv
+    }()
     
+    private var onlineMobileIndicator: UIImageView = {
+        let iv = UIImageView()
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.contentMode = .scaleAspectFit
+        NSLayoutConstraint.activate([
+            iv.widthAnchor.constraint(equalToConstant: 12),
+            iv.heightAnchor.constraint(equalToConstant: 17)
+            ])
+        iv.image = UIImage(named: "onlineMobile")
+        return iv
+    }()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -28,6 +50,16 @@ class ConversationCell: UITableViewCell {
         self.dialogImage.clipsToBounds = true
         unreadCountView.clipsToBounds = true
         unreadCountView.layer.cornerRadius = unreadCountView.frame.height / 2
+        
+        addSubview(onlineIndicator)
+        addSubview(onlineMobileIndicator)
+        NSLayoutConstraint.activate([
+            onlineIndicator.bottomAnchor.constraint(equalTo: dialogImage.bottomAnchor),
+            onlineIndicator.trailingAnchor.constraint(equalTo: dialogImage.trailingAnchor),
+            onlineMobileIndicator.bottomAnchor.constraint(equalTo: dialogImage.bottomAnchor),
+            onlineMobileIndicator.trailingAnchor.constraint(equalTo: dialogImage.trailingAnchor),
+        ])
+        bringSubviewToFront(onlineIndicator)
     }
     
     override func layoutSubviews() {
@@ -38,15 +70,17 @@ class ConversationCell: UITableViewCell {
         }
         dialogName.text = dialogWrapper.dialogTitle
  
-        
-        let unreadCount = dialogWrapper.dialog.unreadCount ?? 0
+        let unreadCount = dialogWrapper.unreadCount
         unreadCountLabel.text = String(unreadCount)
         unreadCountView.isHidden = unreadCount == 0
         dialogTimeLabel.text = dialogWrapper.lastMessage.formattedTime(hoursOnly: false)
         
-        let outAndUnread = dialogWrapper.dialog.outRead != dialogWrapper.lastMessage.message.id! && dialogWrapper.lastMessage.message.isOut
-        lastMessageView.payload = LastMessageView.LastMessageInDialogPayload.init(isChat: dialogWrapper.isChat, isOutAndUnread: outAndUnread)
+        let outAndUnread = dialogWrapper.outRead != dialogWrapper.lastMessage.message.id! && dialogWrapper.lastMessage.message.isOut
+        lastMessageView.payload = LastMessageView.LastMessageInDialogPayload(isChat: dialogWrapper.isChat, isOutAndUnread: outAndUnread)
         lastMessageView.messageWrapper = dialogWrapper.lastMessage
+        
+        onlineIndicator.isHidden = dialogWrapper.profile?.online != .yes || dialogWrapper.profile?.onlineMobile == .yes
+        onlineMobileIndicator.isHidden = dialogWrapper.profile?.onlineMobile != .yes
     }
     
     override func prepareForReuse() {

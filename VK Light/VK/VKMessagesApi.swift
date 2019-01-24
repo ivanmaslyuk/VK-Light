@@ -12,7 +12,7 @@ class VKMessagesApi {
     
     let requestLayer = VKHttpRequestLayer()
     
-    func getConversations(count: Int, offset: Int = 0, extended: Bool = false, completion: @escaping VKResponseHandler<VKGetConversationsResponse>) {
+    func getConversations(count: Int, offset: Int = 0, extended: Bool = false, fields: [String] = ["online", "photo_100", "photo_50", "photo_200"], completion: @escaping VKResponseHandler<VKGetConversationsResponse>) {
         
         // проверить входные данные и кинуть исключения если что
         if count >= 200 {
@@ -22,20 +22,22 @@ class VKMessagesApi {
         let propertioes : Dictionary<String, String> = [
             "count" : String(count),
             "offset" : String(offset),
-            "extended" : extended ? "1" : "0"
+            "extended" : extended ? "1" : "0",
+            "fields" : fields.joined(separator: ",")
         ]
         
         return requestLayer.getResponse(method: "messages.getConversations", parameters: propertioes, completion: completion)
     }
     
-    func getHistory(peerId: Int, startMessageId: Int, count: Int = 20, offset: Int = 0, extended: Bool = false, reverse: Bool = false, completion: @escaping VKResponseHandler<VKGetHistoryResponse>) {
+    func getHistory(peerId: Int, startMessageId: Int, count: Int = 20, offset: Int = 0, extended: Bool = false, reverse: Bool = false, fields: [String] = ["online", "photo_100", "photo_50", "photo_200"], completion: @escaping VKResponseHandler<VKGetHistoryResponse>) {
         let parameters : Dictionary<String, String> = [
             "peer_id" : String(peerId),
             "start_message_id" : String(startMessageId),
             "count" : String(count),
             "offset" : String(offset),
             "rev" : reverse ? "1" : "0",
-            "extended" : extended ? "1" : "0"
+            "extended" : extended ? "1" : "0",
+            "fields" : fields.joined(separator: ",")
         ]
         
         return requestLayer.getResponse(method: "messages.getHistory", parameters: parameters, completion: completion)
@@ -63,13 +65,14 @@ class VKMessagesApi {
     }*/
     
     
-    func getById(ids: [Int], extended: Bool, completion: @escaping VKResponseHandler<VKGetMessagesByIdResponse>) {
+    func getById(ids: [Int], extended: Bool, fields: [String] = ["online", "photo_100", "photo_50", "photo_200"], completion: @escaping VKResponseHandler<VKGetMessagesByIdResponse>) {
         var ids_str: [String] = []
         for id in ids { ids_str.append(String(id)) }
         
         let parameters: [String : String] = [
             "message_ids" : ids_str.joined(separator: ","),
-            "extended" : extended ? "1" : "0"
+            "extended" : extended ? "1" : "0",
+            "fields" : fields.joined(separator: ",")
         ]
         
         return requestLayer.getResponse(method: "messages.getById", parameters: parameters, completion: completion)

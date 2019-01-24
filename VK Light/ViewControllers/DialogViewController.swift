@@ -18,9 +18,9 @@ class DialogViewController: UIViewController {
     var messages : [VKMessageWrapper] = []
     var rowHeights = [CGFloat]()
     let lpEventHandler = VKLongPollEventHandler.shared
-    var isCurrentlyLoadingMessages = false {
-        didSet(new) {
-            if new {
+    var isCurrentlyLoadingMessages = true {
+        didSet {
+            if isCurrentlyLoadingMessages {
                 DispatchQueue.main.async {
                     self.activityIndicator.isHidden = false
                     self.activityIndicator.startAnimating()
@@ -95,17 +95,22 @@ class DialogViewController: UIViewController {
         isCurrentlyLoadingMessages = true
         messageHelper.loadMessages(peerId: dialogWrapper.dialog.peer.id, startId: dialogWrapper.lastMessage.message.id!, offset: messages.count, count: 20) {
             (newMessages, error) in
-            self.isCurrentlyLoadingMessages = false
             if let newMessages = newMessages {
+                guard newMessages.count > 0 else {
+                    self.isCurrentlyLoadingMessages = false
+                    return
+                }
                 self.messages.append(contentsOf: newMessages)
                 DispatchQueue.global().async {
                     self.calculateRowHights(startingAt: countBeforeLoading, count: newMessages.count)
                     DispatchQueue.main.async {
+                        self.isCurrentlyLoadingMessages = false
                         self.tableView.reloadData()
                     }
                 }
             }
             if let error = error {
+                self.isCurrentlyLoadingMessages = false
                 NotificationDebugger.print(text: error.rawValue)
             }
         }

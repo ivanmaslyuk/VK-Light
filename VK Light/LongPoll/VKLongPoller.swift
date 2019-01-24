@@ -18,6 +18,7 @@ class VKLongPoller {
     private var updateHandler = VKLongPollEventHandler.shared
     private let longPollApi = VKLongPollApi()
     private var isPaused = true
+    var statusSubscribers = [LPStatusSubscriber]()
     private init() { }
     
     
@@ -52,25 +53,6 @@ class VKLongPoller {
     }
     
     
-    /*private func getServerOld(blocking: Bool, finished: @escaping () -> Void = {}) {
-        let sema = DispatchSemaphore(value: 0)
-        DispatchQueue.global().async {
-            let response = VKMessagesApi().getLongPollServer()?.response
-            print(response as Any)
-            if let response = response {
-                self.server = response.server
-                self.ts = response.ts
-                self.key = response.key
-            }
-            if blocking { sema.signal() }
-            DispatchQueue.main.async {
-                print("получен LP-сервер")
-                
-                finished()
-            }
-        }
-        if blocking { sema.wait() }
-    }*/
     
     private func getServer(blocking: Bool, finished: @escaping () -> Void = {}) {
         let sema = DispatchSemaphore(value: 0)
@@ -106,10 +88,16 @@ class VKLongPoller {
                 print("LP-сервер прислал ошибку: \(error)")
                 if error != 1 {
                     getServer(blocking: true)
-                    NotificationDebugger.print(text: "ой")
+                    //NotificationDebugger.print(text: "ой")
+                    DispatchQueue.main.async {
+                        self.notifyStatusChanged(status: .error)
+                    }
                 }
             }
             if let updates = response.updates {
+                DispatchQueue.main.async {
+                    self.notifyStatusChanged(status: .ok)
+                }
                 updateHandler.handle(updates: updates)
             }
         } else {
@@ -118,5 +106,20 @@ class VKLongPoller {
     }
     
     
+    func addStatusSubscriber(_ sub: LPStatusSubscriber) {
+        statusSubscribers.append(sub)
+    }
+    
+    
+    func removeStatusSubscriber(_ sub: LPStatusSubscriber) {
+        statusSubscribers = statusSubscribers.filter({$0 !== sub})
+    }
+    
+    
+    func notifyStatusChanged(status: LPStatus) {
+        for sub in statusSubscribers {
+            sub.lpStatusChanged(status)
+        }
+    }
     
 }

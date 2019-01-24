@@ -86,7 +86,7 @@ class MessageHelper {
         let group = findGroupById(id: item.conversation.peer.localId, in: groups)
         let lastMessage = wrapMessage(item.lastMessage, profiles: profiles, groups: groups)
         
-        return VKDialogWrapper.init(dialog: item.conversation, profile: profile, group: group, lastMessage: lastMessage)
+        return VKDialogWrapper(dialog: item.conversation, profile: profile, group: group, lastMessage: lastMessage)
     }
     
     

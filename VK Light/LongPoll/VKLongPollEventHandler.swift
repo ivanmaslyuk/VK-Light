@@ -67,8 +67,8 @@ class VKLongPollEventHandler {
             guard let response = response?.response else {return}
             
             for message in response.items {
-                let relatedProfile = response.findProfileById(id: message.peerId!)
-                let relatedGroup = response.findGroupById(id: -message.peerId!)
+                let relatedProfile = response.findProfileById(id: message.fromId)
+                let relatedGroup = response.findGroupById(id: -message.fromId)
                 self.notifyNewMessage(message: VKMessageWrapper(message: message, profile: relatedProfile, group: relatedGroup, forwardedMessages: [])) // TODO: добавить поддержку пересланных
             }
         })

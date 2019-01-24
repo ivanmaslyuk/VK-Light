@@ -9,13 +9,25 @@
 import Foundation
 
 struct VKDialogWrapper {
+    private var _unread: Int
+    private var _outRead: Int
+    
+    init(dialog: VKConversationModel, profile: VKProfile?, group: VKGroup?, lastMessage: VKMessageWrapper) {
+        self.dialog = dialog
+        self.profile = profile
+        self.group = group
+        self.lastMessage = lastMessage
+        self._unread = dialog.unreadCount ?? 0
+        self._outRead = dialog.outRead
+    }
+    
     let dialog : VKConversationModel
     let profile : VKProfile?
     let group : VKGroup?
-    let lastMessage: VKMessageWrapper
+    var lastMessage: VKMessageWrapper
     
     var isChat : Bool {
-        return dialog.chatSettings != nil
+        return dialog.peer.type == .chat
     }
     
     var dialogTitle : String? {
@@ -50,5 +62,17 @@ struct VKDialogWrapper {
         }
     }
     
+    var unreadCount: Int {
+        get {
+            return _unread
+        }
+        set {
+            _unread = newValue
+        }
+    }
     
+    var outRead: Int {
+        get { return _outRead }
+        set { _outRead = newValue }
+    }
 }

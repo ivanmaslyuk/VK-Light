@@ -14,6 +14,8 @@ struct VKProfile : Decodable {
     let lastName : String
     let deactivated : String? // deleted или banned
     let photo100: URL?
+    let online: VKBool
+    let onlineMobile: VKBool?
     
     var formattedName : String {
         get { return firstName + " " + lastName }
