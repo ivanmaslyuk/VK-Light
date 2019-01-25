@@ -75,6 +75,7 @@ class MessageView : UIStackView, KnowsOwnSize {
             case .photo:
                 photos.append(attach.photo!)
             case .sticker:
+                print("cnикер: \(attach.sticker!)")
                 presentSticker(sticker: attach.sticker!)
             case .audio:
                 continue

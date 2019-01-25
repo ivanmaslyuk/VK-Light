@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         if let _ = UserDefaults.standard.value(forKey: "vk_token") {
-            longPoller.prepareAnd { self.longPoller.resume() }
+            longPoller.resume()
         }
         authorizeNC()
         return true

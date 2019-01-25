@@ -22,13 +22,13 @@ class VKLongPoller {
     private init() { }
     
     
-    func prepareAnd(finished: @escaping () -> Void) {
+    /*func prepareAnd(finished: @escaping () -> Void) {
         getServer(blocking: false, finished: finished)
-    }
+    }*/
     
     
     func resume() {
-        guard let _ = self.server else {
+        /*guard let _ = self.server else {
             print("Невозможно начать LongPoll-запрос, так как self.server не инициализирован.")
             return
         }
@@ -41,6 +41,23 @@ class VKLongPoller {
                     self.doLongPollRequest()
                 } else {
                     break
+                }
+            }
+        }*/
+        
+        if isPaused {
+            if server == nil || ts == nil || key == nil {
+                getServer(blocking: true)
+            }
+            isPaused = false
+            print("Работа LongPoller возобновлена")
+            DispatchQueue.global().async {
+                while true {
+                    if !self.isPaused {
+                        self.doLongPollRequest()
+                    } else {
+                        break
+                    }
                 }
             }
         }
@@ -75,13 +92,13 @@ class VKLongPoller {
     
     
     private func doLongPollRequest() {
-        guard let server = self.server, let key = self.key, let ts = self.ts else {
+        /*guard let server = self.server, let key = self.key, let ts = self.ts else {
             print("doLongPollRequest() был вызван до инициализации self.server")
             getServer(blocking: true)
             return
-        }
+        }*/
         
-        let response = longPollApi.waitForLongPollUpdates(server: server, key: key, ts: ts)
+        let response = longPollApi.waitForLongPollUpdates(server: server!, key: key!, ts: ts!)
         if let response = response {
             if let ts = response.ts { self.ts = ts }
             if let error = response.failed {

@@ -9,16 +9,11 @@
 import UIKit
 
 class CustomTabBarViewController: UITabBarController {
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
-    override func tabBar(_ tabBar: UITabBar, didEndCustomizing items: [UITabBarItem], changed: Bool) {
-        super.tabBar(tabBar, didEndCustomizing: items, changed: changed)
-        selectedIndex = 1
+    var isInitialized = false
+    override func viewWillAppear(_ animated: Bool) {
+        if !isInitialized {
+            selectedIndex = 1
+            isInitialized = true
+        }
     }
 }

@@ -53,6 +53,19 @@ class DialogViewController: UIViewController {
         
         tableView.allowsSelection = false
         tableView.separatorStyle = .none
+        
+        
+        lpEventHandler.addNewMessageSubscriber(subscriber: self)
+        lpEventHandler.addTypingSubscriber(subscriber: self)
+        lpEventHandler.addTypingInChatSubscriber(subscriber: self)
+        lpEventHandler.addMessageFlagsSubscriber(subscriber: self)
+    }
+    
+    deinit {
+        lpEventHandler.removeNewMessageSubscriber(subscriber: self)
+        lpEventHandler.removeTypingSubscriber(subscriber: self)
+        lpEventHandler.removeMessageFlagsSubscriber(subscriber: self)
+        lpEventHandler.removeTypingInChatSubscriber(subscriber: self)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -72,22 +85,9 @@ class DialogViewController: UIViewController {
     }
     
     
-    
-    
     override func viewDidAppear(_ animated: Bool) {
         loadMessages()
-        lpEventHandler.addNewMessageSubscriber(subscriber: self)
-        lpEventHandler.addTypingSubscriber(subscriber: self)
-        lpEventHandler.addMessageFlagsSubscriber(subscriber: self)
     }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        lpEventHandler.removeNewMessageSubscriber(subscriber: self)
-        lpEventHandler.removeTypingSubscriber(subscriber: self)
-        lpEventHandler.removeMessageFlagsSubscriber(subscriber: self)
-    }
-    
-    
     
     
     func loadMessages() {

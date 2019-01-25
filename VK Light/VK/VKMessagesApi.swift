@@ -78,4 +78,6 @@ class VKMessagesApi {
         return requestLayer.getResponse(method: "messages.getById", parameters: parameters, completion: completion)
     }
     
+    
+    
 }
