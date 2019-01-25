@@ -9,7 +9,7 @@
 import Foundation
 
 struct VKMessageWrapper {
-    let message: VKMessageModel
+    let message: VKMessage
     let profile: VKProfile?
     let group: VKGroup?
     var forwardedMessages: [VKMessageWrapper]

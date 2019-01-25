@@ -12,7 +12,7 @@ struct VKGetLongPollHistoryResponse : Decodable {
     
     struct MessagesContainer : Decodable {
         let count: Int
-        let items: [VKMessageModel]
+        let items: [VKMessage]
     }
     
     let history: [VKLPHistoryItemModel]
@@ -45,7 +45,7 @@ struct VKGetLongPollHistoryResponse : Decodable {
         return nil
     }
     
-    func findMessageById(id: Int) -> VKMessageModel? {
+    func findMessageById(id: Int) -> VKMessage? {
         guard let messages = messages else {return nil}
         
         for message in messages.items {

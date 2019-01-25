@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKMessageModel : Decodable {
+struct VKMessage : Decodable {
     let id : Int?
     let date : Date
     let peerId : Int? // не передается если сообщение пришло в качестве последнего в диалоге
@@ -21,7 +21,7 @@ struct VKMessageModel : Decodable {
     let important : Bool?
     let out: Int? // не передается если сообщение пришло в качестве прикрепленного
     //let payload : String? // только для ботов
-    let fwdMessages : [VKMessageModel]?
+    let fwdMessages : [VKMessage]?
     //let replyMessage: VKMessageModel?
     
     /* служебные */

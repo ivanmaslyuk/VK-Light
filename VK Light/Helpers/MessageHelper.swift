@@ -55,7 +55,7 @@ class MessageHelper {
     }
     
     
-    private func wrapMessage(_ msg: VKMessageModel, profiles: [VKProfile]?, groups: [VKGroup]?) -> VKMessageWrapper {
+    private func wrapMessage(_ msg: VKMessage, profiles: [VKProfile]?, groups: [VKGroup]?) -> VKMessageWrapper {
         let profile = findProfileById(id: msg.fromId, in: profiles)
         let group = findGroupById(id: -msg.fromId, in: groups)
         

@@ -12,7 +12,7 @@ struct VKGetConversationsResponse : Decodable {
     
     struct Item : Decodable {
         let conversation : VKConversationModel
-        let lastMessage : VKMessageModel
+        let lastMessage : VKMessage
     }
     
     let count : Int

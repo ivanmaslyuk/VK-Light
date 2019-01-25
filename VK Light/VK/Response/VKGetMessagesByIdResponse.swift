@@ -10,7 +10,7 @@ import Foundation
 
 struct VKGetMessagesByIdResponse : Decodable {
     let count: Int
-    let items: [VKMessageModel]
+    let items: [VKMessage]
     let profiles: [VKProfile]?
     let groups: [VKGroup]?
     

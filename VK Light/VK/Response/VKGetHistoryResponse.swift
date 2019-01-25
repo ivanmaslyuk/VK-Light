@@ -10,7 +10,7 @@ import Foundation
 
 struct VKGetHistoryResponse : Decodable {
     let count : Int
-    let items : [VKMessageModel]
+    let items : [VKMessage]
     let conversations : [VKConversationModel]?
     let profiles : [VKProfile]?
     let groups : [VKGroup]?
