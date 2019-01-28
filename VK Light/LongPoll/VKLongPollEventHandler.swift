@@ -16,15 +16,19 @@ class VKLongPollEventHandler {
     
     
     func handle(updates: [VKLPHistoryItemModel]) {
-        print("LongPoller: ПОЛУЧЕНЫ ДАННЫЕ ОТ LP")
+//        print("LongPoller: ПОЛУЧЕНЫ ДАННЫЕ ОТ LP")
         var messageIds: [Int] = []
         var editedMsgIds: [Int] = []
         var flagsSetForMessages = [VKLPHistoryItemModel]()
         for update in updates {
-            print("LongPoller: Произошло событие \(update.kind) (\(update.kind.rawValue))")
+//            print("LongPoller: Произошло событие \(update.kind) (\(update.kind.rawValue))")
             switch update.kind {
             case .messageFlagsSet, .messageFlagsReset, .messageFlagsChanged:
                 //notifyMessageFlagsChanged(peerId: update.peerId!, messageId: update.messageId!, flags: update.messageFlags!)
+                if !messageIds.isEmpty {
+                    handleNewMessages(ids: messageIds)
+                    messageIds.removeAll()
+                }
                 flagsSetForMessages.append(update)
             case .newMessage:
                 messageIds.append(update.messageId!)

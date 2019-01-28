@@ -32,10 +32,12 @@ class VKHttpRequestLayer {
         var params = parameters
         params["access_token"] = accessToken
         params["v"] = version
-        let paramsString = params.map{ "\($0)=\($1)" }.joined(separator: "&")
+        let paramsString = params.map{ "\($0)=\($1)" }.joined(separator: "&").addingPercentEncoding(withAllowedCharacters: .urlPathAllowed)!
         
-        let url = URL(string: "https://api.vk.com/method/\(method)?\(paramsString)")!
-        print(url)
+        let urlString = "https://api.vk.com/method/\(method)?\(paramsString)"
+//        let encodedUrlString = String(describing: urlString.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed))
+        let url = URL(string: urlString)!
+//        print(url)
         
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             if let error = error {

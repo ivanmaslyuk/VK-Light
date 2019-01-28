@@ -10,14 +10,21 @@ import UIKit
 
 class DialogViewController: UIViewController {
 
-    //var dialogInfo : VKGetConversationsResponse.Item?
     var dialogWrapper: VKDialogWrapper!
-    //var profile :  VKProfile?
-    //var group : VKGroup?
     let messageHelper = MessageHelper()
     var messages : [VKMessageWrapper] = []
     var rowHeights = [CGFloat]()
     let lpEventHandler = VKLongPollEventHandler.shared
+    let titleView = DialogHeaderView()
+    let messageInputView = MessageInputView()
+    var isSubscribed: Bool = false
+    
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+    var inputViewOffset: NSLayoutConstraint!
+    
+    
     var isCurrentlyLoadingMessages = true {
         didSet {
             if isCurrentlyLoadingMessages {
@@ -36,42 +43,79 @@ class DialogViewController: UIViewController {
     }
     
     
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = dialogWrapper.dialogTitle
+        self.navigationItem.titleView = self.titleView
+        titleView.title = dialogWrapper.dialogTitle
+        self.resetStatus()
         
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(MessageCell.self, forCellReuseIdentifier: "messageCell")
-        
-        tableView.transform = CGAffineTransform.identity.rotated(by: .pi) // переворачиваем TableView
-        pushScrollBarToRightSide()
-        
-        tableView.allowsSelection = false
-        tableView.separatorStyle = .none
-        
-        
-        lpEventHandler.addNewMessageSubscriber(subscriber: self)
-        lpEventHandler.addTypingSubscriber(subscriber: self)
-        lpEventHandler.addTypingInChatSubscriber(subscriber: self)
-        lpEventHandler.addMessageFlagsSubscriber(subscriber: self)
+        setAvatar()
+        setupTableView()
+        setupInputView()
     }
     
-    deinit {
-        lpEventHandler.removeNewMessageSubscriber(subscriber: self)
-        lpEventHandler.removeTypingSubscriber(subscriber: self)
-        lpEventHandler.removeMessageFlagsSubscriber(subscriber: self)
-        lpEventHandler.removeTypingInChatSubscriber(subscriber: self)
+    @objc func handleKeyboardNotification(notification: NSNotification) {
+        if isMovingFromParent { return }
+        if let userInfo = notification.userInfo {
+            let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
+            let isKeyboardShowing = notification.name == UIResponder.keyboardWillShowNotification
+            
+            inputViewOffset.constant = isKeyboardShowing ? -keyboardFrame.height : 0
+            
+            UIView.animate(withDuration: 0, delay: 0, options: .curveEaseOut, animations: {
+                self.addContentInsetsToTableView()
+                self.view.layoutIfNeeded()
+                if self.tableView.indexPathsForVisibleRows?.contains(IndexPath(row: 0, section: 0)) ?? false {
+                    self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top, animated: false)
+                }
+            }, completion: nil)
+        }
+    }
+    
+    @objc func handleTableViewTapped(recognizer: UITapGestureRecognizer) {
+        self.messageInputView.finishEditing()
+    }
+    
+    private func setupInputView() {
+        view.addSubview(messageInputView)
+        messageInputView.translatesAutoresizingMaskIntoConstraints = false
+        messageInputView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        messageInputView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+        self.inputViewOffset = messageInputView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
+        inputViewOffset.isActive = true
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardNotification), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardNotification), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTableViewTapped(recognizer:)))
+        tableView.addGestureRecognizer(tapRecognizer)
+        
+        messageInputView.sendAction = self.sendMessage
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !isSubscribed {
+            subscribe()
+            isSubscribed = true
+        }
+        addContentInsetsToTableView()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        if isMovingFromParent {
+            unsubscribe()
+            isSubscribed = false
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        // при перевороте экрана
         pushScrollBarToRightSide(size: size)
-        //addContentInsetsToTableView()
+        coordinator.animate(alongsideTransition: nil, completion: { (_) in
+            self.addContentInsetsToTableView()
+        })
     }
     
     private func pushScrollBarToRightSide(size: CGSize? = nil) {
@@ -81,12 +125,17 @@ class DialogViewController: UIViewController {
     }
     
     private func addContentInsetsToTableView() {
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: (navigationController?.navigationBar.frame.height)! + UIApplication.shared.statusBarFrame.size.height, right: 0)
+        let topInset = -inputViewOffset.constant + 48 //messageInputView.frame.height
+        let bottomInset = (navigationController?.navigationBar.frame.height) ?? 0 + UIApplication.shared.statusBarFrame.size.height
+        tableView.contentInset = UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: 0)
+        let scrollInsets = tableView.scrollIndicatorInsets
+        tableView.scrollIndicatorInsets = UIEdgeInsets(top: topInset, left: 0, bottom: bottomInset, right: scrollInsets.right)
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
         loadMessages()
+        setAvatar()
     }
     
     
@@ -117,8 +166,69 @@ class DialogViewController: UIViewController {
     }
     
     
+    func resetStatus() {
+        if let p = dialogWrapper.profile {
+            titleView.status = p.online == .yes ? "в сети" : "не в сети"
+        }
+        if let _ = dialogWrapper.group {
+            titleView.status = "сообщество"
+        }
+        if dialogWrapper.isChat {
+            titleView.status = "\(dialogWrapper.dialog.chatSettings!.membersCount!) участников"
+        }
+    }
     
+    func setAvatar() {
+        let iv = CachedImageView()
+        iv.layer.cornerRadius = 18
+        iv.backgroundColor = .gray
+        iv.clipsToBounds = true
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        iv.widthAnchor.constraint(equalToConstant: 36).isActive = true
+        if let url = dialogWrapper.photo100 {
+            iv.setSource(url: url)
+        }
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: iv)
+    }
+    
+    func subscribe() {
+        lpEventHandler.addNewMessageSubscriber(subscriber: self)
+        lpEventHandler.addTypingSubscriber(subscriber: self)
+        lpEventHandler.addTypingInChatSubscriber(subscriber: self)
+        lpEventHandler.addMessageFlagsSubscriber(subscriber: self)
+    }
 
+    func unsubscribe() {
+        lpEventHandler.removeNewMessageSubscriber(subscriber: self)
+        lpEventHandler.removeTypingSubscriber(subscriber: self)
+        lpEventHandler.removeMessageFlagsSubscriber(subscriber: self)
+        lpEventHandler.removeTypingInChatSubscriber(subscriber: self)
+    }
+    
+    func setupTableView() {
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(MessageCell.self, forCellReuseIdentifier: "messageCell")
+        
+        tableView.transform = CGAffineTransform.identity.rotated(by: .pi) // переворачиваем TableView
+        pushScrollBarToRightSide()
+        
+        tableView.allowsSelection = false
+        tableView.separatorStyle = .none
+    }
+    
+    func sendMessage() {
+        let peerId = dialogWrapper.dialog.peer.id
+        let randomId = Int32.random(in: 0...Int32.max)
+        let message = messageInputView.text
+        VKMessagesApi().send(peerId: peerId, randomId: randomId, message: message, latitude: nil, longitude: nil, attachments: nil, replyTo: nil, forwardedMessages: nil, stickerId: nil, parseLinks: true) { (response, error) in
+            
+        }
+        messageInputView.clear()
+    }
+    
+    
 }
 
 extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
@@ -146,6 +256,11 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return rowHeights[indexPath.row]
     }
+    
+    private func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) {
+        messageInputView.finishEditing()
+    }
+    
     
     func calculateRowHights(startingAt: Int, count: Int) {
         var current = startingAt
@@ -176,11 +291,14 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
 
 extension DialogViewController : NewMessagesSubscriber {
     func newMessageReceived(message: VKMessageWrapper) {
+        self.resetStatus()
         self.messages.insert(message, at: 0)
         DispatchQueue.global().async {
             self.calculateRowHeight(for: 0)
             DispatchQueue.main.async {
-                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .top)
+                if (self.isViewLoaded && self.view.window != nil && UIApplication.shared.applicationState == .active) { // if view is visible
+                    self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .top)
+                }
             }
         }
     }
@@ -199,8 +317,8 @@ extension DialogViewController : NewMessagesSubscriber {
 extension DialogViewController : UserTypingSubscriber {
 
     func userStartedTyping(userId: Int) {
-        self.title = "печатает..."
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: { self.title = self.dialogWrapper.dialogTitle })
+        self.titleView.status = "печатает..."
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: { self.resetStatus() })
     }
     
     func watchingTypingFromUser() -> Int {
@@ -216,8 +334,8 @@ extension DialogViewController : UserTypingSubscriber {
 
 extension DialogViewController : TypingInChatSubscriber {
     func userStartedTypingInChat(userId: Int, chatId: Int) {
-        self.title = "\(userId) печатает..."
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: { self.title = self.dialogWrapper.dialogTitle })
+        self.titleView.status = "\(userId) печатает..."
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: { self.resetStatus() })
     }
     
     func watchingTypingInChat() -> Int {

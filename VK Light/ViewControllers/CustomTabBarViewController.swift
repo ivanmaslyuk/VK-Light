@@ -11,9 +11,13 @@ import UIKit
 class CustomTabBarViewController: UITabBarController {
     var isInitialized = false
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         if !isInitialized {
             selectedIndex = 1
             isInitialized = true
         }
+        self.setNeedsStatusBarAppearanceUpdate()
     }
+    
+    
 }

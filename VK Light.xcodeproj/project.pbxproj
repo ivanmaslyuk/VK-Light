@@ -51,6 +51,7 @@
 		6524A453219D41460051D73C /* VKGetConversationsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6524A452219D41460051D73C /* VKGetConversationsResponse.swift */; };
 		653770DD21FB61FA0037FD38 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 653770DB21FB61FA0037FD38 /* Model.xcdatamodeld */; };
 		653770E021FB6EB40037FD38 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653770DF21FB6EB40037FD38 /* CoreDataManager.swift */; };
+		653770E221FB72A40037FD38 /* DialogHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653770E121FB72A40037FD38 /* DialogHeaderView.swift */; };
 		6548943B21B5633E00025CB6 /* VKGiftModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6548943A21B5633E00025CB6 /* VKGiftModel.swift */; };
 		6548943D21B563D700025CB6 /* VKWallPostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6548943C21B563D700025CB6 /* VKWallPostModel.swift */; };
 		6548945621B5695E00025CB6 /* VKBool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6548945521B5695E00025CB6 /* VKBool.swift */; };
@@ -69,6 +70,8 @@
 		65ADFEB621E233230060020D /* AttachedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADFEB521E233230060020D /* AttachedImageView.swift */; };
 		65ADFEB821E25F990060020D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADFEB721E25F990060020D /* MessageView.swift */; };
 		65ADFEBA21E2912A0060020D /* ForwardedMessageHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADFEB921E2912A0060020D /* ForwardedMessageHeader.swift */; };
+		65AE67B921FC78A100FFCB84 /* MessageInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AE67B821FC78A100FFCB84 /* MessageInputView.swift */; };
+		65D700E821FF142F001D75A9 /* AudioWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D700E721FF142F001D75A9 /* AudioWaveformView.swift */; };
 		65E6F50A219C8C4E006BC0A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E6F509219C8C4E006BC0A8 /* AppDelegate.swift */; };
 		65E6F50C219C8C4E006BC0A8 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E6F50B219C8C4E006BC0A8 /* AuthViewController.swift */; };
 		65E6F50F219C8C4E006BC0A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65E6F50D219C8C4E006BC0A8 /* Main.storyboard */; };
@@ -121,6 +124,7 @@
 		6524A452219D41460051D73C /* VKGetConversationsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKGetConversationsResponse.swift; sourceTree = "<group>"; };
 		653770DC21FB61FA0037FD38 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		653770DF21FB6EB40037FD38 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		653770E121FB72A40037FD38 /* DialogHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogHeaderView.swift; sourceTree = "<group>"; };
 		6548943A21B5633E00025CB6 /* VKGiftModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKGiftModel.swift; sourceTree = "<group>"; };
 		6548943C21B563D700025CB6 /* VKWallPostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKWallPostModel.swift; sourceTree = "<group>"; };
 		6548945521B5695E00025CB6 /* VKBool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKBool.swift; sourceTree = "<group>"; };
@@ -139,6 +143,8 @@
 		65ADFEB521E233230060020D /* AttachedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachedImageView.swift; sourceTree = "<group>"; };
 		65ADFEB721E25F990060020D /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		65ADFEB921E2912A0060020D /* ForwardedMessageHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardedMessageHeader.swift; sourceTree = "<group>"; };
+		65AE67B821FC78A100FFCB84 /* MessageInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInputView.swift; sourceTree = "<group>"; };
+		65D700E721FF142F001D75A9 /* AudioWaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioWaveformView.swift; sourceTree = "<group>"; };
 		65E6F506219C8C4E006BC0A8 /* VK Light.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK Light.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		65E6F509219C8C4E006BC0A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65E6F50B219C8C4E006BC0A8 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
@@ -306,6 +312,9 @@
 				6592917121F31AFD00608207 /* LastMessageView.swift */,
 				65A1E01E21F4E847003CA73E /* KnowsOwnSize.swift */,
 				65AB77AE21F9FF4700D82DC0 /* NetworkStatusView.swift */,
+				653770E121FB72A40037FD38 /* DialogHeaderView.swift */,
+				65AE67B821FC78A100FFCB84 /* MessageInputView.swift */,
+				65D700E721FF142F001D75A9 /* AudioWaveformView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -504,10 +513,12 @@
 				65AB77AD21F9F54800D82DC0 /* LPStatusSubscriber.swift in Sources */,
 				65052630219D6CB800EF8BAA /* VKHttpRequestLayer.swift in Sources */,
 				65052634219DB99000EF8BAA /* ConversationsViewController.swift in Sources */,
+				653770E221FB72A40037FD38 /* DialogHeaderView.swift in Sources */,
 				6506ECA721B2B8BD0033859A /* UserTypingSubscriber.swift in Sources */,
 				650856E321A9578500DE6ECB /* DialogsHelper.swift in Sources */,
 				6506ECA921B2BA2C0033859A /* TypingInChatSubscriber.swift in Sources */,
 				6548945621B5695E00025CB6 /* VKBool.swift in Sources */,
+				65D700E821FF142F001D75A9 /* AudioWaveformView.swift in Sources */,
 				6506FF1A21B40D3600DF281C /* MessageEditedSubscriber.swift in Sources */,
 				6549FAE921AAA11300E1A109 /* VKGetLongPollHistoryResponse.swift in Sources */,
 				65ADFEBA21E2912A0060020D /* ForwardedMessageHeader.swift in Sources */,
@@ -550,6 +561,7 @@
 				6548945A21B56CF600025CB6 /* VKCommentModel.swift in Sources */,
 				6524A450219D35B90051D73C /* VKConversationModel.swift in Sources */,
 				6549FAE721AA8E2400E1A109 /* VKMessageWrapper.swift in Sources */,
+				65AE67B921FC78A100FFCB84 /* MessageInputView.swift in Sources */,
 				65A1E01F21F4E847003CA73E /* KnowsOwnSize.swift in Sources */,
 				6594A04E21F49C5300CFD54C /* CustomTabBarViewController.swift in Sources */,
 				6548943B21B5633E00025CB6 /* VKGiftModel.swift in Sources */,

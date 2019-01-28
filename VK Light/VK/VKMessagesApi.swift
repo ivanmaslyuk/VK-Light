@@ -26,7 +26,7 @@ class VKMessagesApi {
             "fields" : fields.joined(separator: ",")
         ]
         
-        return requestLayer.getResponse(method: "messages.getConversations", parameters: propertioes, completion: completion)
+        requestLayer.getResponse(method: "messages.getConversations", parameters: propertioes, completion: completion)
     }
     
     func getHistory(peerId: Int, startMessageId: Int, count: Int = 20, offset: Int = 0, extended: Bool = false, reverse: Bool = false, fields: [String] = ["online", "photo_100", "photo_50", "photo_200"], completion: @escaping VKResponseHandler<VKGetHistoryResponse>) {
@@ -40,7 +40,7 @@ class VKMessagesApi {
             "fields" : fields.joined(separator: ",")
         ]
         
-        return requestLayer.getResponse(method: "messages.getHistory", parameters: parameters, completion: completion)
+        requestLayer.getResponse(method: "messages.getHistory", parameters: parameters, completion: completion)
     }
     
     func getLongPollServer(completion: @escaping VKResponseHandler<VKLPServerModel>) {
@@ -49,7 +49,7 @@ class VKMessagesApi {
             "lp_version" : "3"
         ]
         
-        return requestLayer.getResponse(method: "messages.getLongPollServer", parameters: parameters, completion: completion)
+        requestLayer.getResponse(method: "messages.getLongPollServer", parameters: parameters, completion: completion)
     }
     
     /*func getLongPollHistory(ts: Int, pts: Int, onlines: Bool, fields: [String]) -> VKResponse<VKGetLongPollHistoryResponse>? {
@@ -75,9 +75,49 @@ class VKMessagesApi {
             "fields" : fields.joined(separator: ",")
         ]
         
-        return requestLayer.getResponse(method: "messages.getById", parameters: parameters, completion: completion)
+        requestLayer.getResponse(method: "messages.getById", parameters: parameters, completion: completion)
     }
     
+    func send(peerId: Int, randomId: Int32?, message: String?, latitude: Int?, longitude: Int?, attachments: [String]?, replyTo: Int?, forwardedMessages: [Int]?, stickerId: Int?, parseLinks: Bool, completion: @escaping VKResponseHandler<Int>) {
+        
+        if !(message != nil || attachments != nil || forwardedMessages != nil || stickerId != nil) {
+            fatalError("Сообщение не содержит контента. Отправка невозможна")
+        }
+        
+        if stickerId != nil && (message != nil || attachments != nil || forwardedMessages != nil) {
+            fatalError("Сообщение со стикером не может содержать никакого другого контента.")
+        }
+        
+        var fwdIds = [String]()
+        if let fwds = forwardedMessages {
+            for fwd in fwds {
+                fwdIds.append(String(fwd))
+            }
+        }
+        
+        let parameters = [
+            "peer_id" : String(peerId),
+            "random_id" : randomId == nil ? "" : String(randomId!),
+            "message" : message ?? "",
+            "lat" : longitude == nil ? "" : String(latitude!),
+            "long" : longitude == nil ? "" : String(longitude!),
+            "attachment" : attachments?.joined(separator: ",") ?? "",
+            "reply_to" : replyTo == nil ? "" : String(replyTo!),
+            "forward_messages" : fwdIds.joined(separator: ","),
+            "sticker_id" : stickerId == nil ? "" : String(stickerId!),
+            "dont_parse_links" : parseLinks ? "0" : "1",
+        ]
+        
+        requestLayer.getResponse(method: "messages.send", parameters: parameters, completion: completion)
+    }
     
+    func sendSticker(peerId: Int, stickerId: Int, completion: @escaping VKResponseHandler<Int>) {
+        let parameters = [
+            "peer_id" : String(peerId),
+            "stickerId" : String(stickerId)
+        ]
+        
+        requestLayer.getResponse(method: "messages.sendSticker", parameters: parameters, completion: completion)
+    }
     
 }

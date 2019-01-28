@@ -13,34 +13,27 @@ class ConversationsViewController: UITableViewController {
     var dialogs = [VKDialogWrapper]()
     let lpHandler = VKLongPollEventHandler.shared
     let networkStatusView = NetworkStatusView()
+    var isSubscribed: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.separatorInset = UIEdgeInsets.init(top: 0, left: 80, bottom: 0, right: 0)
-        VKLongPoller.shared.addStatusSubscriber(self)
-        lpHandler.addMenuCounterSubscriber(subscriber: self)
-        lpHandler.addNewMessageSubscriber(subscriber: self)
-        lpHandler.addMessagesReadSubscriber(subscriber: self)
         
     }
     
-    
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.tabBarController?.tabBar.isHidden = false
         
         if dialogs.isEmpty {
             loadMoreDialogs()
         }
+        
+        if !isSubscribed {
+            subscribe()
+            isSubscribed = true
+        }
     }
-    
-    
-    deinit {
-        VKLongPoller.shared.removeStatusSubscriber(self)
-        lpHandler.removeMenuCounterSubscriber(subscriber: self)
-        lpHandler.removeNewMessageSubscriber(subscriber: self)
-        lpHandler.removeMessagesReadSubscriber(subscriber: self)
-    }
-    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dialogs.count
@@ -85,6 +78,20 @@ class ConversationsViewController: UITableViewController {
                 }
             }
         })
+    }
+    
+    func subscribe() {
+        VKLongPoller.shared.addStatusSubscriber(self)
+        lpHandler.addMenuCounterSubscriber(subscriber: self)
+        lpHandler.addNewMessageSubscriber(subscriber: self)
+        lpHandler.addMessagesReadSubscriber(subscriber: self)
+    }
+    
+    func unsubscribe() {
+        VKLongPoller.shared.removeStatusSubscriber(self)
+        lpHandler.removeMenuCounterSubscriber(subscriber: self)
+        lpHandler.removeNewMessageSubscriber(subscriber: self)
+        lpHandler.removeMessagesReadSubscriber(subscriber: self)
     }
 
 }

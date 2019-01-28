@@ -21,7 +21,7 @@ class MessageCell: UITableViewCell {
     var rightConstr: NSLayoutConstraint!
     
     static let bubblePadding: CGFloat = 4
-    static let bubbleMargin: CGFloat = 5
+    static let bubbleMargin: CGFloat = 3
     static let minHeight: CGFloat = 36
     let bubbleWidth: CGFloat = 300
     
