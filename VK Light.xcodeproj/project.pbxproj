@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1310159984A9B47C4F52D1FB /* Pods_VK_Light.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8CC35A586E6F0DAB09E4969 /* Pods_VK_Light.framework */; };
 		6502082521A1C3F700157572 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6502082421A1C3F700157572 /* SettingsViewController.swift */; };
 		6502082921A1C6E600157572 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6502082821A1C6E600157572 /* MessageCell.swift */; };
 		6504B2FF21A1666A002EDE94 /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6504B2FE21A1666A002EDE94 /* DialogViewController.swift */; };
@@ -155,9 +154,6 @@
 		65E6F513219C8C50006BC0A8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		65E6F515219C8C50006BC0A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65E6F51E219CB7CD006BC0A8 /* VKResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VKResponse.swift; sourceTree = "<group>"; };
-		8DFD7B72EF6CDA04A40CC214 /* Pods-VK Light.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK Light.release.xcconfig"; path = "Pods/Target Support Files/Pods-VK Light/Pods-VK Light.release.xcconfig"; sourceTree = "<group>"; };
-		A8CC35A586E6F0DAB09E4969 /* Pods_VK_Light.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VK_Light.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C61C339E00DBDBEBD934DEBB /* Pods-VK Light.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VK Light.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VK Light/Pods-VK Light.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,7 +161,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1310159984A9B47C4F52D1FB /* Pods_VK_Light.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,8 +322,6 @@
 			children = (
 				65E6F508219C8C4E006BC0A8 /* VK Light */,
 				65E6F507219C8C4E006BC0A8 /* Products */,
-				811C07F4CD6E32AEBF95A465 /* Pods */,
-				813CD713DCC20012459D9D0D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -373,23 +366,6 @@
 			path = VK;
 			sourceTree = "<group>";
 		};
-		811C07F4CD6E32AEBF95A465 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				C61C339E00DBDBEBD934DEBB /* Pods-VK Light.debug.xcconfig */,
-				8DFD7B72EF6CDA04A40CC214 /* Pods-VK Light.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		813CD713DCC20012459D9D0D /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				A8CC35A586E6F0DAB09E4969 /* Pods_VK_Light.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -397,11 +373,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 65E6F518219C8C50006BC0A8 /* Build configuration list for PBXNativeTarget "VK Light" */;
 			buildPhases = (
-				2811AAFEE5CC96F24EC20BBF /* [CP] Check Pods Manifest.lock */,
 				65E6F502219C8C4E006BC0A8 /* Sources */,
 				65E6F503219C8C4E006BC0A8 /* Frameworks */,
 				65E6F504219C8C4E006BC0A8 /* Resources */,
-				FCFFBB9FCD7C942F0319710D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -457,53 +431,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		2811AAFEE5CC96F24EC20BBF /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-VK Light-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		FCFFBB9FCD7C942F0319710D /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-VK Light/Pods-VK Light-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/ReverseExtension/ReverseExtension.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReverseExtension.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-VK Light/Pods-VK Light-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		65E6F502219C8C4E006BC0A8 /* Sources */ = {
@@ -721,7 +648,6 @@
 		};
 		65E6F519219C8C50006BC0A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C61C339E00DBDBEBD934DEBB /* Pods-VK Light.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -740,7 +666,6 @@
 		};
 		65E6F51A219C8C50006BC0A8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8DFD7B72EF6CDA04A40CC214 /* Pods-VK Light.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
