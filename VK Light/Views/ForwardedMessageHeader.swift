@@ -27,7 +27,6 @@ class ForwardedMessageHeader : UIView, KnowsOwnSize {
     
     private var nameLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textColor = .blue
         lbl.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl

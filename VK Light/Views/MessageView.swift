@@ -27,10 +27,10 @@ class MessageView : UIStackView, KnowsOwnSize {
         label.textColor = .white
         label.lineBreakMode = .byWordWrapping
         
-        label.topInset = 4
-        label.bottomInset = 4
-        label.rightInset = 8
-        label.leftInset = 8
+        label.topInset = 6
+        label.bottomInset = 6
+        label.rightInset = 12
+        label.leftInset = 12
         
         return label
     }()

@@ -257,10 +257,6 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
         return rowHeights[indexPath.row]
     }
     
-    private func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) {
-        messageInputView.finishEditing()
-    }
-    
     
     func calculateRowHights(startingAt: Int, count: Int) {
         var current = startingAt

@@ -11,6 +11,22 @@ import UIKit
 
 class AttachedImageView : UIView, KnowsOwnSize {
     
+    var roundTop: Bool! {
+        didSet {
+            let top: CGFloat = roundTop ?? false ? 16.0 : 7.0
+            let bottom: CGFloat = roundBottom ?? false ? 16.0 : 7.0
+            imageView.roundCorners(topLeft: top, topRight: top, bottomLeft: bottom, bottomRight: bottom)
+        }
+    }
+    
+    var roundBottom: Bool! {
+        didSet {
+            let top: CGFloat = roundTop ?? false ? 16.0 : 7.0
+            let bottom: CGFloat = roundBottom ?? false ? 16.0 : 7.0
+            imageView.roundCorners(topLeft: top, topRight: top, bottomLeft: bottom, bottomRight: bottom)
+        }
+    }
+    
     private let topPadding: CGFloat = 3.0
     private let bottomPadding: CGFloat = 3.0
     
@@ -45,20 +61,15 @@ class AttachedImageView : UIView, KnowsOwnSize {
     
     
     private func setImage() {
-        let img = image.getAppropriatelySized(for: 300)
-//        let aspectRatio = Double(img.width) / Double(img.height)
-//        let adjustedWidth = Double(300)
-//        var adjustedHeight = adjustedWidth / aspectRatio
-//
-//        if adjustedHeight > 400 { adjustedHeight = 400 }
-        let newSize = adjustedSize(for: img, maxWidth: 300)
-        imageView.frame.size = newSize//CGSize(width: adjustedWidth, height: adjustedHeight)
+        let img = image.getAppropriatelySized(for: Int(frame.width))
+        let newSize = adjustedSize(for: img, maxWidth: frame.width)
+        imageView.frame.size = newSize
         
         let constraints = [
             self.heightAnchor.constraint(equalToConstant: newSize.height + topPadding + bottomPadding),
-            self.widthAnchor.constraint(equalToConstant: newSize.width),
+//            self.widthAnchor.constraint(equalToConstant: newSize.width),
             
-            imageView.topAnchor.constraint(equalTo: topAnchor, constant: topPadding), // TODO: починить это, нет отступа сверху
+            imageView.topAnchor.constraint(equalTo: topAnchor, constant: topPadding),
             imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -bottomPadding),
             imageView.heightAnchor.constraint(equalToConstant: newSize.height),
             imageView.widthAnchor.constraint(equalToConstant: newSize.width),
@@ -66,7 +77,9 @@ class AttachedImageView : UIView, KnowsOwnSize {
         
         NSLayoutConstraint.activate(constraints)
         imageView.setSource(url: img.url)
+        roundBottom = true
         
+        //layoutSubviews()
     }
     
     private func adjustedSize(for size: VKPhotoModel.Size, maxWidth: CGFloat) -> CGSize {
@@ -83,6 +96,79 @@ class AttachedImageView : UIView, KnowsOwnSize {
         let img = image.getAppropriatelySized(for: 300)
         let size = adjustedSize(for: img, maxWidth: 300)
         return size.height + topPadding + bottomPadding
+    }
+    
+}
+
+
+
+
+
+extension UIBezierPath {
+    convenience init(shouldRoundRect rect: CGRect, topLeftRadius: CGSize = .zero, topRightRadius: CGSize = .zero, bottomLeftRadius: CGSize = .zero, bottomRightRadius: CGSize = .zero){
+        
+        self.init()
+        
+        let path = CGMutablePath()
+        
+        let topLeft = rect.origin
+        let topRight = CGPoint(x: rect.maxX, y: rect.minY)
+        let bottomRight = CGPoint(x: rect.maxX, y: rect.maxY)
+        let bottomLeft = CGPoint(x: rect.minX, y: rect.maxY)
+        
+        if topLeftRadius != .zero{
+            path.move(to: CGPoint(x: topLeft.x+topLeftRadius.width, y: topLeft.y))
+        } else {
+            path.move(to: CGPoint(x: topLeft.x, y: topLeft.y))
+        }
+        
+        if topRightRadius != .zero{
+            path.addLine(to: CGPoint(x: topRight.x-topRightRadius.width, y: topRight.y))
+            path.addCurve(to:  CGPoint(x: topRight.x, y: topRight.y+topRightRadius.height), control1: CGPoint(x: topRight.x, y: topRight.y), control2:CGPoint(x: topRight.x, y: topRight.y+topRightRadius.height))
+        } else {
+            path.addLine(to: CGPoint(x: topRight.x, y: topRight.y))
+        }
+        
+        if bottomRightRadius != .zero{
+            path.addLine(to: CGPoint(x: bottomRight.x, y: bottomRight.y-bottomRightRadius.height))
+            path.addCurve(to: CGPoint(x: bottomRight.x-bottomRightRadius.width, y: bottomRight.y), control1: CGPoint(x: bottomRight.x, y: bottomRight.y), control2: CGPoint(x: bottomRight.x-bottomRightRadius.width, y: bottomRight.y))
+        } else {
+            path.addLine(to: CGPoint(x: bottomRight.x, y: bottomRight.y))
+        }
+        
+        if bottomLeftRadius != .zero{
+            path.addLine(to: CGPoint(x: bottomLeft.x+bottomLeftRadius.width, y: bottomLeft.y))
+            path.addCurve(to: CGPoint(x: bottomLeft.x, y: bottomLeft.y-bottomLeftRadius.height), control1: CGPoint(x: bottomLeft.x, y: bottomLeft.y), control2: CGPoint(x: bottomLeft.x, y: bottomLeft.y-bottomLeftRadius.height))
+        } else {
+            path.addLine(to: CGPoint(x: bottomLeft.x, y: bottomLeft.y))
+        }
+        
+        if topLeftRadius != .zero{
+            path.addLine(to: CGPoint(x: topLeft.x, y: topLeft.y+topLeftRadius.height))
+            path.addCurve(to: CGPoint(x: topLeft.x+topLeftRadius.width, y: topLeft.y) , control1: CGPoint(x: topLeft.x, y: topLeft.y) , control2: CGPoint(x: topLeft.x+topLeftRadius.width, y: topLeft.y))
+        } else {
+            path.addLine(to: CGPoint(x: topLeft.x, y: topLeft.y))
+        }
+        
+        path.closeSubpath()
+        cgPath = path
+    }
+}
+
+
+
+
+
+extension UIView{
+    func roundCorners(topLeft: CGFloat = 0, topRight: CGFloat = 0, bottomLeft: CGFloat = 0, bottomRight: CGFloat = 0) {//(topLeft: CGFloat, topRight: CGFloat, bottomLeft: CGFloat, bottomRight: CGFloat) {
+        let topLeftRadius = CGSize(width: topLeft, height: topLeft)
+        let topRightRadius = CGSize(width: topRight, height: topRight)
+        let bottomLeftRadius = CGSize(width: bottomLeft, height: bottomLeft)
+        let bottomRightRadius = CGSize(width: bottomRight, height: bottomRight)
+        let maskPath = UIBezierPath(shouldRoundRect: bounds, topLeftRadius: topLeftRadius, topRightRadius: topRightRadius, bottomLeftRadius: bottomLeftRadius, bottomRightRadius: bottomRightRadius)
+        let shape = CAShapeLayer()
+        shape.path = maskPath.cgPath
+        layer.mask = shape
     }
     
 }

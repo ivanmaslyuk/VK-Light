@@ -47,7 +47,7 @@ class VKLongPoller {
         
         if isPaused {
             if server == nil || ts == nil || key == nil {
-                getServer(blocking: true)
+                getServer()
             }
             isPaused = false
             print("Работа LongPoller возобновлена")
@@ -71,7 +71,7 @@ class VKLongPoller {
     
     
     
-    private func getServer(blocking: Bool, finished: @escaping () -> Void = {}) {
+    private func getServer() {
         let sema = DispatchSemaphore(value: 0)
         DispatchQueue.global().async {
             VKMessagesApi().getLongPollServer(completion: { (response, error) in
@@ -83,29 +83,28 @@ class VKLongPoller {
                 if let error = error {
                     print(error)
                 }
-                if blocking { sema.signal() }
-                DispatchQueue.main.async { finished() }
+                sema.signal()
             })
         }
-        if blocking { sema.wait() }
+        sema.wait()
     }
     
     
     private func doLongPollRequest() {
-        /*guard let server = self.server, let key = self.key, let ts = self.ts else {
-            print("doLongPollRequest() был вызван до инициализации self.server")
-            getServer(blocking: true)
+        guard let server = self.server, let key = self.key, let ts = self.ts else {
+            print("doLongPollRequest() был вызван до инициализации self.server. LongPoller будет остановлен. Значения: ts: \(String(describing: self.ts)), server: \(String(describing: self.server)), key: \(String(describing: self.key))")
+            //getServer()
+            isPaused = true
             return
-        }*/
+        }
         
-        let response = longPollApi.waitForLongPollUpdates(server: server!, key: key!, ts: ts!)
+        let response = longPollApi.waitForLongPollUpdates(server: server, key: key, ts: ts)
         if let response = response {
             if let ts = response.ts { self.ts = ts }
             if let error = response.failed {
                 print("LP-сервер прислал ошибку: \(error)")
                 if error != 1 {
-                    getServer(blocking: true)
-                    //NotificationDebugger.print(text: "ой")
+                    getServer()
                     DispatchQueue.main.async {
                         self.notifyStatusChanged(status: .error)
                     }
@@ -118,7 +117,7 @@ class VKLongPoller {
                 updateHandler.handle(updates: updates)
             }
         } else {
-            print("Полученный ответ от LP-сервера не является корректным.")
+            print("Не удалось раскодировать ответ LongPoll-сервера.")
         }
     }
     

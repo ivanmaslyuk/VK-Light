@@ -72,6 +72,7 @@
 		65ADFEBA21E2912A0060020D /* ForwardedMessageHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADFEB921E2912A0060020D /* ForwardedMessageHeader.swift */; };
 		65AE67B921FC78A100FFCB84 /* MessageInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AE67B821FC78A100FFCB84 /* MessageInputView.swift */; };
 		65D700E821FF142F001D75A9 /* AudioWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D700E721FF142F001D75A9 /* AudioWaveformView.swift */; };
+		65D700EA21FF2976001D75A9 /* ReplyMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D700E921FF2976001D75A9 /* ReplyMessageView.swift */; };
 		65E6F50A219C8C4E006BC0A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E6F509219C8C4E006BC0A8 /* AppDelegate.swift */; };
 		65E6F50C219C8C4E006BC0A8 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E6F50B219C8C4E006BC0A8 /* AuthViewController.swift */; };
 		65E6F50F219C8C4E006BC0A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65E6F50D219C8C4E006BC0A8 /* Main.storyboard */; };
@@ -145,6 +146,7 @@
 		65ADFEB921E2912A0060020D /* ForwardedMessageHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardedMessageHeader.swift; sourceTree = "<group>"; };
 		65AE67B821FC78A100FFCB84 /* MessageInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInputView.swift; sourceTree = "<group>"; };
 		65D700E721FF142F001D75A9 /* AudioWaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioWaveformView.swift; sourceTree = "<group>"; };
+		65D700E921FF2976001D75A9 /* ReplyMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyMessageView.swift; sourceTree = "<group>"; };
 		65E6F506219C8C4E006BC0A8 /* VK Light.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK Light.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		65E6F509219C8C4E006BC0A8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		65E6F50B219C8C4E006BC0A8 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 				653770E121FB72A40037FD38 /* DialogHeaderView.swift */,
 				65AE67B821FC78A100FFCB84 /* MessageInputView.swift */,
 				65D700E721FF142F001D75A9 /* AudioWaveformView.swift */,
+				65D700E921FF2976001D75A9 /* ReplyMessageView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -538,6 +541,7 @@
 				651951D621BC00F600B5909C /* CachedImageView.swift in Sources */,
 				6504B2FF21A1666A002EDE94 /* DialogViewController.swift in Sources */,
 				6506FF3121B4781800DF281C /* VKDocumentModel.swift in Sources */,
+				65D700EA21FF2976001D75A9 /* ReplyMessageView.swift in Sources */,
 				65079F7621BD074D0013F502 /* LabelWithPadding.swift in Sources */,
 				65ADFEB821E25F990060020D /* MessageView.swift in Sources */,
 				65ADFEB621E233230060020D /* AttachedImageView.swift in Sources */,
