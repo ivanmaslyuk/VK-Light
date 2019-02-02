@@ -146,7 +146,7 @@ class MessageCell: UITableViewCell {
         timeLabel.text = messageWrapper.formattedTime
         let lastAttachType = messageWrapper.message.attachments.last?.type
         timeLabel.backgroundColor = lastAttachType == .sticker || lastAttachType == .photo ? UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 0.5) : .clear
-        timeLabel.textColor = lastAttachType == .sticker || lastAttachType == .photo ? .white : .black
+        timeLabel.textColor = lastAttachType == .sticker || lastAttachType == .photo ? .white : .gray
         
         avatar.isHidden = messageWrapper.message.out == 1
         if !messageWrapper.message.isOut {

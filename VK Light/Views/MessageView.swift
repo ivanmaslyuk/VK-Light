@@ -21,10 +21,13 @@ class MessageView : UIStackView, KnowsOwnSize {
     private var maxContentWidth: CGFloat {
         var width = MessageCell.bubbleWidth
         if depth > 0 {
-            width -= CGFloat(3 * depth)
+            width -= CGFloat(3 * (depth-1))
+            width -= 12
         }
         return width
     }
+    
+    var leaveSpaceForTimeLabel: Bool = false
     
     let messageText : LabelWithPadding = {
         let label = LabelWithPadding()
@@ -69,6 +72,7 @@ class MessageView : UIStackView, KnowsOwnSize {
         
         presentAttachments()
         presentForwarded()
+        if leaveSpaceForTimeLabel { addSpaceForTimeLabel() }
     }
     
     
@@ -113,6 +117,10 @@ class MessageView : UIStackView, KnowsOwnSize {
     
     
     private func presentForwarded() {
+        guard !messageWrapper.forwardedMessages.isEmpty else {
+            return
+        }
+        leaveSpaceForTimeLabel = true
         for m in messageWrapper.forwardedMessages {
             let fwdMessage = ForwardedMessageView(depth: depth + 1)
             fwdMessage.message = m
@@ -141,7 +149,7 @@ class MessageView : UIStackView, KnowsOwnSize {
                 if messageWrapper.isSingleImage {
                     image.addPadding = false
                 }
-                if i == 0 {
+                if i == 0 && !messageWrapper.hasText {
                     image.roundTop = true
                 }
                 if i == photos.count-1 {
@@ -164,11 +172,24 @@ class MessageView : UIStackView, KnowsOwnSize {
     }
     
     
+    func addSpaceForTimeLabel() {
+        guard !isForwarded else {
+            return
+        }
+        
+        let v = KnowsOwnSizeView(frame: CGRect(x: 0, y: 0, width: 0, height: 20))
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        addArrangedSubview(v)
+    }
+    
+    
     public func clean() {
         for a in attachmentViews {
             a.removeFromSuperview()
         }
         attachmentViews.removeAll()
+        leaveSpaceForTimeLabel = false
     }
     
     

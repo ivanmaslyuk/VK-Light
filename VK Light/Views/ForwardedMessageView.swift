@@ -58,8 +58,9 @@ class ForwardedMessageView : UIView, KnowsOwnSize {
 //    }()
     
     private func setupConstraints() {
+        let offset: CGFloat = depth == 1 ? 10 : 1
         NSLayoutConstraint.activate([
-            leftBar.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 1),
+            leftBar.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: offset),
             leftBar.topAnchor.constraint(equalTo: messageView.topAnchor),
             leftBar.bottomAnchor.constraint(equalTo: messageView.bottomAnchor),
             

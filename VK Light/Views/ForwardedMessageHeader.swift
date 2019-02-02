@@ -15,12 +15,12 @@ class ForwardedMessageHeader : UIView, KnowsOwnSize {
     public var profile: VKProfile?
     public var group: VKGroup?
     public var date: Date!
-    public var avatarDiameter = 35
+    public var avatarDiameter = 40
     
     private var avatarImage: CachedImageView = {
         let img = CachedImageView()
         img.clipsToBounds = true
-        img.layer.cornerRadius = 35 / 2
+        img.layer.cornerRadius = 40 / 2
         img.translatesAutoresizingMaskIntoConstraints = false
         return img
     }()
