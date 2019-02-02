@@ -17,22 +17,23 @@ class CachedImageView: UIImageView, KnowsOwnSize {
             clipsToBounds = true
         }
     }*/
-    private var imageCache = NSCache<AnyObject, AnyObject>()
-    
     
     func setSource(url: URL) {
-        if let cachedImage = imageCache.object(forKey: url as AnyObject) as? UIImage {
-            self.image = cachedImage
-        } else {
-            URLSession.shared.dataTask(with: url) {(data, response, error) in
-                if let data = data {
-                    DispatchQueue.main.async {
-                        let imageToCache = UIImage(data: data)
-                        self.imageCache.setObject(imageToCache!, forKey: url as AnyObject)
-                        self.image = imageToCache
+        DispatchQueue.global().async {
+            let imageCache = NSCache<AnyObject, AnyObject>()
+            if let cachedImage = imageCache.object(forKey: url as AnyObject) as? UIImage {
+                self.image = cachedImage
+            } else {
+                URLSession.shared.dataTask(with: url) {(data, response, error) in
+                    if let data = data {
+                        DispatchQueue.main.async {
+                            let imageToCache = UIImage(data: data)
+                            imageCache.setObject(imageToCache!, forKey: url as AnyObject)
+                            self.image = imageToCache
+                        }
                     }
-                }
-            }.resume()
+                    }.resume()
+            }
         }
     }
     

@@ -27,12 +27,15 @@ import UIKit
                       height: size.height + topInset + bottomInset)
     }
     
+    var maxWidth: CGFloat?
+    
     var heightOfSelf: CGFloat {
         //let labelSize = self.sizeThatFits(CGSize(width: 300, height: CGFloat.greatestFiniteMagnitude))
         //return labelSize.height
-        let noInsets = self.text?.height(withConstrainedWidth: 300 - leftInset - rightInset, font: self.font) ?? 0
+        let noInsets = self.text?.height(withConstrainedWidth: (maxWidth ?? 300) - leftInset - rightInset, font: self.font) ?? 0
         return noInsets + topInset + bottomInset
     }
+    
 }
 
 extension String {

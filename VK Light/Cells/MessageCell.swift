@@ -23,10 +23,10 @@ class MessageCell: UITableViewCell {
 //    static let bubblePadding: CGFloat = 4
     static let bubbleMargin: CGFloat = 3
     static let minHeight: CGFloat = 36
-    let bubbleWidth: CGFloat = 300
+    static let bubbleWidth: CGFloat = 300
     
-    private let inColor = UIColor(red: 235, green: 237, blue: 239)
-    private let outColor = UIColor(red: 28, green: 146, blue: 253)
+    private let inColor = UIColor(red: 236, green: 237, blue: 239)
+    private let outColor = UIColor(red: 204, green: 228, blue: 255)
     
     private var attachmentViews: [UIView] = []
     
@@ -55,14 +55,14 @@ class MessageCell: UITableViewCell {
     private let avatar : CachedImageView = {
         var imageView = CachedImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 16
+        imageView.layer.cornerRadius = 15
         imageView.layer.masksToBounds = true
         imageView.isHidden = true
         return imageView
     }()
     
     private let messageView : MessageView = {
-        let stView = MessageView()
+        let stView = MessageView(depth: 0)
         stView.translatesAutoresizingMaskIntoConstraints = false
         stView.backgroundColor = .black
         stView.axis = .vertical
@@ -102,7 +102,7 @@ class MessageCell: UITableViewCell {
             messageView.leadingAnchor.constraint(equalTo: avatar.trailingAnchor, constant: MessageCell.bubbleMargin),
             messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: MessageCell.bubbleMargin),
             messageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -MessageCell.bubbleMargin),
-            messageView.widthAnchor.constraint(lessThanOrEqualToConstant: bubbleWidth),
+            messageView.widthAnchor.constraint(lessThanOrEqualToConstant: MessageCell.bubbleWidth),
 //            messageView.widthAnchor.constraint(greaterThanOrEqualToConstant: 30),
 //            messageView.heightAnchor.constraint(greaterThanOrEqualToConstant: MessageCell.minHeight),
             
@@ -111,8 +111,8 @@ class MessageCell: UITableViewCell {
             messageCard.leadingAnchor.constraint(equalTo: messageView.leadingAnchor),
             messageCard.trailingAnchor.constraint(equalTo: messageView.trailingAnchor),
             
-            timeLabel.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: timeLabel.bottomInset - 6),
-            timeLabel.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: timeLabel.rightInset - 6),
+            timeLabel.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: -(12 - timeLabel.rightInset)),
+            timeLabel.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: -(6 - timeLabel.bottomInset)),
             
             
         ]
@@ -134,6 +134,11 @@ class MessageCell: UITableViewCell {
         messageView.clean()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        timeLabel.layer.cornerRadius = timeLabel.frame.size.height / 2
+    }
+    
     
     func setMessage() {
         messageCard.backgroundColor = messageWrapper.isSticker ? .clear : messageWrapper.message.isOut ? outColor : inColor
@@ -141,7 +146,7 @@ class MessageCell: UITableViewCell {
         timeLabel.text = messageWrapper.formattedTime
         let lastAttachType = messageWrapper.message.attachments.last?.type
         timeLabel.backgroundColor = lastAttachType == .sticker || lastAttachType == .photo ? UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 0.5) : .clear
-        timeLabel.layer.cornerRadius = timeLabel.frame.size.height / 2
+        timeLabel.textColor = lastAttachType == .sticker || lastAttachType == .photo ? .white : .black
         
         avatar.isHidden = messageWrapper.message.out == 1
         if !messageWrapper.message.isOut {

@@ -48,19 +48,21 @@ class ForwardedMessageHeader : UIView, KnowsOwnSize {
         addSubview(dateLabel)
         
         let constraints = [
-            avatarImage.leadingAnchor.constraint(equalTo: leadingAnchor),
+            avatarImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
             avatarImage.centerYAnchor.constraint(equalTo: centerYAnchor),
             avatarImage.heightAnchor.constraint(equalToConstant: CGFloat(avatarDiameter)),
             avatarImage.widthAnchor.constraint(equalToConstant: CGFloat(avatarDiameter)),
             
             nameLabel.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: 4),
             nameLabel.bottomAnchor.constraint(equalTo: centerYAnchor, constant: -1),
+            nameLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
             dateLabel.leadingAnchor.constraint(equalTo: avatarImage.trailingAnchor, constant: 4),
             dateLabel.topAnchor.constraint(equalTo: centerYAnchor, constant: 1),
+            dateLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
-            self.heightAnchor.constraint(equalTo: avatarImage.heightAnchor, constant: 10),
-            ]
+            self.heightAnchor.constraint(equalTo: avatarImage.heightAnchor, constant: 5),
+        ]
         
         NSLayoutConstraint.activate(constraints)
     }
@@ -84,6 +86,7 @@ class ForwardedMessageHeader : UIView, KnowsOwnSize {
     }
     
     var heightOfSelf: CGFloat {
-        return CGFloat(avatarDiameter) + 10
+        return CGFloat(avatarDiameter) + 5
     }
+    
 }

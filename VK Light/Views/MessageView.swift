@@ -16,6 +16,15 @@ class MessageView : UIStackView, KnowsOwnSize {
     }
     
     private var attachmentViews = [UIView]()
+    private var depth: Int
+    
+    private var maxContentWidth: CGFloat {
+        var width = MessageCell.bubbleWidth
+        if depth > 0 {
+            width -= CGFloat(3 * depth)
+        }
+        return width
+    }
     
     let messageText : LabelWithPadding = {
         let label = LabelWithPadding()
@@ -23,8 +32,8 @@ class MessageView : UIStackView, KnowsOwnSize {
         label.numberOfLines = 0
         label.backgroundColor = .clear
         label.clipsToBounds = false
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.textColor = .black
         label.lineBreakMode = .byWordWrapping
         
         label.topInset = 6
@@ -35,15 +44,10 @@ class MessageView : UIStackView, KnowsOwnSize {
         return label
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(depth: Int) {
+        self.depth = depth
+        super.init(frame: .zero)
         axis = .vertical
-        
-        /*let constraints = [
-            topAnchor.constraint(equalTo: topAnchor)
-        ]
-        
-        NSLayoutConstraint.activate(constraints)*/
     }
     
     required init(coder: NSCoder) {
@@ -57,10 +61,11 @@ class MessageView : UIStackView, KnowsOwnSize {
         
         if !message.text.isEmpty {
             messageText.text = message.text
+            messageText.maxWidth = maxContentWidth
             addArrangedSubview(messageText)
         }
         
-        messageText.textColor = message.isOut || isForwarded ? .white : .black
+//        messageText.textColor = message.isOut || isForwarded ? .white : .black
         
         presentAttachments()
         presentForwarded()
@@ -109,10 +114,8 @@ class MessageView : UIStackView, KnowsOwnSize {
     
     private func presentForwarded() {
         for m in messageWrapper.forwardedMessages {
-            let fwdMessage = MessageView()
-            fwdMessage.isForwarded = true
-            fwdMessage.messageWrapper = m
-            
+            let fwdMessage = ForwardedMessageView(depth: depth + 1)
+            fwdMessage.message = m
             addArrangedSubview(fwdMessage)
         }
     }
@@ -124,29 +127,39 @@ class MessageView : UIStackView, KnowsOwnSize {
         header.group = messageWrapper.group
         header.date = messageWrapper.message.date
         header.present()
-        
         addArrangedSubview(header)
     }
     
     
     private func presentPhotos(photos: [VKPhotoModel]) {
-        for photo in photos {
-            let image = AttachedImageView()
-            image.image = photo
-            
+        
+        
+        guard !photos.isEmpty else { return }
+        for i in 0...photos.count-1 {
+            let image = AttachedImageView(image: photos[i], width: maxContentWidth)
+            if !isForwarded {
+                if messageWrapper.isSingleImage {
+                    image.addPadding = false
+                }
+                if i == 0 {
+                    image.roundTop = true
+                }
+                if i == photos.count-1 {
+                    image.roundBottom = true
+                }
+            }
             addArrangedSubview(image)
         }
     }
     
     
     private func presentSticker(sticker: VKStickerModel) {
-        let image = CachedImageView()
+        let image = CachedImageView(frame: CGRect(x: 0, y: 0, width: 160, height: 160))
         image.translatesAutoresizingMaskIntoConstraints = false
         image.setSource(url: sticker.images.last!.url)
         image.contentMode = .scaleAspectFit
-        image.heightAnchor.constraint(equalToConstant: 150).isActive = true
-        image.widthAnchor.constraint(equalToConstant: 150).isActive = true
-        
+        image.heightAnchor.constraint(equalToConstant: 160).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 160).isActive = true
         addArrangedSubview(image)
     }
     
@@ -169,10 +182,9 @@ class MessageView : UIStackView, KnowsOwnSize {
         var height: CGFloat = 0
         for item in attachmentViews {
             let kos = item as! KnowsOwnSize
-            var newHeight = kos.heightOfSelf
-            if newHeight == 0 { newHeight = 150 }
-            height += newHeight
+            height += kos.heightOfSelf
         }
         return height
     }
+    
 }

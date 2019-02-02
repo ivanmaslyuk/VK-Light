@@ -9,21 +9,21 @@
 import Foundation
 import UIKit
 
-class AttachedImageView : UIView, KnowsOwnSize {
+class AttachedImageViewOld : UIView, KnowsOwnSize {
     
     var roundTop: Bool! {
         didSet {
-            let top: CGFloat = roundTop ?? false ? 16.0 : 7.0
-            let bottom: CGFloat = roundBottom ?? false ? 16.0 : 7.0
-            imageView.roundCorners(topLeft: top, topRight: top, bottomLeft: bottom, bottomRight: bottom)
+//            let top: CGFloat = roundTop ?? false ? 16.0 : 7.0
+//            let bottom: CGFloat = roundBottom ?? false ? 16.0 : 7.0
+//            imageView.roundCorners(topLeft: top, topRight: top, bottomLeft: bottom, bottomRight: bottom)
         }
     }
     
     var roundBottom: Bool! {
         didSet {
-            let top: CGFloat = roundTop ?? false ? 16.0 : 7.0
-            let bottom: CGFloat = roundBottom ?? false ? 16.0 : 7.0
-            imageView.roundCorners(topLeft: top, topRight: top, bottomLeft: bottom, bottomRight: bottom)
+//            let top: CGFloat = roundTop ?? false ? 16.0 : 7.0
+//            let bottom: CGFloat = roundBottom ?? false ? 16.0 : 7.0
+//            imageView.roundCorners(topLeft: top, topRight: top, bottomLeft: bottom, bottomRight: bottom)
         }
     }
     
@@ -46,6 +46,7 @@ class AttachedImageView : UIView, KnowsOwnSize {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        print("layoutSubviews() called for AttachedImageView")
     }
     
     override init(frame: CGRect) {
@@ -61,6 +62,7 @@ class AttachedImageView : UIView, KnowsOwnSize {
     
     
     private func setImage() {
+        print("AttachedImageView frame before setting image: \(frame)")
         let img = image.getAppropriatelySized(for: Int(frame.width))
         let newSize = adjustedSize(for: img, maxWidth: frame.width)
         imageView.frame.size = newSize
@@ -77,9 +79,9 @@ class AttachedImageView : UIView, KnowsOwnSize {
         
         NSLayoutConstraint.activate(constraints)
         imageView.setSource(url: img.url)
-        roundBottom = true
         
         //layoutSubviews()
+        print("AttachedImageView frame after setting image: \(frame)")
     }
     
     private func adjustedSize(for size: VKPhotoModel.Size, maxWidth: CGFloat) -> CGSize {
@@ -97,6 +99,149 @@ class AttachedImageView : UIView, KnowsOwnSize {
         let size = adjustedSize(for: img, maxWidth: 300)
         return size.height + topPadding + bottomPadding
     }
+    
+}
+
+
+
+
+
+class AttachedImageView : UIView, KnowsOwnSize {
+    var roundTop: Bool! {
+        didSet {
+            let top: CGFloat = (roundTop ?? false) ? 15 : 7.0
+            let bottom: CGFloat = (roundBottom ?? false) ? 15 : 7.0
+            var h = height - topConstraint.constant - (-bottomConstraint.constant)
+            let w = widthConstraint.constant
+            if h > 400 {
+                h = 400
+            }
+            if h < 60 {
+                h = 60
+            }
+            imageView.roundCorners(topLeft: top, topRight: top, bottomLeft: bottom, bottomRight: bottom, maskHeight: h, maskWidth: w)
+        }
+    }
+    
+    var roundBottom: Bool! {
+        didSet {
+            let top: CGFloat = (roundTop ?? false) ? 15 : 7.0
+            let bottom: CGFloat = (roundBottom ?? false) ? 15 : 7.0
+            var h = height - topConstraint.constant - (-bottomConstraint.constant)
+            let w = widthConstraint.constant
+            if h > 400 {
+                h = 400
+            }
+            if h < 60 {
+                h = 60
+            }
+            imageView.roundCorners(topLeft: top, topRight: top, bottomLeft: bottom, bottomRight: bottom, maskHeight: h, maskWidth: w)
+        }
+    }
+    
+    var addPadding: Bool! {
+        didSet {
+            let padding: CGFloat = 3
+            topConstraint.constant = addPadding ? padding : 0
+            bottomConstraint.constant = addPadding ? -padding : 0
+            leftConstraint.constant = addPadding ? padding : 0
+            rightConstraint.constant = addPadding ? -padding : 0
+            widthConstraint.constant = addPadding ? width - padding * 2 : width
+        }
+    }
+    
+    private var topConstraint: NSLayoutConstraint!
+    private var bottomConstraint: NSLayoutConstraint!
+    private var leftConstraint: NSLayoutConstraint!
+    private var rightConstraint: NSLayoutConstraint!
+    private var widthConstraint: NSLayoutConstraint!
+    
+    private var image: VKPhotoModel
+    private var width: CGFloat
+    private var height: CGFloat!
+    
+    private var imageView: CachedImageView = {
+        var iv = CachedImageView()
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.contentMode = .scaleAspectFit
+        iv.clipsToBounds = true
+        iv.layer.cornerRadius = 7
+        iv.backgroundColor = UIColor(red: 188, green: 212, blue: 240)
+        return iv
+    }()
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+    }
+    
+    init(image: VKPhotoModel, width: CGFloat) {
+        self.image = image
+        self.width = width
+        super.init(frame: .zero)
+        addSubview(imageView)
+        setupConstraints()
+        setImage()
+    }
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    private func setupConstraints() {
+        topConstraint = imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 3)
+        bottomConstraint = imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -3)
+        rightConstraint = imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -3)
+        leftConstraint = imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 3)
+        widthConstraint = imageView.widthAnchor.constraint(equalToConstant: width - 6)
+        
+        let minWidth = imageView.heightAnchor.constraint(greaterThanOrEqualToConstant: 60)
+        let maxWidth = imageView.heightAnchor.constraint(lessThanOrEqualToConstant: 400)
+        minWidth.priority = .required
+        maxWidth.priority = .required
+        
+        NSLayoutConstraint.activate([
+            topConstraint,
+            bottomConstraint,
+            leftConstraint,
+            rightConstraint,
+            widthConstraint,
+            minWidth,
+            maxWidth
+        ])
+    }
+    
+    private func setImage() {
+        let size = image.getAppropriatelySized(for: 3000)
+        let ratio = getAspectRatio(for: size)
+        height = width/ratio
+        
+        let hc = imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: 1/ratio)
+        hc.priority = .defaultHigh
+        hc.isActive = true
+        
+        imageView.setSource(url: size.url)
+    }
+    
+    private func getAspectRatio(for size: VKPhotoModel.Size) -> CGFloat {
+        let aspectRatio = CGFloat(size.width) / CGFloat(size.height)
+        return aspectRatio
+    }
+    
+    var heightOfSelf: CGFloat {
+        let size = image.getAppropriatelySized(for: 3000)
+        let ratio = getAspectRatio(for: size)
+        var h = widthConstraint.constant / ratio
+        if h > 400 {
+            h = 400
+        }
+        if h < 60 {
+            h = 60
+        }
+        return h + topConstraint.constant + (-bottomConstraint.constant)
+    }
+    
     
 }
 
@@ -160,15 +305,33 @@ extension UIBezierPath {
 
 
 extension UIView{
-    func roundCorners(topLeft: CGFloat = 0, topRight: CGFloat = 0, bottomLeft: CGFloat = 0, bottomRight: CGFloat = 0) {//(topLeft: CGFloat, topRight: CGFloat, bottomLeft: CGFloat, bottomRight: CGFloat) {
+    func roundCorners(topLeft: CGFloat, topRight: CGFloat, bottomLeft: CGFloat, bottomRight: CGFloat, maskHeight: CGFloat, maskWidth: CGFloat) {
         let topLeftRadius = CGSize(width: topLeft, height: topLeft)
         let topRightRadius = CGSize(width: topRight, height: topRight)
         let bottomLeftRadius = CGSize(width: bottomLeft, height: bottomLeft)
         let bottomRightRadius = CGSize(width: bottomRight, height: bottomRight)
-        let maskPath = UIBezierPath(shouldRoundRect: bounds, topLeftRadius: topLeftRadius, topRightRadius: topRightRadius, bottomLeftRadius: bottomLeftRadius, bottomRightRadius: bottomRightRadius)
+//        print(bounds)
+        let maskPath = UIBezierPath(shouldRoundRect: CGRect(x: 0, y: 0, width: maskWidth, height: maskHeight), topLeftRadius: topLeftRadius, topRightRadius: topRightRadius, bottomLeftRadius: bottomLeftRadius, bottomRightRadius: bottomRightRadius)
         let shape = CAShapeLayer()
         shape.path = maskPath.cgPath
         layer.mask = shape
+        layer.masksToBounds = true
+        
+        
+        
+//        let borderLayer = CAShapeLayer()
+//        borderLayer.path = (self.layer.mask! as! CAShapeLayer).path! // Reuse the Bezier path
+//        borderLayer.strokeColor = UIColor.red.cgColor
+//        borderLayer.fillColor = UIColor.clear.cgColor
+//        borderLayer.lineWidth = 5
+//        borderLayer.frame = self.bounds
+//        self.layer.addSublayer(borderLayer)
     }
     
+}
+
+extension UIColor {
+    static func random() -> UIColor {
+        return UIColor(red: Int.random(in: 0...255), green: Int.random(in: 0...255), blue: Int.random(in: 0...255))
+    }
 }

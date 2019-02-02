@@ -267,7 +267,7 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
     }
     
     private func calculateRowHeight(for messageIndex: Int) {
-        let bubble = MessageView()
+        let bubble = MessageView(depth: 0)
         bubble.messageWrapper = messages[messageIndex]
         var height = bubble.heightOfSelf + MessageCell.absolutePadding
         if height < MessageCell.minHeight { height = MessageCell.minHeight }
@@ -275,7 +275,7 @@ extension DialogViewController : UITableViewDelegate, UITableViewDataSource {
     }
     
     private func recalculateRowHeight(for messageIndex: Int) {
-        let bubble = MessageView()
+        let bubble = MessageView(depth: 0)
         bubble.messageWrapper = messages[messageIndex]
         var height = bubble.heightOfSelf + MessageCell.absolutePadding
         if height < MessageCell.minHeight { height = MessageCell.minHeight }
