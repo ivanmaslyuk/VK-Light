@@ -109,44 +109,25 @@ class AttachedImageViewOld : UIView, KnowsOwnSize {
 class AttachedImageView : UIView, KnowsOwnSize {
     var roundTop: Bool! {
         didSet {
-            let top: CGFloat = (roundTop ?? false) ? 15 : 7.0
-            let bottom: CGFloat = (roundBottom ?? false) ? 15 : 7.0
-            var h = height - topConstraint.constant - (-bottomConstraint.constant)
-            let w = widthConstraint.constant
-            if h > 400 {
-                h = 400
-            }
-            if h < 60 {
-                h = 60
-            }
-            imageView.roundCorners(topLeft: top, topRight: top, bottomLeft: bottom, bottomRight: bottom, maskHeight: h, maskWidth: w)
+            updateCornerMask()
         }
     }
     
     var roundBottom: Bool! {
         didSet {
-            let top: CGFloat = (roundTop ?? false) ? 15 : 7.0
-            let bottom: CGFloat = (roundBottom ?? false) ? 15 : 7.0
-            var h = height - topConstraint.constant - (-bottomConstraint.constant)
-            let w = widthConstraint.constant
-            if h > 400 {
-                h = 400
-            }
-            if h < 60 {
-                h = 60
-            }
-            imageView.roundCorners(topLeft: top, topRight: top, bottomLeft: bottom, bottomRight: bottom, maskHeight: h, maskWidth: w)
+            updateCornerMask()
         }
     }
     
     var addPadding: Bool! {
         didSet {
-            let padding: CGFloat = 3
-            topConstraint.constant = addPadding ? padding : 0
-            bottomConstraint.constant = addPadding ? -padding : 0
-            leftConstraint.constant = addPadding ? padding : 0
-            rightConstraint.constant = addPadding ? -padding : 0
-            widthConstraint.constant = addPadding ? width - padding * 2 : width
+            let verticalPadding: CGFloat = 1.5
+            let horizontalPadding: CGFloat = 3
+            topConstraint.constant = addPadding ? verticalPadding : 0
+            bottomConstraint.constant = addPadding ? -verticalPadding : 0
+            leftConstraint.constant = addPadding ? horizontalPadding : 0
+            rightConstraint.constant = addPadding ? -horizontalPadding : 0
+            widthConstraint.constant = addPadding ? width - horizontalPadding * 2 : width
         }
     }
     
@@ -190,8 +171,8 @@ class AttachedImageView : UIView, KnowsOwnSize {
     
     
     private func setupConstraints() {
-        topConstraint = imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 3)
-        bottomConstraint = imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -3)
+        topConstraint = imageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 1.5)
+        bottomConstraint = imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -1.5)
         rightConstraint = imageView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -3)
         leftConstraint = imageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 3)
         widthConstraint = imageView.widthAnchor.constraint(equalToConstant: width - 6)
@@ -240,6 +221,24 @@ class AttachedImageView : UIView, KnowsOwnSize {
             h = 60
         }
         return h + topConstraint.constant + (-bottomConstraint.constant)
+    }
+    
+    private func updateCornerMask() {
+        // изменяем padding
+        topConstraint.constant = (roundTop ?? false) ? ((addPadding ?? true) ? 3 : 0) : ((addPadding ?? true) ? 1.5 : 0)
+        bottomConstraint.constant = (roundBottom ?? false) ? ((addPadding ?? true) ? -3 : 0) : ((addPadding ?? true) ? -1.5 : 0)
+        // изменяем закругленность углов
+        let top: CGFloat = (roundTop ?? false) ? 15 : 7.0
+        let bottom: CGFloat = (roundBottom ?? false) ? 15 : 7.0
+        var h = height - topConstraint.constant - (-bottomConstraint.constant)
+        let w = widthConstraint.constant
+        if h > 400 {
+            h = 400
+        }
+        if h < 60 {
+            h = 60
+        }
+        imageView.roundCorners(topLeft: top, topRight: top, bottomLeft: bottom, bottomRight: bottom, maskHeight: h, maskWidth: w)
     }
     
     
