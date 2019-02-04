@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKVideoModel : Decodable {
+struct VKVideo : Decodable {
     let id: Int
     let ownerId: Int
     let title: String

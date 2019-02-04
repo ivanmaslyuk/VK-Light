@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKAudioModel : Decodable {
+struct VKAudio : Decodable {
     
     enum VKMusicGenre : Int, Decodable {
         case rock = 1

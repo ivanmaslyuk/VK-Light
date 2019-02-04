@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKAudioMessageModel : Decodable {
+struct VKAudioMessage : Decodable {
     let id: Int
     let accessKey: String
     let duration: Int

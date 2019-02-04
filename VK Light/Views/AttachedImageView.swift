@@ -30,7 +30,7 @@ class AttachedImageViewOld : UIView, KnowsOwnSize {
     private let topPadding: CGFloat = 3.0
     private let bottomPadding: CGFloat = 3.0
     
-    public var image: VKPhotoModel! {
+    public var image: VKPhoto! {
         didSet { setImage() }
     }
     
@@ -84,7 +84,7 @@ class AttachedImageViewOld : UIView, KnowsOwnSize {
         print("AttachedImageView frame after setting image: \(frame)")
     }
     
-    private func adjustedSize(for size: VKPhotoModel.Size, maxWidth: CGFloat) -> CGSize {
+    private func adjustedSize(for size: VKPhoto.Size, maxWidth: CGFloat) -> CGSize {
         let aspectRatio = CGFloat(size.width) / CGFloat(size.height)
         let adjustedWidth = maxWidth
         var adjustedHeight = adjustedWidth / aspectRatio
@@ -137,7 +137,7 @@ class AttachedImageView : UIView, KnowsOwnSize {
     private var rightConstraint: NSLayoutConstraint!
     private var widthConstraint: NSLayoutConstraint!
     
-    private var image: VKPhotoModel
+    private var image: VKPhoto
     private var width: CGFloat
     private var height: CGFloat!
     
@@ -155,7 +155,7 @@ class AttachedImageView : UIView, KnowsOwnSize {
         super.layoutSubviews()
     }
     
-    init(image: VKPhotoModel, width: CGFloat) {
+    init(image: VKPhoto, width: CGFloat) {
         self.image = image
         self.width = width
         super.init(frame: .zero)
@@ -205,7 +205,7 @@ class AttachedImageView : UIView, KnowsOwnSize {
         imageView.setSource(url: size.url)
     }
     
-    private func getAspectRatio(for size: VKPhotoModel.Size) -> CGFloat {
+    private func getAspectRatio(for size: VKPhoto.Size) -> CGFloat {
         let aspectRatio = CGFloat(size.width) / CGFloat(size.height)
         return aspectRatio
     }

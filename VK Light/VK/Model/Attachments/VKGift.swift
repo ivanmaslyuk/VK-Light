@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKGiftModel : Decodable {
+struct VKGift : Decodable {
     let id: Int
     let thumb256: URL
     let thumb96: URL

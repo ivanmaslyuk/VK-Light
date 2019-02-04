@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKLinkModel : Decodable {
+struct VKLink : Decodable {
     
     struct Product : Decodable {
         struct Price : Decodable {
@@ -33,7 +33,7 @@ struct VKLinkModel : Decodable {
     let title: String // заголовок
     let caption: String? // подпись
     let description: String // описание
-    let photo: VKPhotoModel?
+    let photo: VKPhoto?
     let product: Product?
     let button: Button?
     let previewPage: String?

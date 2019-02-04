@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKDocumentModel : Decodable {
+struct VKDocument : Decodable {
     
     enum DocType : Int, Decodable {
         case textFile = 1

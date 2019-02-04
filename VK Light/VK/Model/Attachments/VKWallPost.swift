@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKWallPostModel : Decodable {
+struct VKWallPost : Decodable {
     
     struct Likes : Decodable {
         let count: Int
@@ -50,10 +50,10 @@ struct VKWallPostModel : Decodable {
     let views: Views?
     let postType: PostType
     //let postSource
-    let attachments: [VKAttachmentModel]?
-    let geo: VKGeoMarkModel?
+    let attachments: [VKAttachment]?
+    let geo: VKGeoMark?
     let signerId: Int?
-    let copyHistory: [VKWallPostModel]?
+    let copyHistory: [VKWallPost]?
     let canPin: VKBool?
     let canDelete: VKBool?
     let canEdit: VKBool?

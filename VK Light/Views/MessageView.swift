@@ -77,7 +77,7 @@ class MessageView : UIStackView, KnowsOwnSize {
     
     
     func presentAttachments() {
-        var photos: [VKPhotoModel] = []
+        var photos: [VKPhoto] = []
         
         for attach in messageWrapper.message.attachments {
             switch attach.type {
@@ -139,7 +139,7 @@ class MessageView : UIStackView, KnowsOwnSize {
     }
     
     
-    private func presentPhotos(photos: [VKPhotoModel]) {
+    private func presentPhotos(photos: [VKPhoto]) {
         
         
         guard !photos.isEmpty else { return }
@@ -161,7 +161,7 @@ class MessageView : UIStackView, KnowsOwnSize {
     }
     
     
-    private func presentSticker(sticker: VKStickerModel) {
+    private func presentSticker(sticker: VKSticker) {
         let image = CachedImageView(frame: CGRect(x: 0, y: 0, width: 160, height: 160))
         image.translatesAutoresizingMaskIntoConstraints = false
         image.setSource(url: sticker.images.last!.url)

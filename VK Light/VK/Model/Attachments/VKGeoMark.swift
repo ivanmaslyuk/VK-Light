@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKGeoMarkModel : Decodable {
+struct VKGeoMark : Decodable {
     let type: String
     let coordinates: String
     let place: String? // описание

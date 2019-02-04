@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class VKCachedImageViewWithIntrinsicSize : CachedImageView {
-    var imageModel: VKPhotoModel?
+    var imageModel: VKPhoto?
     
     
     override var intrinsicContentSize: CGSize {

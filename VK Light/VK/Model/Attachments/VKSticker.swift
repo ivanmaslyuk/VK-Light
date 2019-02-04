@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKStickerModel : Decodable {
+struct VKSticker : Decodable {
     
     struct VKStickerImage : Decodable {
         let url : URL

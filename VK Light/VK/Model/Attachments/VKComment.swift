@@ -8,11 +8,11 @@
 
 import Foundation
 
-struct VKCommentModel : Decodable {
+struct VKComment : Decodable {
     
     struct CommentThread : Decodable {
         let count: Int
-        let items: [VKCommentModel]?
+        let items: [VKComment]?
         let canPost: Bool
         let showReplyButton: Bool // нужно ли отображать кнопку «ответить» в ветке
         let groupsCanPost: Bool
@@ -24,7 +24,7 @@ struct VKCommentModel : Decodable {
     let text: String
     let replyToUser: Int?
     let replyToComment: Int?
-    let attachments: [VKAttachmentModel]?
+    let attachments: [VKAttachment]?
     let parentsStack: [Int]?
     let thread: CommentThread
 }

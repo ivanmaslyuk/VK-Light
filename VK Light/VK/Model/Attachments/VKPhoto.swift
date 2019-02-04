@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct VKPhotoModel : Decodable {
+struct VKPhoto : Decodable {
     
     struct Size : Decodable {
         let type: String
