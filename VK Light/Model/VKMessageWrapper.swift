@@ -27,6 +27,14 @@ struct VKMessageWrapper {
         return message.text.trimmingCharacters(in: .whitespaces) != ""
     }
     
+    var hasAttachments : Bool {
+        return !message.attachments.isEmpty
+    }
+    
+    var hasForwarded : Bool {
+        return !forwardedMessages.isEmpty
+    }
+    
     var isSingleImage : Bool {
         guard !message.attachments.isEmpty else { return false }
         return !hasText && message.attachments.count == 1 && message.attachments[0].type == .photo && forwardedMessages.isEmpty

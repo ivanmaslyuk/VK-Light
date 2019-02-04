@@ -31,11 +31,11 @@ class MessageView : UIStackView, KnowsOwnSize {
     
     let messageText : LabelWithPadding = {
         let label = LabelWithPadding()
-        label.translatesAutoresizingMaskIntoConstraints = false
+//        label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         label.backgroundColor = .clear
         label.clipsToBounds = false
-        label.font = UIFont.systemFont(ofSize: 18)
+        label.font = UIFont.systemFont(ofSize: 17)
         label.textColor = .black
         label.lineBreakMode = .byWordWrapping
         
@@ -177,9 +177,9 @@ class MessageView : UIStackView, KnowsOwnSize {
             return
         }
         
-        let v = KnowsOwnSizeView(frame: CGRect(x: 0, y: 0, width: 0, height: 20))
+        let v = KnowsOwnSizeView(frame: CGRect(x: 0, y: 0, width: 0, height: 16))
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        v.heightAnchor.constraint(equalToConstant: 16).isActive = true
         addArrangedSubview(v)
     }
     

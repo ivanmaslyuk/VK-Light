@@ -20,9 +20,13 @@ class MessageCell: UITableViewCell {
     var leftConstr: NSLayoutConstraint!
     var rightConstr: NSLayoutConstraint!
     
+    // time label constraints
+    var timeLabelTrailingConstraint: NSLayoutConstraint!
+    var timeLabelLeadingConstraint: NSLayoutConstraint!
+    
 //    static let bubblePadding: CGFloat = 4
     static let bubbleMargin: CGFloat = 3
-    static let minHeight: CGFloat = 36
+    static let minHeight: CGFloat = 36 // используется только при расчете высоты ячейки в другом классе
     static let bubbleWidth: CGFloat = 300
     
     private let inColor = UIColor(red: 236, green: 237, blue: 239)
@@ -55,13 +59,13 @@ class MessageCell: UITableViewCell {
     private let avatar : CachedImageView = {
         var imageView = CachedImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.layer.cornerRadius = 15
+        imageView.layer.cornerRadius = 16
         imageView.layer.masksToBounds = true
         imageView.isHidden = true
         return imageView
     }()
     
-    private let messageView : MessageView = {
+    let messageView : MessageView = {
         let stView = MessageView(depth: 0)
         stView.translatesAutoresizingMaskIntoConstraints = false
         stView.backgroundColor = .black
@@ -92,9 +96,15 @@ class MessageCell: UITableViewCell {
         contentView.addSubview(avatar)
         contentView.addSubview(timeLabel)
         
+        timeLabelTrailingConstraint = timeLabel.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: -(12 - timeLabel.rightInset))
+        timeLabelLeadingConstraint = timeLabel.leadingAnchor.constraint(equalTo: messageView.leadingAnchor)
+        
+        timeLabelLeadingConstraint.priority = .defaultLow
+        timeLabelTrailingConstraint.priority = .required
+        
+        timeLabelTrailingConstraint.isActive = true
+        
         let constraints = [
-            //heightAnchor.constraint(equalTo: messageView.heightAnchor, constant: (bubbleMargin + bubblePadding) * 2),
-            
             avatar.widthAnchor.constraint(equalToConstant: 32),
             avatar.heightAnchor.constraint(equalToConstant: 32),
             avatar.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -MessageCell.bubbleMargin),
@@ -103,15 +113,13 @@ class MessageCell: UITableViewCell {
             messageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: MessageCell.bubbleMargin),
             messageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -MessageCell.bubbleMargin),
             messageView.widthAnchor.constraint(lessThanOrEqualToConstant: MessageCell.bubbleWidth),
-//            messageView.widthAnchor.constraint(greaterThanOrEqualToConstant: 30),
-//            messageView.heightAnchor.constraint(greaterThanOrEqualToConstant: MessageCell.minHeight),
             
             messageCard.topAnchor.constraint(equalTo: messageView.topAnchor),
             messageCard.bottomAnchor.constraint(equalTo: messageView.bottomAnchor),
             messageCard.leadingAnchor.constraint(equalTo: messageView.leadingAnchor),
             messageCard.trailingAnchor.constraint(equalTo: messageView.trailingAnchor),
             
-            timeLabel.trailingAnchor.constraint(equalTo: messageView.trailingAnchor, constant: -(12 - timeLabel.rightInset)),
+//            timeLabelTrailingConstraint,
             timeLabel.bottomAnchor.constraint(equalTo: messageView.bottomAnchor, constant: -(6 - timeLabel.bottomInset)),
             
             
@@ -143,10 +151,6 @@ class MessageCell: UITableViewCell {
     func setMessage() {
         messageCard.backgroundColor = messageWrapper.isSticker ? .clear : messageWrapper.message.isOut ? outColor : inColor
         isIncoming = !messageWrapper.message.isOut
-        timeLabel.text = messageWrapper.formattedTime
-        let lastAttachType = messageWrapper.message.attachments.last?.type
-        timeLabel.backgroundColor = lastAttachType == .sticker || lastAttachType == .photo ? UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 0.5) : .clear
-        timeLabel.textColor = lastAttachType == .sticker || lastAttachType == .photo ? .white : .gray
         
         avatar.isHidden = messageWrapper.message.out == 1
         if !messageWrapper.message.isOut {
@@ -158,10 +162,51 @@ class MessageCell: UITableViewCell {
             }
         }
         
+        setupTimeLabel()
         messageView.messageWrapper = messageWrapper
     }
     
+    func setupTimeLabel() {
+        // устанавливаем текст
+        timeLabel.text = messageWrapper.formattedTime
+        
+        // настраиваем стиль
+        let lastAttachType = messageWrapper.message.attachments.last?.type
+        timeLabel.backgroundColor = lastAttachType == .sticker || lastAttachType == .photo ? UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 0.5) : .clear
+        timeLabel.textColor = lastAttachType == .sticker || lastAttachType == .photo ? .white : .gray
+        
+        // настроиваем позиционирование
+        let lastWidth = lastLineWidth()
+        if canFitTimeLabelOnOneLineWithText(lastLineWidth: lastWidth) {
+//            timeLabelTrailingConstraint.isActive = false
+            timeLabelLeadingConstraint.constant = lastWidth + 12
+            timeLabelLeadingConstraint.isActive = true
+            
+        } else {
+            timeLabelLeadingConstraint.isActive = false
+//            timeLabelTrailingConstraint.isActive = true
+            if !messageWrapper.hasForwarded && !messageWrapper.hasAttachments {
+                messageView.leaveSpaceForTimeLabel = true
+            }
+        }
+    }
     
+    func canFitTimeLabelOnOneLineWithText(lastLineWidth: CGFloat) -> Bool {
+        guard messageWrapper.hasText else { return false }
+        guard !messageWrapper.hasForwarded, !messageWrapper.hasAttachments else { return false }
+        
+        let timeLabelWidth = CGFloat(50)
+        return MessageCell.bubbleWidth - (timeLabelWidth + lastLineWidth) >= 0 ? true : false
+    }
+    
+    func lastLineWidth() -> CGFloat {
+        let font = UIFont.systemFont(ofSize: 17)
+        let attributedString = NSAttributedString(string: messageWrapper.message.text, attributes: [.font: font])
+        let labelWidth = MessageCell.bubbleWidth - 12 //- 12
+        let maxX = lastLineMaxX(message: attributedString, labelWidth: labelWidth)
+        
+        return maxX
+    }
 
 }
 

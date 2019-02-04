@@ -73,6 +73,7 @@
 		65ADFEB821E25F990060020D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADFEB721E25F990060020D /* MessageView.swift */; };
 		65ADFEBA21E2912A0060020D /* ForwardedMessageHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ADFEB921E2912A0060020D /* ForwardedMessageHeader.swift */; };
 		65AE67B921FC78A100FFCB84 /* MessageInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AE67B821FC78A100FFCB84 /* MessageInputView.swift */; };
+		65BCF2E82208937E00EF7E3D /* TextTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65BCF2E72208937E00EF7E3D /* TextTools.swift */; };
 		65D700E821FF142F001D75A9 /* AudioWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D700E721FF142F001D75A9 /* AudioWaveformView.swift */; };
 		65D700EA21FF2976001D75A9 /* ReplyMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D700E921FF2976001D75A9 /* ReplyMessageView.swift */; };
 		65E6F50A219C8C4E006BC0A8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E6F509219C8C4E006BC0A8 /* AppDelegate.swift */; };
@@ -150,6 +151,7 @@
 		65ADFEB721E25F990060020D /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		65ADFEB921E2912A0060020D /* ForwardedMessageHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForwardedMessageHeader.swift; sourceTree = "<group>"; };
 		65AE67B821FC78A100FFCB84 /* MessageInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageInputView.swift; sourceTree = "<group>"; };
+		65BCF2E72208937E00EF7E3D /* TextTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextTools.swift; sourceTree = "<group>"; };
 		65D700E721FF142F001D75A9 /* AudioWaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioWaveformView.swift; sourceTree = "<group>"; };
 		65D700E921FF2976001D75A9 /* ReplyMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyMessageView.swift; sourceTree = "<group>"; };
 		65E6F506219C8C4E006BC0A8 /* VK Light.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "VK Light.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -265,6 +267,7 @@
 				650C95B721A2D95700D98867 /* MessageHelper.swift */,
 				650856E221A9578500DE6ECB /* DialogsHelper.swift */,
 				650D820021B6D51C00D88134 /* NotificationDebugger.swift */,
+				65BCF2E72208937E00EF7E3D /* TextTools.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -502,6 +505,7 @@
 				6506FF2B21B4721900DF281C /* VKVideo.swift in Sources */,
 				6548945A21B56CF600025CB6 /* VKComment.swift in Sources */,
 				6524A450219D35B90051D73C /* VKConversationModel.swift in Sources */,
+				65BCF2E82208937E00EF7E3D /* TextTools.swift in Sources */,
 				6549FAE721AA8E2400E1A109 /* VKMessageWrapper.swift in Sources */,
 				65AE67B921FC78A100FFCB84 /* MessageInputView.swift in Sources */,
 				65A1E01F21F4E847003CA73E /* KnowsOwnSize.swift in Sources */,
